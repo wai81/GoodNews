@@ -1,0 +1,42 @@
+﻿@model LoginViewModel
+
+
+<h4 class="mb-3">Вход в приложение</h4>
+<form class="form-signin" method="post" asp-controller="Account" asp-action="Login"
+      asp-route-returnUrl="@Model.ReturnUrl">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="form-label-group">
+        <input type="email" asp-for="Email" class="form-control" placeholder="Email address" required="" autofocus="">
+        <label for="Email"></label>
+        <span asp-validation-for="Email"></span>
+    </div>
+    @*<div>
+        <label asp-for="Email"></label><br />
+        <input class="form-control" asp-for="Email" placeholder="you@example.com"/>
+        <span asp-validation-for="Email"></span>
+    </div>*@
+    
+    <div class="form-label-group">
+        <input type="password" asp-for="Password" class="form-control" placeholder="Password" required="">
+       <label for="Password"></label>
+        <span asp-validation-for="Password"></span>
+    </div>
+    @*<div>
+        <label asp-for="Password"></label><br />
+        <input class="form-control" asp-for="Password" />
+        <span asp-validation-for="Password"></span>
+    </div>*@
+    <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" asp-for="RememberMe">
+        <label class="custom-control-label" asp-for="RememberMe"></label>
+    </div>
+    
+    <div>
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Войти</button>
+        @*<input class="btn btn-sm btn-outline-secondary" type="submit" value="Войти"/>*@
+
+        <a class="btn btn-secondary btn-lg btn-block" asp-controller="Account" asp-action="Register">Регистрация</a>
+
+
+    </div>
+</form>

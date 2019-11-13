@@ -1,0 +1,116 @@
+﻿@inject SignInManager<User> SignIn
+@using GoodNews.DB
+@model NewsViewModel
+
+@{
+    ViewData["Title"] = Model.News.Title;
+}
+
+
+
+<div class="row">
+    <div class="col-md-8 blog-main">
+        <div class="blog-post">
+            <h2 class="blog-post-title">@Model.News.Title</h2>
+            <p class="blog-post-meta">@Model.News.DateCreate</p>
+
+            <p style="text-align:justify">@Model.News.NewsDescription</p>
+
+        </div>
+
+        <div>
+            <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.News.Id">Edit</a>
+
+            <a class="btn float-right btn-sm btn-outline-secondary" asp-action="Index">Back to List</a>
+        </div>
+        
+
+        <div class="row">
+            <div class="col-12">
+                <h5><span class=" badge badge-primary">Add comment:</span></h5>
+
+                @* <form asp-controller="Comments" asp-action="Create">*@
+                <div>
+                    @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+                    @*<input type="hidden" name="newsId" value="@Html.DisplayFor(modelItem => Model.News.Id)" />*@
+
+                    <div id="comment-input" class="form-group">
+                        <input type="hidden" id="newsId" name="id" value="@Model.News.Id" />
+                        <textarea id="commentText" name="text" class="form-control form-control-sm" placeholder="Join the discussion..." rows="3"></textarea>
+                    </div>
+                    @if (SignIn.IsSignedIn(User))
+                    {
+                        @*<div class="form-row">
+                                <div class="form-group col-md-6">
+
+                                    <input name="commentUser" class="form-control form-control-sm" type="text" placeholder="Name" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input name="commentEmail" class="form-control form-control-sm" type="email" placeholder="Email" />
+                                </div>
+                            </div>*@
+
+                        <div class="form-group">
+                            @*<input type="submit" value="Send comment" class="btn btn-add-discussion float-right btn-sm btn-outline-secondary" />*@
+                            <button id="btn-add-discussion" class="btn float-right btn-sm btn-outline-secondary">Send comment</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            @*<input type="submit" value="Send comment" class="btn btn-add-discussion float-right btn-sm btn-outline-secondary" />*@
+                            <button id="btn-add-discussion"  class="btn float-right btn-sm btn-outline-secondary">Send comment</button>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div id="commentContainer" class="container">
+            @await Html.PartialAsync("/Views/Shared/_NewsComments.cshtml", @Model)
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+         const onDocumentReady = () => {
+             //$('#toggle-comment-input').click(toggleCommentInput);
+             $('#btn-add-discussion').click(addComment);
+         };
+         
+         const errorFunc = (errorData) => {
+             console.log('Error' + errorData.responseText);
+            }
+
+         const getComments = () => {
+             const articleId = $('#newsId').val();
+             $.ajax({
+                 type: "GET",
+                 url: `/Comments/_GetNewsComments/?id=${articleId}`,
+                 success: function (data) {
+                     $('#commentText').val('');
+                     $('#commentContainer').html(data).slideDown("slow");
+                 },
+                 error: errorFunc
+             });
+         };
+         const addComment = () => {
+             const comment = {
+                 newsId: $('#newsId').val(),
+                 Text: $('#commentText').val()
+             }
+             $.post({
+                 type: "POST",
+                 url: "/Comments/AddComment",
+                 contentType: "application/json; charset=utf-8",
+                 data: JSON.stringify(comment),
+                 dataType: "text",
+                 success: getComments
+             });
+         };
+         $(document).ready(onDocumentReady);
+     </script>
+ }

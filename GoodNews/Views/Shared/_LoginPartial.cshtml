@@ -1,0 +1,64 @@
+﻿<div class="d-flex flex-column flex-md-row align-items-center p-2 px-md-4 mb-2 bg-white border-bottom shadow-sm">
+<h5 class="my-0 mr-md-auto font-weight-normal"></h5>
+  
+    @if (User.Identity.IsAuthenticated)
+        {
+           @if (User.IsInRole("admin"))
+           {
+               <nav class="my-2 my-md-0 mr-md-3">
+                   <a class="btn btn-sm btn-light" asp-controller ="News" asp-action="Create">Добавить новость</a>
+                   @*<a class="btn btn-sm btn-light" asp-action="ParsingNews">Обновить новости</a>
+                   <a class="p-2 text-dark" asp-controller="Roles" asp-action="Index">Roles</a>
+                       <a class="p-2 text-dark" asp-controller="Users" asp-action="Index">Users</a>
+                       <a class="p-2 text-dark" href="#">Support</a>
+                       @*<a class="p-2 text-dark" href="#">Support</a>
+                       <a class="p-2 text-dark" href="#">Pricing</a>*@
+               </nav>
+               <div class="dropdown">
+                   <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                       Обновить новости
+                   </button>
+                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                       <a class="dropdown-item" asp-controller ="News" asp-action="ParsingNews">Все ресурсы</a>
+                       <a class="dropdown-item" asp-controller ="News" asp-action="Parsing_Onlainer">onlaner.by</a>
+                       <a class="dropdown-item" asp-controller ="News" asp-action="Parsing_S13">s13.by</a>
+                       <a class="dropdown-item" asp-controller ="News" asp-action="Parsing_TUT">tut.by</a>
+                   </div>
+               </div>
+               <div class="dropdown">
+                   <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     Администрирование
+                   </button>
+                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                       <a class="dropdown-item" asp-controller="Roles" asp-action="Index">Управление ролями</a>
+                       <a class="dropdown-item" asp-controller="Users" asp-action="Index">Управление пользователями</a>
+                   </div>
+               </div>
+
+           }
+
+            <ul class="navbar-nav">
+                <li class="nav-item">
+
+                    <form method="post" asp-controller="Account" asp-action="LogOff">
+
+                        <a class="p-2 text-dark"> @User.Identity.Name</a>
+                       
+                        <input class="btn btn-sm btn-primary" type="submit" value="Выход" /><i class="fa fa-sign-in" aria-hidden="true"></i>
+                        </form>
+                </li>
+            </ul>
+
+        }
+        else
+        {
+            <ul class="navbar-nav">
+            <li class="nav-item">
+                @*<a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Вход</a>
+                <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Регистрация</a>*@
+                <a class="btn btn-sm btn-primary" asp-controller="Account" asp-action="Login">Вход</a>
+            </li>
+            </ul>
+        }
+   
+    </div>
