@@ -1,6 +1,5 @@
 ﻿
 using GoodNews.DB;
-using Models;
 
 
 namespace DataAccesLayer.Repositories

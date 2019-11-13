@@ -24,7 +24,7 @@ namespace GoodNews.Controllers
             _userManager = userManager;
         }
 
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddComment([FromBody] NewsComment newsComment)
         {
@@ -42,7 +42,7 @@ namespace GoodNews.Controllers
             await _uow.SaveAsync();
             return Json(comment);
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> DeleteComment([FromBody] Guid id)
         {

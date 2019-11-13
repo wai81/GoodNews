@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Interfaces;
 using GoodNews.DB;
-using Models;
 
 namespace DataAccesLayer
 {

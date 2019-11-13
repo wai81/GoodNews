@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Core.Interfaces;
 using GoodNews.DB;
 using Microsoft.EntityFrameworkCore;
-using Models;
 
 namespace DataAccesLayer
 {

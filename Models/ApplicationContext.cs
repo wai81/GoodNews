@@ -1,8 +1,7 @@
-﻿using GoodNews.DB;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Models
+namespace GoodNews.DB
 {
     public class ApplicationContext : IdentityDbContext<User>
     {

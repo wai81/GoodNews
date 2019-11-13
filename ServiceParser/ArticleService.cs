@@ -48,7 +48,7 @@ namespace ServiceParser
 
         }
 
-        IEnumerable<News> IHtmlArticleService.GetArticlesFrom_Onlainer(string url)
+        public IEnumerable<News> GetArticlesFrom_Onlainer(string url)
         {
             List<News> news = new List<News>();
 

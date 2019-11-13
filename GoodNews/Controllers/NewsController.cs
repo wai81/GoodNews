@@ -32,16 +32,7 @@ namespace GoodNews.Controllers
         // GET: News
         public async Task<IActionResult> Index()
         {
-           // IEnumerable<News> newsList = await uow.NewsRepository.GetAllAsync();
-
-           // HomeViewModel vm = new HomeViewModel()
-           //{
-           //     News = newsList.ToList()
-           //};
-
-            //return View(vm);
-
-            return View(await uow.NewsRepository.GetAllAsync());
+          return View(await uow.NewsRepository.GetAllAsync());
         }
 
         // GET: News/Details/5
@@ -51,7 +42,6 @@ namespace GoodNews.Controllers
             {
                 return NotFound();
             }
-            //var news = await uow.NewsRepository.GetByIdAsync(id);
             var news = uow.NewsRepository.Where(n => n.Id.Equals(id)).FirstOrDefault();
             var commentList = await uow.NewsCommentRepository.Include("User").Include("News").ToListAsync();
             var comments = commentList.Where(n => n.News.Id.Equals(id)).OrderByDescending(n => n.Added);
@@ -68,7 +58,7 @@ namespace GoodNews.Controllers
 
             };
             return View(vm);
-           //return View(news);
+          
         }
 
 
