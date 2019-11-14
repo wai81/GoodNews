@@ -70,6 +70,7 @@ namespace GoodNews.Controllers
             {
                 return NotFound();
             }
+
             var vm = new NewsViewModel()
             {
                 News = news,

@@ -72,7 +72,7 @@
 
 @section Scripts{
 
-    <script type="text/javascript">
+    @*<script type="text/javascript">
        
         $(document).ready(function() {
                 $('#btn-add-discussion').click(function() {
@@ -123,12 +123,12 @@
 
         });
 
-    </script>
+    </script>*@
 
-    @*<script>
+    <script>
             const onDocumentReady = () => {
                 $('#btn-add-discussion').click(addComment);
-                $('#btn-login').click(singIn);
+                
             };
 
             const errorFunc = (errorData) => {
@@ -142,25 +142,28 @@
                     url: `/Comments/_GetNewsComments/?id=${articleId}`,
                     success: function (data) {
                         $('#commentText').val('');
-                        $('#commentContainer').html(data).slideDown("slow");
+                        $('#commentContainer').html(data);
+                        $(this).fadeIn(300);
                     },
                     error: errorFunc
                 });
             };
             const addComment = () => {
-                const comment = {
-                    newsId: $('#newsId').val(),
-                    Text: $('#commentText').val()
-                }
+
+                var newsId = $('#newsId').val();
+                var Text = $('#commentText').val();
+                
                 $.ajax({
-                    type: "POST",
-                    url: "/Comments/AddComment",
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify(comment),
-                    dataType: "text",
-                    success: getComments
+                    type: 'POST',
+                    url: '/Comments/AddComment/',
+                    data: {
+                        Text: Text,
+                        newsId: newsId
+                    },
+                    success:
+                        getComments
                 });
            };
             $(document).ready(onDocumentReady);
-        </script>*@
+        </script>
 }
