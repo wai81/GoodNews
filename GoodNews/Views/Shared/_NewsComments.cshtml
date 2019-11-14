@@ -2,57 +2,57 @@
 @using Microsoft.EntityFrameworkCore.Internal
 @model NewsViewModel
 
-   
+
 <div class="container" id="partialComments">
     <span class="badge badge-secondary">Comments:</span>
     <hr />
-  
-        @if (Model.NewsComments.Any())
+
+    @if (Model.NewsComments.Any())
+    {
+        @*<div class="row">
+                <h6>(@Html.DisplayFor(modelItem => Model.NewsComments.Count())) Comments on @Html.DisplayFor(modelItem => Model.News.Title)</h6>
+            </div>*@
+
+
+        @foreach (var item in Model.NewsComments)
         {
-            @*<div class="row">
-                    <h6>(@Html.DisplayFor(modelItem => Model.NewsComments.Count())) Comments on @Html.DisplayFor(modelItem => Model.News.Title)</h6>
-                </div>*@
-
-
-            @foreach (var item in Model.NewsComments)
-            {
-                <div class="row " id="@item.Id">
-                    <div class="col-md-12 blog-main">
-                        <div class="shadow p-3 mb-5 bg-light rounded">
-                            <h5 class="font-italic">
-                                @Html.DisplayFor(modelItem => item.User.UserName)
-                            </h5>
-                            @if (User.Identity.IsAuthenticated)
+            <div class="row " id="@item.Id">
+                <div class="col-md-12 blog-main">
+                    <div class="shadow p-3 mb-5 bg-light rounded">
+                        <h5 class="font-italic">
+                            @Html.DisplayFor(modelItem => item.User.UserName)
+                        </h5>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("admin") || User.FindFirst(ClaimTypes.NameIdentifier).Value == item.User.Id)
                             {
-                                @if (User.IsInRole("admin") || User.FindFirst(ClaimTypes.NameIdentifier).Value == item.User.Id)
-                                {
-                                    <button id="@item.Id" class= "btn btn-outline-danger btn-sm float-right  delete-discussion ">Delete</button>
-                                }
-                                @*<a class="float-right btn text-white btn-danger ml-2"> <i class="fa fa-thumbs-down"></i> Dislike</a>
-                                    <a class="float-right btn text-white btn-primary"> <i class="fas fa-thumbs-up"></i> Like</a>*@
+                                <button id="@item.Id" class="btn btn-outline-danger btn-sm float-right  delete-discussion ">Delete</button>
                             }
-                            <p style="font-size: small">
-                                @Html.DisplayFor(modelItem => item.Email) Posted <b>@Html.DisplayFor(modelItem => item.Added)</b>
-                            </p>
-                            <p class="mb-0" style="text-align: justify">@Html.DisplayFor(modelItem => item.Text)</p>
+                            @*<a class="float-right btn text-white btn-danger ml-2"> <i class="fa fa-thumbs-down"></i> Dislike</a>
+                                <a class="float-right btn text-white btn-primary"> <i class="fas fa-thumbs-up"></i> Like</a>*@
+                        }
+                        <p style="font-size: small">
+                            @Html.DisplayFor(modelItem => item.Email) Posted <b>@Html.DisplayFor(modelItem => item.Added)</b>
+                        </p>
+                        <p class="mb-0" style="text-align: justify">@Html.DisplayFor(modelItem => item.Text)</p>
 
-                        </div>
                     </div>
                 </div>
-            }
-
-        }
-        else
-        {
-            <div class="row">
-                @*<h6>(@Html.DisplayFor(modelItem => 0)) Comments on @Html.DisplayFor(modelItem => Model.News.Title)</h6>*@
             </div>
         }
+
+    }
+    else
+    {
+        <div class="row">
+            @*<h6>(@Html.DisplayFor(modelItem => 0)) Comments on @Html.DisplayFor(modelItem => Model.News.Title)</h6>*@
+        </div>
+    }
 </div>
 
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
 <script>
-    
+
     $(document).ready(function () {
         $('.delete-discussion').click(
             delete_Discussion
@@ -71,5 +71,4 @@
             error: errorFunc
         });
     };
-
 </script>

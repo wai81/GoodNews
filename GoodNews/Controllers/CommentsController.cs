@@ -26,7 +26,7 @@ namespace GoodNews.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddComment([FromBody] NewsComment newsComment)
+        public async Task<IActionResult> AddComment([FromBody] CommentModel newsComment )
         {
             var commentUser = _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
 
@@ -34,13 +34,16 @@ namespace GoodNews.Controllers
             {
                 Id = new Guid(),
                 User = commentUser,
-                News = _uow.NewsRepository.Find(n => n.Id.Equals(newsComment.NewsId)).FirstOrDefault(),
+                News = _uow.NewsRepository.Find(n => n.Id.Equals(newsComment.Id)).FirstOrDefault(),
                 Email = commentUser.Email,
-                Text = newsComment.Text
+                Text = newsComment.commentText
             };
             await _uow.NewsCommentRepository.CreateAsync(comment);
             await _uow.SaveAsync();
-            return Json(comment);
+            
+            //return Json(comment);
+            //return RedirectToAction("_GetNewsComments","Comments", new {id = newsComment.Id});
+            return Ok();
         }
         [Authorize(Roles = "admin")]
         [HttpPost]

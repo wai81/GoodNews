@@ -23,16 +23,17 @@
 
             <a class="btn float-right btn-sm btn-outline-secondary" asp-action="Index">Back to List</a>
         </div>
-        
+
 
         <div class="row">
             <div class="col-12">
                 <h5><span class=" badge badge-primary">Add comment:</span></h5>
-                  <div>
-                   <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                  <div id="comment-input" class="form-group">
+                <div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div id="comment-input" class="form-group">
                         <input type="hidden" id="newsId" name="id" value="@Model.News.Id" />
                         <textarea id="commentText" name="text" class="form-control form-control-sm" placeholder="Join the discussion..." rows="3"></textarea>
+                        <span asp-validation-for="NewsComments" id="messageerror" class="text-danger"></span>
                     </div>
                     @if (SignIn.IsSignedIn(User))
                     {
@@ -53,7 +54,7 @@
                     else
                     {
                         <div class="form-group">
-                            <a asp-controller="Account"  asp-action="Login" class="btn float-right btn-sm btn-outline-secondary">Send comment</a>
+                            <a asp-controller="Account" asp-action="Login" class="btn float-right btn-sm btn-outline-secondary">Send comment</a>
                         </div>
 
                     }
@@ -61,50 +62,105 @@
             </div>
         </div>
 
-        <div id="commentContainer" class="container">
-            @await Html.PartialAsync("/Views/Shared/_NewsComments.cshtml", @Model)
-        </div>
+      <div id="commentContainer" class="container">
+           @await Html.PartialAsync("/Views/Shared/_NewsComments.cshtml", @Model)
+      </div>
     </div>
 </div>
 
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
 
 @section Scripts{
-    <script>
-         const onDocumentReady = () => {
-             $('#btn-add-discussion').click(addComment);
-             $('#btn-login').click(singIn);
-         };
-         
-         const errorFunc = (errorData) => {
-             console.log('Error' + errorData.responseText);
-            }
 
-         const getComments = () => {
-             const articleId = $('#newsId').val();
-             $.ajax({
-                 type: "GET",
-                 url: `/Comments/_GetNewsComments/?id=${articleId}`,
-                 success: function (data) {
-                     $('#commentText').val('');
-                     $('#commentContainer').html(data).slideDown("slow");
-                 },
-                 error: errorFunc
-             });
-         };
-         const addComment = () => {
-             const comment = {
-                 newsId: $('#newsId').val(),
-                 Text: $('#commentText').val()
-             }
-             $.ajax({
-                 type: "POST",
-                 url: "/Comments/AddComment",
-                 contentType: "application/json; charset=utf-8",
-                 data: JSON.stringify(comment),
-                 dataType: "text",
-                 success: getComments
-             });
-        };
-         $(document).ready(onDocumentReady);
-     </script>
- }
+    <script type="text/javascript">
+       
+        $(document).ready(function() {
+                $('#btn-add-discussion').click(function() {
+
+                    var error = false;
+
+                    var newsId = $('#newsId').val();
+
+                    var commentMsg = $('#commentText').val();
+                    if (commentMsg.length < 3) {
+                        alert("Message lenght must be atleast 3 words");
+                        error = true;
+                    }
+
+                    if (error)
+                        return;
+
+                    var data = {
+                        "commentText": commentMsg,
+                        "Id": newsId
+                    }
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("AddComment", "Comments")',
+                        data: JSON.stringify(data),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            $.ajax({
+                                type: 'GET',
+                                url: '/Comments/_GetNewsComments/?id=' + newsId,
+                                success: function(data) {
+                                    $('#commentContainer').html(data);
+                                    $('#commentText').val('');
+                                },
+                                error: function(errorData) {
+                                    alert(errorData);
+                                }
+                            });
+                        },
+                        error: function(errorData) {
+                            alert(errorData);
+                        }
+                    });
+
+
+                });
+
+        });
+
+    </script>
+
+    @*<script>
+            const onDocumentReady = () => {
+                $('#btn-add-discussion').click(addComment);
+                $('#btn-login').click(singIn);
+            };
+
+            const errorFunc = (errorData) => {
+                console.log('Error' + errorData.responseText);
+               }
+
+            const getComments = () => {
+                const articleId = $('#newsId').val();
+                $.ajax({
+                    type: "GET",
+                    url: `/Comments/_GetNewsComments/?id=${articleId}`,
+                    success: function (data) {
+                        $('#commentText').val('');
+                        $('#commentContainer').html(data).slideDown("slow");
+                    },
+                    error: errorFunc
+                });
+            };
+            const addComment = () => {
+                const comment = {
+                    newsId: $('#newsId').val(),
+                    Text: $('#commentText').val()
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/Comments/AddComment",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(comment),
+                    dataType: "text",
+                    success: getComments
+                });
+           };
+            $(document).ready(onDocumentReady);
+        </script>*@
+}
