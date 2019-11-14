@@ -6,6 +6,7 @@ namespace GoodNews.ViewModels
     public class NewsViewModel
     {
         public News News { get; set; }
+        public Category Category { get; set; }
         public IEnumerable<NewsComment> NewsComments { get; set; }
     }
 }

@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Models;
 using ServiceParser;
 
 namespace GoodNews.Controllers
@@ -21,21 +20,23 @@ namespace GoodNews.Controllers
         private readonly IHtmlArticleService articleService;
         private readonly UserManager<User> _userManager;
         
-        public NewsController(IUnitOfWork unitOfWork, IHtmlArticleService service, UserManager<User> userManager)
-        //public NewsController(IUnitOfWork unitOfWork)
-         {
+        public NewsController(IUnitOfWork unitOfWork,
+            IHtmlArticleService service,
+            UserManager<User> userManager)
+        {
             articleService = service;
             uow = unitOfWork;
             _userManager = userManager;
          }
         
-        // GET: News
+        [HttpGet]
         public async Task<IActionResult> Index()
-        {
-          return View(await uow.NewsRepository.GetAllAsync());
-        }
 
-        // GET: News/Details/5
+        {
+            return View(await uow.NewsRepository.GetAllAsync());
+        }
+        
+        [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
             if (id == null)
@@ -43,8 +44,11 @@ namespace GoodNews.Controllers
                 return NotFound();
             }
             var news = uow.NewsRepository.Where(n => n.Id.Equals(id)).FirstOrDefault();
-            var commentList = await uow.NewsCommentRepository.Include("User").Include("News").ToListAsync();
-            var comments = commentList.Where(n => n.News.Id.Equals(id)).OrderByDescending(n => n.Added);
+            var commentList = await uow.NewsCommentRepository.
+                                        Include("User").Include("News").ToListAsync();
+            var comments = commentList.Where(n => n.News.Id.Equals(id)).
+                                                    OrderByDescending(n => n.Added);
+            var category = await uow.CategoryRepository.GetByIdAsync(news.CategoryID);
 
             if (news == null)
             {
@@ -53,23 +57,23 @@ namespace GoodNews.Controllers
             var vm = new NewsViewModel()
             {
                 News = news,
-               // Category = category,
+                Category = category,
                 NewsComments = comments
 
             };
             return View(vm);
           
         }
-
-
-        // GET: News/Create
+        
+        [HttpGet]
         [Authorize]
         public IActionResult Create()
         {
             ViewData["CategoryID"] = new SelectList(uow.CategoryRepository.GetAll(), "Id", "Name");
             return View();
         }
-        // POST: News/Create
+        
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(News news)
         {
@@ -83,7 +87,7 @@ namespace GoodNews.Controllers
             return View(news);
         }
 
-        // GET: News/Edit/5
+        [HttpGet]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -100,7 +104,6 @@ namespace GoodNews.Controllers
             return View(news);
         }
 
-        // POST: News/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, News news)
@@ -132,8 +135,8 @@ namespace GoodNews.Controllers
             ViewData["CategoryID"] = new SelectList(uow.CategoryRepository.GetAll(), "Id", "Name", news.CategoryID);
             return View(news);
         }
-
-        // GET: News/Delete/5
+        
+        [HttpGet]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -148,7 +151,6 @@ namespace GoodNews.Controllers
             return View(news);
         }
 
-        // POST: News/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
@@ -167,8 +169,8 @@ namespace GoodNews.Controllers
             return false;
         }
 
-        [Authorize(Roles = "admin")]
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> ParsingNews()
         {
             var parserNews = Task.Factory.StartNew(() =>
@@ -193,7 +195,7 @@ namespace GoodNews.Controllers
             var parserNews = Task.Factory.StartNew(() =>
                 {
                     var pars_Onliner = articleService.GetArticlesFrom_Onlainer(@"https://people.onliner.by/feed");
-                    articleService.AddRange(pars_Onliner);
+                    articleService.AddRangeAsync(pars_Onliner);
                 }
             );
             parserNews.Wait();
@@ -220,7 +222,7 @@ namespace GoodNews.Controllers
             var parserNews = Task.Factory.StartNew(() =>
                 {
                     var pars_TUT = articleService.GetArticlesFrom_TUT(@"https://news.tut.by/rss/all.rss");
-                    articleService.AddRange(pars_TUT);
+                    articleService.AddRangeAsync(pars_TUT);
                 }
             );
             parserNews.Wait();
