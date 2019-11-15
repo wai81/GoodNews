@@ -27,32 +27,29 @@
 
         <div class="row">
             <div class="col-12">
-                <h5><span class=" badge badge-primary">Add comment:</span></h5>
+               
                 <div>
+                    <hr/>
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div id="comment-input" class="form-group">
-                        <input type="hidden" id="newsId" name="id" value="@Model.News.Id" />
-                        <textarea id="commentText" name="text" class="form-control form-control-sm" placeholder="Join the discussion..." rows="3"></textarea>
-                        <span asp-validation-for="NewsComments" id="messageerror" class="text-danger"></span>
-                    </div>
+                    
                     @if (SignIn.IsSignedIn(User))
                     {
-                        @*<div class="form-row">
-                                <div class="form-group col-md-6">
-
-                                    <input name="commentUser" class="form-control form-control-sm" type="text" placeholder="Name" />
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <input name="commentEmail" class="form-control form-control-sm" type="email" placeholder="Email" />
-                                </div>
-                            </div>*@
-
+                        <div id="comment-input" class="form-group">
+                            <input type="hidden" id="newsId" name="id" value="@Model.News.Id" />
+                            <textarea id="commentText" name="text" class="form-control form-control-sm" placeholder="Add a comment to the article..." rows="3"></textarea>
+                            <span asp-validation-for="NewsComments" id="messageerror" class="text-danger"></span>
+                        </div>
                         <div class="form-group">
                             <a id="btn-add-discussion" class="btn float-right btn-sm btn-outline-secondary">Send comment</a>
                         </div>
                     }
                     else
                     {
+                        <div id="comment-input" class="form-group">
+                            <input type="hidden" id="newsId" name="id" value="@Model.News.Id" />
+                            <textarea id="commentText" name="text" class="form-control form-control-sm" placeholder="You cannot leave a comment. You are not logged in to your account." rows="3"></textarea>
+                            <span asp-validation-for="NewsComments" id="messageerror" class="text-danger"></span>
+                        </div>
                         <div class="form-group">
                             <a asp-controller="Account" asp-action="Login" class="btn float-right btn-sm btn-outline-secondary">Send comment</a>
                         </div>
@@ -84,20 +81,21 @@
         function getComments() {
             $.ajax({
                 type: 'GET',
-                url: '/Comments/_GetNewsComments/?id=' + $('#newsId').val(),
-                success: function (data) {
-                    $('#commentContainer').fadeOut(400,
-                        function() {
-                            $('#commentContainer').html(data);
-                            $(this).fadeIn(300);
-                            
-                        });
-                },   
-                error: function(errorData) {
+                url: '/Comments/_GetNewsComments/?id=' + $('#newsId').val()
+            }).done(function (data) {
+                $('#commentText').val(''),
+                $('#commentContainer').fadeOut(200,
+                    function() {
+                        $('#commentContainer').html(data);
+                        $(this).fadeIn(300);
+                    });
+            }).fail({
+                function(errorData) {
                     console.log(errorData);
                 }
             });
-        } 
+        };
+     
 
         function addComment() {
 
@@ -116,69 +114,21 @@
 
             var data = {
                 "commentText": commentMsg,
-                "Id": newsId
+                "newsId": newsId
             };
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action("AddComment", "Comments")',
                 data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    if (response == 200) {
-                        getComments();
-                        $('#commentText').val('');
-                    }
-                },
-                error: function(errorData) {
-                    console.log(errorData);
-                }
+                dataType: "json"
+            }).done(function() {
+                getComments();
+            }).fail(function(errorData) {
+                console.log(errorData);
             });
         };
-
-       
-
     </script>
 
-    @*<script>
-            const onDocumentReady = () => {
-                $('#btn-add-discussion').click(addComment);
-                
-            };
-
-            const errorFunc = (errorData) => {
-                console.log('Error' + errorData.responseText);
-               }
-
-            const getComments = () => {
-                const articleId = $('#newsId').val();
-                $.ajax({
-                    type: "GET",
-                    url: `/Comments/_GetNewsComments/?id=${articleId}`,
-                    success: function (data) {
-                        $('#commentText').val('');
-                        $('#commentContainer').html(data);
-                        $(this).fadeIn(300);
-                    },
-                    error: errorFunc
-                });
-            };
-            const addComment = () => {
-
-                var newsId = $('#newsId').val();
-                var Text = $('#commentText').val();
-                
-                $.ajax({
-                    type: 'POST',
-                    url: '/Comments/AddComment/',
-                    data: {
-                        Text: Text,
-                        newsId: newsId
-                    },
-                    success:
-                        getComments
-                });
-           };
-            $(document).ready(onDocumentReady);
-        </script>*@
+   
 }
