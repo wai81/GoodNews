@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 
 namespace GoodNews.Controllers
@@ -40,10 +41,11 @@ namespace GoodNews.Controllers
             };
             await _uow.NewsCommentRepository.CreateAsync(comment);
             await _uow.SaveAsync();
-            
-            //return Json(comment);
+
+            return Json(comment);
             //return RedirectToAction("_GetNewsComments","Comments", new {id = newsComment.Id});
-            return Ok();
+            //return Ok();
+           
         }
         [Authorize(Roles = "admin")]
         [HttpPost]
@@ -66,10 +68,7 @@ namespace GoodNews.Controllers
             var news = _uow.NewsRepository.Where(p => p.Id.Equals(id)).FirstOrDefault();
             var commentList = await _uow.NewsCommentRepository.Include("User").Include("News").ToListAsync();
             var comments = commentList.Where(i => i.News.Id.Equals(id)).OrderByDescending(o => o.Added);
-            if (news == null)
-            {
-                return NotFound();
-            }
+           
 
             var vm = new NewsViewModel()
             {

@@ -62,9 +62,10 @@
             </div>
         </div>
 
-      <div id="commentContainer" class="container">
-           @await Html.PartialAsync("/Views/Shared/_NewsComments.cshtml", @Model)
-      </div>
+       
+        <div id="commentContainer" class="container">
+            @await Html.PartialAsync("/Views/Shared/_NewsComments.cshtml", @Model)
+        </div>
     </div>
 </div>
 
@@ -72,60 +73,74 @@
 
 @section Scripts{
 
-    @*<script type="text/javascript">
-       
+    <script>
+
         $(document).ready(function() {
-                $('#btn-add-discussion').click(function() {
-
-                    var error = false;
-
-                    var newsId = $('#newsId').val();
-
-                    var commentMsg = $('#commentText').val();
-                    if (commentMsg.length < 3) {
-                        alert("Message lenght must be atleast 3 words");
-                        error = true;
-                    }
-
-                    if (error)
-                        return;
-
-                    var data = {
-                        "commentText": commentMsg,
-                        "Id": newsId
-                    }
-                    $.ajax({
-                        type: 'POST',
-                        url: '@Url.Action("AddComment", "Comments")',
-                        data: JSON.stringify(data),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (response) {
-                            $.ajax({
-                                type: 'GET',
-                                url: '/Comments/_GetNewsComments/?id=' + newsId,
-                                success: function(data) {
-                                    $('#commentContainer').html(data);
-                                    $('#commentText').val('');
-                                },
-                                error: function(errorData) {
-                                    alert(errorData);
-                                }
-                            });
-                        },
-                        error: function(errorData) {
-                            alert(errorData);
-                        }
-                    });
-
-
-                });
-
+            $('#btn-add-discussion').click(
+                addComment
+            );
         });
 
-    </script>*@
+        function getComments() {
+            $.ajax({
+                type: 'GET',
+                url: '/Comments/_GetNewsComments/?id=' + $('#newsId').val(),
+                success: function (data) {
+                    $('#commentContainer').fadeOut(400,
+                        function() {
+                            $('#commentContainer').html(data);
+                            $(this).fadeIn(300);
+                            
+                        });
+                },   
+                error: function(errorData) {
+                    console.log(errorData);
+                }
+            });
+        } 
 
-    <script>
+        function addComment() {
+
+            var error = false;
+
+            var newsId = $('#newsId').val();
+
+            var commentMsg = $('#commentText').val();
+            if (commentMsg.length < 3) {
+                alert("Message lenght must be atleast 3 words");
+                error = true;
+            }
+
+            if (error)
+                return;
+
+            var data = {
+                "commentText": commentMsg,
+                "Id": newsId
+            };
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("AddComment", "Comments")',
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response == 200) {
+                        getComments();
+                        $('#commentText').val('');
+                    }
+                },
+                error: function(errorData) {
+                    console.log(errorData);
+                }
+            });
+        };
+
+       
+
+    </script>
+
+    @*<script>
             const onDocumentReady = () => {
                 $('#btn-add-discussion').click(addComment);
                 
@@ -165,5 +180,5 @@
                 });
            };
             $(document).ready(onDocumentReady);
-        </script>
+        </script>*@
 }

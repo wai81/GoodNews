@@ -5,7 +5,8 @@
 
 <div class="container" id="partialComments">
     <span class="badge badge-secondary">Comments:</span>
-    <hr />
+    <div class="container" id="commentContainer">
+   
 
     @if (Model.NewsComments.Any())
     {
@@ -48,6 +49,7 @@
             @*<h6>(@Html.DisplayFor(modelItem => 0)) Comments on @Html.DisplayFor(modelItem => Model.News.Title)</h6>*@
         </div>
     }
+    </div>
 </div>
 
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
@@ -68,7 +70,9 @@
             success: function (result) {
                 $('div#' + idComment).slideToggle(500);
             },
-            error: errorFunc
+            error: function(errorData) {
+                console.log(errorData);
+            }
         });
     };
 </script>
