@@ -6,13 +6,12 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Models;
 
-namespace GoodNews.Migrations
+namespace GoodNews.DB.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20191110170824_init")]
-    partial class init
+    [Migration("20191116230423_NewMigration")]
+    partial class NewMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -252,7 +251,7 @@ namespace GoodNews.Migrations
             modelBuilder.Entity("GoodNews.DB.News", b =>
                 {
                     b.HasOne("GoodNews.DB.Category", "Category")
-                        .WithMany("news")
+                        .WithMany("News")
                         .HasForeignKey("CategoryID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

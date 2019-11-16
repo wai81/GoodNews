@@ -18,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceParser", "ServicePar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccesLayer", "AccesLayer\DataAccesLayer.csproj", "{8D2C0475-A3F1-4975-9090-42DA69A2677F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodNews.API", "GoodNews.API\GoodNews.API.csproj", "{CF5FF89F-A302-4565-A660-C41AEE6844D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodNews.API", "GoodNews.API\GoodNews.API.csproj", "{06C38945-7DBB-4C1A-B6F7-4143D5CE3C95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,10 +46,10 @@ Global
 		{8D2C0475-A3F1-4975-9090-42DA69A2677F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D2C0475-A3F1-4975-9090-42DA69A2677F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D2C0475-A3F1-4975-9090-42DA69A2677F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF5FF89F-A302-4565-A660-C41AEE6844D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF5FF89F-A302-4565-A660-C41AEE6844D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF5FF89F-A302-4565-A660-C41AEE6844D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF5FF89F-A302-4565-A660-C41AEE6844D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06C38945-7DBB-4C1A-B6F7-4143D5CE3C95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06C38945-7DBB-4C1A-B6F7-4143D5CE3C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06C38945-7DBB-4C1A-B6F7-4143D5CE3C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06C38945-7DBB-4C1A-B6F7-4143D5CE3C95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

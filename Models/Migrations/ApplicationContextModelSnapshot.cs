@@ -5,9 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Models;
 
-namespace GoodNews.Migrations
+namespace GoodNews.DB.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
     partial class ApplicationContextModelSnapshot : ModelSnapshot
@@ -250,7 +249,7 @@ namespace GoodNews.Migrations
             modelBuilder.Entity("GoodNews.DB.News", b =>
                 {
                     b.HasOne("GoodNews.DB.Category", "Category")
-                        .WithMany("news")
+                        .WithMany("News")
                         .HasForeignKey("CategoryID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
