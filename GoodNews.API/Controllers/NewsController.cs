@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GoodNews.DB;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,7 +18,7 @@ namespace GoodNews.API.Controllers
     public class NewsController : ControllerBase
     {
         private readonly ApplicationContext _context;
-
+        
         public NewsController(ApplicationContext context)
         {
             _context = context;
