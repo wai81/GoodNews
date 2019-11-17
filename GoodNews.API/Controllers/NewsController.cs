@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GoodNews.DB;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace GoodNews.API.Controllers
 {
+    /// <summary>
+    /// NewsController
+    /// </summary>
     [Route("api/[controller]")]
-    public class NewsController : Controller
+    public class NewsController : ControllerBase
     {
         private readonly ApplicationContext _context;
 
@@ -18,20 +22,38 @@ namespace GoodNews.API.Controllers
         {
             _context = context;
         }
+        /// <summary>
+        /// Get all news articles 
+        /// </summary>
+        /// <returns></returns>
+        // GET: api/<controller>
 
         // GET: api/<controller>
         [HttpGet]
-        public IEnumerable<string> Get()
+        [ProducesResponseType (StatusCodes.Status200OK)]
+        [ProducesResponseType (StatusCodes.Status400BadRequest)]
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            //return new string[] { "value1", "value2" };
+            return Ok(_context.News.ToArray());
         }
 
+
+        /// <summary>
+        /// Get News by Id
+        /// </summary>
+        /// <param name="id">id of news articles </param>
+        /// <returns></returns>
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetById(Guid id)
         {
-            return "value";
+            return Ok(_context.News.Where(n => n.Id.Equals(id)).ToArray());
         }
+
+
 
         // POST api/<controller>
         [HttpPost]
