@@ -76,7 +76,7 @@ namespace GoodNews.API
             //    app.UseHsts();
             //}
 
-            //Add Securing JWT
+            //Add Sequring JWT
             app.UseAuthentication();
             //Add Swagger
             app.UseSwagger();
@@ -86,7 +86,13 @@ namespace GoodNews.API
             });
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvc(routes=>
+            {
+                routes.MapRoute(
+                    name: "api",
+                    "api/{controller = News}/{action = Get}/{ id ?}"
+                );
+            });
         }
     }
 }

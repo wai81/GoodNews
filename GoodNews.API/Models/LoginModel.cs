@@ -11,4 +11,4 @@ namespace GoodNews.API.Models
         public string Password { get; set; }
     }
 }
-}
+
