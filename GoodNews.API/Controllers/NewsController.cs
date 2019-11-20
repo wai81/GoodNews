@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GoodNews.DB;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +15,10 @@ namespace GoodNews.API.Controllers
     /// <summary>
     /// NewsController
     /// </summary>
+   
     [Route("api/[controller]")]
+    [ApiController]
+    //[Authorize]
     public class NewsController : ControllerBase
     {
         private readonly ApplicationContext _context;

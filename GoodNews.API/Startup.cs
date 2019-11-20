@@ -31,6 +31,7 @@ namespace GoodNews.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //add JWT
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -45,14 +46,14 @@ namespace GoodNews.API
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                     };
                 });
-
+            //add config contex
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationContext>(options =>
                 // options.UseSqlServer(connection));
                 options.UseSqlServer(connection, c => c.MigrationsAssembly("GoodNews.DB")));
-          
+            //add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            //add Swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info()
@@ -85,7 +86,7 @@ namespace GoodNews.API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "");
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc(routes=>
             {
                 routes.MapRoute(
