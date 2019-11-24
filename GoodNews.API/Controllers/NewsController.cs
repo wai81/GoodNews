@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using GoodNews.DB;
-using Microsoft.AspNetCore.Authorization;
+using GoodNews.Infrastructure.Queries.Models;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,26 +19,26 @@ namespace GoodNews.API.Controllers
     //[Authorize]
     public class NewsController : ControllerBase
     {
-        private readonly ApplicationContext _context;
-        
-        public NewsController(ApplicationContext context)
+        //private readonly ApplicationContext _context;
+        private readonly IMediator mediator;
+
+        // public NewsController(ApplicationContext context)
+        public NewsController(IMediator mediator)
         {
-            _context = context;
+            this.mediator = mediator;
         }
         /// <summary>
         /// Get all news articles 
         /// </summary>
         /// <returns></returns>
         // GET: api/<controller>
-
-        // GET: api/<controller>
         [HttpGet]
         [ProducesResponseType (StatusCodes.Status200OK)]
         [ProducesResponseType (StatusCodes.Status400BadRequest)]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
             //return new string[] { "value1", "value2" };
-            return Ok(_context.News.ToArray());
+            return Ok(await mediator.Send(new GetNewsQueryModel()));
         }
 
 
@@ -53,12 +51,23 @@ namespace GoodNews.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            return Ok(_context.News.Where(n => n.Id.Equals(id)).ToArray());
+            //return Ok(_context.News.Where(n => n.Id.Equals(id)).ToArray());
+            return Ok(await mediator.Send(new GetNewsByIdQueryModel(id)));
         }
-
-
+        /// <summary>
+        /// Get NewsID by CategoriID
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        [HttpGet("category/{categoryId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Get(Guid categoryId)
+        {
+            return Ok(await mediator.Send(new GetNewsByCategoryIdQueryModel(categoryId)));
+        }
 
         // POST api/<controller>
         [HttpPost]
