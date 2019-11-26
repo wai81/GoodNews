@@ -10,18 +10,19 @@ using System.Threading.Tasks;
 
 namespace GoodNews.Infrastructure.Queries.Handlers
 {
-    public class GetNewsQueryHandler : IRequestHandler<GetNewsQueryModel, IEnumerable<News>>
+    public class GetCategoryByIdQweryHandler : IRequestHandler<GetCategoryByIdQueryModel, Category>
     {
         private readonly ApplicationContext _context;
 
-        public GetNewsQueryHandler(ApplicationContext context)
+        public GetCategoryByIdQweryHandler(ApplicationContext context)
         {
             _context = context;
         }
 
-        public async Task<IEnumerable<News>> Handle(GetNewsQueryModel request, CancellationToken cancellationToken)
+        public async Task<Category> Handle(GetCategoryByIdQueryModel request, CancellationToken cancellationToken)
         {
-            var result = await _context.News.ToListAsync(cancellationToken: cancellationToken);
+            var result = await _context.Categories.FirstOrDefaultAsync(n => n.Id.Equals(request.Id), cancellationToken: cancellationToken);
+
             return result;
         }
     }

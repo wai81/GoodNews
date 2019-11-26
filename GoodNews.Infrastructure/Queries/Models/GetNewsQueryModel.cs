@@ -8,5 +8,6 @@ namespace GoodNews.Infrastructure.Queries.Models
 {
     public class GetNewsQueryModel : IRequest<IEnumerable<News>>
     {
+       
     }
 }

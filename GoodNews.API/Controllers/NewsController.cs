@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using GoodNews.API.Models;
 using GoodNews.DB;
+using GoodNews.Infrastructure.Commands.Models;
 using GoodNews.Infrastructure.Queries.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -33,12 +37,19 @@ namespace GoodNews.API.Controllers
         /// <returns></returns>
         // GET: api/<controller>
         [HttpGet]
-        [ProducesResponseType (StatusCodes.Status200OK)]
+        [ProducesResponseType (200,  Type=typeof(SpecialType))]
         [ProducesResponseType (StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get()
         {
-            //return new string[] { "value1", "value2" };
-            return Ok(await mediator.Send(new GetNewsQueryModel()));
+            //try
+            //{
+                return Ok(await mediator.Send(new GetNewsQueryModel()));
+            //}
+            //catch (Exception e)
+            //{
+            //    return StatusCode(400,e);
+            //}
+            
         }
 
 
@@ -49,12 +60,32 @@ namespace GoodNews.API.Controllers
         /// <returns></returns>
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(200, Type = typeof(SpecialType))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(Guid id)
         {
-            //return Ok(_context.News.Where(n => n.Id.Equals(id)).ToArray());
-            return Ok(await mediator.Send(new GetNewsByIdQueryModel(id)));
+            try
+            {
+                var newsDetails = await mediator.Send(new GetNewsByIdQueryModel(id));
+                //var newsCategory = await mediator.Send(new GetCategoryByIdQueryModel(newsDetails.CategoryID));
+                var newsComments = await mediator.Send(new GetNewsCommentsQueryModel(id));
+                newsComments = newsComments.OrderByDescending(c => c.Added);
+
+                var news = new NewsDetailsModel()
+                {
+                    News = newsDetails,
+                    //Category = newsCategory,
+                    NewsComments = newsComments
+                };
+                return Ok(news);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+           
         }
         /// <summary>
         /// Get NewsID by CategoriID
@@ -68,23 +99,44 @@ namespace GoodNews.API.Controllers
         {
             return Ok(await mediator.Send(new GetNewsByCategoryIdQueryModel(categoryId)));
         }
+       
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="news"></param>
+        /// <returns></returns>
         // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<IActionResult> Post([FromBody] NewsModel news)
         {
+            var context = new News()
+            { 
+                Title = news.Title,
+                DateCreate = news.DateCreate,
+                NewsContent = news.NewsContent,
+                NewsDescription = news.NewsDescription,
+                LinkURL = news.LinkURL,
+                ImageUrl = news.ImageUrl,
+                CategoryID = news.CategoryID
+                
+            };
+            return Ok( await mediator.Send(new AddNewsCommandModel(context)));
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
+            
+
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
+            return Ok(await mediator.Send(new DeleteNewsCommandModel(id)));
         }
     }
 }
