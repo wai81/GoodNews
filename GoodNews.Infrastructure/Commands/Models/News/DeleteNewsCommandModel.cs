@@ -1,9 +1,7 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using MediatR;
 
-namespace GoodNews.Infrastructure.Commands.Models
+namespace GoodNews.Infrastructure.Commands.Models.News
 {
     public class DeleteNewsCommandModel : IRequest<bool>
     {

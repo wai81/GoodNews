@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using GoodNews.API.Models;
 using GoodNews.DB;
 using GoodNews.Infrastructure.Commands.Models;
+using GoodNews.Infrastructure.Commands.Models.News;
 using GoodNews.Infrastructure.Queries.Models;
+using GoodNews.Infrastructure.Queries.Models.News;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,10 +25,8 @@ namespace GoodNews.API.Controllers
     //[Authorize]
     public class NewsController : ControllerBase
     {
-        //private readonly ApplicationContext _context;
         private readonly IMediator mediator;
 
-        // public NewsController(ApplicationContext context)
         public NewsController(IMediator mediator)
         {
             this.mediator = mediator;
@@ -52,7 +52,6 @@ namespace GoodNews.API.Controllers
             
         }
 
-
         /// <summary>
         /// Get News by Id
         /// </summary>
@@ -70,7 +69,6 @@ namespace GoodNews.API.Controllers
                 //var newsCategory = await mediator.Send(new GetCategoryByIdQueryModel(newsDetails.CategoryID));
                 var newsComments = await mediator.Send(new GetNewsCommentsQueryModel(id));
                 newsComments = newsComments.OrderByDescending(c => c.Added);
-
                 var news = new NewsDetailsModel()
                 {
                     News = newsDetails,
@@ -84,9 +82,8 @@ namespace GoodNews.API.Controllers
                 Console.WriteLine(e);
                 throw;
             }
-
-           
         }
+      
         /// <summary>
         /// Get NewsID by CategoriID
         /// </summary>
@@ -100,7 +97,6 @@ namespace GoodNews.API.Controllers
             return Ok(await mediator.Send(new GetNewsByCategoryIdQueryModel(categoryId)));
         }
        
-
         /// <summary>
         /// 
         /// </summary>
@@ -131,7 +127,11 @@ namespace GoodNews.API.Controllers
             
 
         }
-
+        /// <summary>
+        /// Delete Articel News by Id
+        /// </summary>
+        /// <param name="id">id of news articles</param>
+        /// <returns></returns>
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)

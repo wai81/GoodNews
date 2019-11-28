@@ -1,16 +1,14 @@
-﻿using GoodNews.DB;
+﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using GoodNews.DB;
 using GoodNews.Infrastructure.Queries.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace GoodNews.Infrastructure.Queries.Handlers
+namespace GoodNews.Infrastructure.Queries.Handlers.News
 {
-    public class GetNewsQueryHandler : IRequestHandler<GetNewsQueryModel, IEnumerable<News>>
+    public class GetNewsQueryHandler : IRequestHandler<GetNewsQueryModel, IEnumerable<DB.News>>
     {
         private readonly ApplicationContext _context;
 
@@ -19,7 +17,7 @@ namespace GoodNews.Infrastructure.Queries.Handlers
             _context = context;
         }
 
-        public async Task<IEnumerable<News>> Handle(GetNewsQueryModel request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<DB.News>> Handle(GetNewsQueryModel request, CancellationToken cancellationToken)
         {
             var result = await _context.News.ToListAsync(cancellationToken: cancellationToken);
             return result;

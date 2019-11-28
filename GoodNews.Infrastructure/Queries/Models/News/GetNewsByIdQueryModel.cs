@@ -1,12 +1,10 @@
-﻿using GoodNews.DB;
+﻿using System;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using GoodNews.DB;
 
-namespace GoodNews.Infrastructure.Queries.Models
+namespace GoodNews.Infrastructure.Queries.Models.News
 {
-    public class GetNewsByIdQueryModel : IRequest<News>
+    public class GetNewsByIdQueryModel : IRequest<DB.News>
     {
         public Guid Id { get; }
         public Guid CategoryId { get; set; }

@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Queries\Handlers\Comments\" />
+    <Folder Include="Queries\Models\Comments\" />
     <Folder Include="Services\Queries\" />
   </ItemGroup>
 

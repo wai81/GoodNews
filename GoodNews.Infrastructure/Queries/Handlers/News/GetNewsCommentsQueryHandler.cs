@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GoodNews.DB;
-using GoodNews.Infrastructure.Queries.Models;
+using GoodNews.Infrastructure.Queries.Models.News;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace GoodNews.Infrastructure.Queries.Handlers
+namespace GoodNews.Infrastructure.Queries.Handlers.News
 {
     class GetNewsCommentsQueryHandler : IRequestHandler<GetNewsCommentsQueryModel, IEnumerable<NewsComment>>
     {

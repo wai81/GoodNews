@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using GoodNews.DB;
 using MediatR;
 
-namespace GoodNews.Infrastructure.Queries.Models
+namespace GoodNews.Infrastructure.Queries.Models.News
 {
     public class GetNewsCommentsQueryModel : IRequest<IEnumerable<NewsComment>>
     {
