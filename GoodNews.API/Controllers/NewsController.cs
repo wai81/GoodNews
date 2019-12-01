@@ -3,10 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using GoodNews.API.Models;
 using GoodNews.DB;
-using GoodNews.Infrastructure.Commands.Models;
-using GoodNews.Infrastructure.Commands.Models.News;
-using GoodNews.Infrastructure.Queries.Models;
-using GoodNews.Infrastructure.Queries.Models.News;
+using GoodNews.Infrastructure.Commands.Models.Post;
+using GoodNews.Infrastructure.Queries.Models.Comments;
+using GoodNews.Infrastructure.Queries.Models.Post;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +18,7 @@ namespace GoodNews.API.Controllers
     /// <summary>
     /// NewsController
     /// </summary>
-   
+
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize]
@@ -67,7 +66,7 @@ namespace GoodNews.API.Controllers
             {
                 var newsDetails = await mediator.Send(new GetNewsByIdQueryModel(id));
                 //var newsCategory = await mediator.Send(new GetCategoryByIdQueryModel(newsDetails.CategoryID));
-                var newsComments = await mediator.Send(new GetNewsCommentsQueryModel(id));
+                var newsComments = await mediator.Send(new GetCommentsByIdNewsQueryModel(id));
                 newsComments = newsComments.OrderByDescending(c => c.Added);
                 var news = new NewsDetailsModel()
                 {

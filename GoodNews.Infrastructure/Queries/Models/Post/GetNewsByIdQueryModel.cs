@@ -1,10 +1,12 @@
 ﻿using System;
-using MediatR;
+using System.Collections.Generic;
+using System.Text;
 using GoodNews.DB;
+using MediatR;
 
-namespace GoodNews.Infrastructure.Queries.Models.News
+namespace GoodNews.Infrastructure.Queries.Models.Post
 {
-    public class GetNewsByIdQueryModel : IRequest<DB.News>
+    public class GetNewsByIdQueryModel : IRequest<News>
     {
         public Guid Id { get; }
         public Guid CategoryId { get; set; }
@@ -19,5 +21,6 @@ namespace GoodNews.Infrastructure.Queries.Models.News
             CategoryId = categoryId;
             return this;
         }
+
     }
 }

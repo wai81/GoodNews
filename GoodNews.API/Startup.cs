@@ -4,7 +4,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GoodNews.API.Filters;
 using GoodNews.DB;
+using GoodNews.Infrastructure.Service.Parser;
+using Hangfire;
+using Hangfire.SqlServer;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -39,6 +43,7 @@ namespace GoodNews.API
             services.AddDbContext<ApplicationContext>(options =>
                 // options.UseSqlServer(connection));
                 options.UseSqlServer(connection, c => c.MigrationsAssembly("GoodNews.DB")));
+            
             //add Identity
             services.AddIdentity<User, IdentityRole>(opts =>
             {
@@ -51,7 +56,9 @@ namespace GoodNews.API
 
             }).AddEntityFrameworkStores<ApplicationContext>()
                 .AddDefaultTokenProviders();
-           
+            //add Servise Parser News from URL
+            services.AddTransient<INewsFromUrl, NewsFromUrl>();
+            services.AddTransient<IParserSevice, ParserService>();
             //add JWT
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();// => Удаляем claims по умолчанию
             services.AddAuthentication(opt => //JwtBearerDefaults.AuthenticationScheme
@@ -82,6 +89,10 @@ namespace GoodNews.API
             services.AddMediatR(assembly);
             services.AddTransient<IMediator, Mediator>();
             //services.AddTransient<INewsGetterService, NewsGetterService>();
+            
+            // Add Hangfire services.
+            services.AddHangfire(configuration =>
+                configuration.UseSqlServerStorage(connection, new SqlServerStorageOptions()));
 
             //add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -120,6 +131,18 @@ namespace GoodNews.API
             });
 
             //app.UseHttpsRedirection();
+            app.UseHangfireServer();
+            app.UseHangfireDashboard("/api/admin/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new HangfireAuthorizationFilter() }
+            });
+
+            var service = app.ApplicationServices.GetService<INewsFromUrl>();
+
+            RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://news.tut.by/rss/all.rss"),Cron.MinuteInterval(10));
+            //RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"http://s13.ru/rss"), Cron.Minutely());
+            //RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://people.onliner.by/feed"), Cron.Minutely());
+
             app.UseMvc(routes=>
             {
                 routes.MapRoute(

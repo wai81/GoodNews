@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\Models\GoodNews.DB.csproj" />
+    <ProjectReference Include="..\GoodNews.DB\GoodNews.DB.csproj" />
   </ItemGroup>
 
 </Project>

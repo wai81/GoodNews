@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoodNews.DB.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20191116230423_NewMigration")]
-    partial class NewMigration
+    [Migration("20191130184441_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

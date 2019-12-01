@@ -8,16 +8,13 @@ namespace GoodNews.Infrastructure.Commands.Handlers.Categories
 {
     public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommandModel, bool>
     {
-
         private readonly ApplicationContext _context;
         public DeleteCategoryCommandHandler(ApplicationContext context)
         {
             _context = context;
         }
-
         public async Task<bool> Handle(DeleteCategoryCommandModel request, CancellationToken cancellationToken)
         {
-
             var category = await _context.Categories.FindAsync(request.Id);
             if (category == null)
             {
