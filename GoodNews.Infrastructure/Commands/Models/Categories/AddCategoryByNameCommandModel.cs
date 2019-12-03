@@ -14,6 +14,6 @@ namespace GoodNews.Infrastructure.Commands.Models.Categories
         }
 
        public Guid Id { get; set; }
-       public string Name { get; set; }
+       public string Name { get; }
     }
 }

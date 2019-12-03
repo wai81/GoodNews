@@ -42,8 +42,6 @@ namespace GoodNews.Infrastructure.Service.Parser
                     if (!string.IsNullOrEmpty(description))
                     {
                         
-                        var categoryId =  mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
-                        
                         news.Add(new News()
                         {
                             Title = postNews.Title.Text.Replace("&nbsp;", string.Empty),
@@ -51,7 +49,7 @@ namespace GoodNews.Infrastructure.Service.Parser
                             LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
                             NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
                                 .Replace("Читать далее…", ""),
-                            //Category = category,
+                            CategoryID = mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault()?.Name)),
                             NewsDescription = description
 
                         });

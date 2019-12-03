@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GoodNews.DB
 {
@@ -14,7 +15,7 @@ namespace GoodNews.DB
         public string NewsDescription { get; set; }
         public string ImageUrl { get; set; }
         public string LinkURL { get; set; }
-        public Guid CategoryID { get; set; }
+        public Task<Guid> CategoryID { get; set; }
         public virtual Category Category { get; set; }
         ///public ICollection<Category> Category { get; set; }
         public virtual ICollection<NewsComment> NewsComments { get; set; }
