@@ -138,8 +138,8 @@ namespace GoodNews.API
             });
 
             var service = app.ApplicationServices.GetService<INewsFromUrl>();
-
-            RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://news.tut.by/rss/all.rss"),Cron.MinuteInterval(10));
+            service.GetNewsUrl(@"https://news.tut.by/rss/all.rss");
+            //RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://news.tut.by/rss/all.rss"), Cron.MinuteInterval(10));
             //RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"http://s13.ru/rss"), Cron.Minutely());
             //RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://people.onliner.by/feed"), Cron.Minutely());
 

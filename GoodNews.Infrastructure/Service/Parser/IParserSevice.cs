@@ -6,6 +6,6 @@ namespace GoodNews.Infrastructure.Service.Parser
 {
     public interface IParserSevice
     {
-        Task<IEnumerable<News>> GetNewsFromUrlAsync(string url);
+        Task<List<News>> GetNewsFromUrlAsync(string url);
     }
 }

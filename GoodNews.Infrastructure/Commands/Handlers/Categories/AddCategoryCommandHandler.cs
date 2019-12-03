@@ -7,14 +7,14 @@ using MediatR;
 
 namespace GoodNews.Infrastructure.Commands.Handlers.Categories
 {
-    public class AddCategoryCommandHandler : IRequestHandler<AddCategoriCommandModel, bool>
+    public class AddCategoryCommandHandler : IRequestHandler<AddCategoryCommandModel, bool>
     {
         private readonly ApplicationContext _context;
         public AddCategoryCommandHandler(ApplicationContext context)
         {
             _context = context;
         }
-        public async Task<bool> Handle(AddCategoriCommandModel request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(AddCategoryCommandModel request, CancellationToken cancellationToken)
         {
             await _context.Categories.AddAsync(request.Category, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);

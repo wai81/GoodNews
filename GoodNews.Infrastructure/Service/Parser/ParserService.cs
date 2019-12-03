@@ -26,13 +26,7 @@ namespace GoodNews.Infrastructure.Service.Parser
         {
             this.mediator = mediator;
         }
-        public async Task<bool> AddRangeAsync(IEnumerable<News> objects)
-        {
-            await mediator.Send(new AddRangeNewsCommandModel(objects));
-            return true;
-        }
-      
-        public async Task<IEnumerable<News>> GetNewsFromUrlAsync(string url)
+      public async Task<List<News>> GetNewsFromUrlAsync(string url)
         {
             List<News> news = new List<News>();
             //List<Category> category = new List<Category>();
@@ -44,21 +38,16 @@ namespace GoodNews.Infrastructure.Service.Parser
             {
                 foreach (var postNews in feed.Items)
                 {
-                    string categoryName = postNews.Categories.FirstOrDefault().Name;
-                    var category = await mediator.Send(new GetCategoryByNameQueryModel(categoryName));
-                    if (category == null)
-                    {
-                       await mediator.Send(new AddCategoriCommandModel(
-                            new Category()
-                            {
-                                Name = categoryName
-                            }));
-                        category = await mediator.Send(new GetCategoryByNameQueryModel(categoryName));
-                    }
-                    
                     var description = GetDescription(postNews.Links.FirstOrDefault().Uri.ToString());
                     if (!string.IsNullOrEmpty(description))
                     {
+                        var categoryName = postNews.Categories.FirstOrDefault().Name;
+                        var categoryId = await mediator.Send(new AddCategoryByNameCommandModel(new Category()
+                            {
+                                Name = categoryName
+                            }
+                        ));
+                        
                         news.Add(new News()
                         {
                             Title = postNews.Title.Text.Replace("&nbsp;", string.Empty),
@@ -66,7 +55,7 @@ namespace GoodNews.Infrastructure.Service.Parser
                             LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
                             NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
                                 .Replace("Читать далее…", ""),
-                            Category = category,
+                            //Category = category,
                             NewsDescription = description
 
                         });
@@ -123,24 +112,18 @@ namespace GoodNews.Infrastructure.Service.Parser
             string node_url = null;
             string text = null;
 
-            if (url.IndexOf("/s13.ru/", StringComparison.Ordinal) != 0)
+            if (url.Contains("s13.ru/"))
             {
                 node_url = "//html/body/div/div/div/div/ul/li/div/div";
             }
-            else
+            if (url.Contains("tut.by/"))
             {
-                if (url.IndexOf(".tut.by/", StringComparison.Ordinal) != 0)
-                {
                     node_url= "//html/body/div/div/div/div/div/div/div/div/p";
-                }
-                else
-                {
-                    if (url.IndexOf(".onliner.by/", StringComparison.Ordinal) != 0)
-                    {
-                        node_url = "//html/body/div/div/div/div/div/div/div/div/div/div/div/div/div/div/p";
-                    }
-                }
             }
+            if (url.Contains("onliner.by/"))
+                node_url = "//html/body/div/div/div/div/div/div/div/div/div/div/div/div/div/div/p";
+            
+            
             var web = new HtmlWeb();
             var doc = web.Load(url);
             var node = doc.DocumentNode.SelectNodes(node_url);
