@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace GoodNews.DB
@@ -9,5 +10,6 @@ namespace GoodNews.DB
       public string Name { get; set; }
       public ICollection<News> News { get; set; }
 
+      
     }
 }

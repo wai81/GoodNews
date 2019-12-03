@@ -8,11 +8,12 @@ namespace GoodNews.Infrastructure.Commands.Models.Categories
 {
     public class AddCategoryByNameCommandModel : IRequest<Guid>
     {
-        public Category Category { get; }
-        public AddCategoryByNameCommandModel(Category category)
+        public AddCategoryByNameCommandModel(string name)
         {
-            Category = category;
+            Name = name;
         }
 
+       public Guid Id { get; set; }
+       public string Name { get; set; }
     }
 }

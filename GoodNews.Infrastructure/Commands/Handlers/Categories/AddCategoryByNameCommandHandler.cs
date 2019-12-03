@@ -22,14 +22,13 @@ namespace GoodNews.Infrastructure.Commands.Handlers.Categories
 
         public async Task<Guid> Handle(AddCategoryByNameCommandModel request, CancellationToken cancellationToken)
         {
-            var result = await _context.Categories.Where(predicate: cn => cn.Name.Equals(request.Category.Name)).FirstOrDefaultAsync(cancellationToken);
+            var result = await _context.Categories.Where(predicate: cn => cn.Name.Equals(request.Name)).FirstOrDefaultAsync(cancellationToken);
             if (result == null)
             {
-                _context.Categories.Add(request.Category);
-                _context.SaveChanges();
-                
+               result = new Category{ Name = request.Name};
+               await _context.AddAsync(result);
+               await _context.SaveChangesAsync(cancellationToken);
             }
-            result = await _context.Categories.Where(predicate: cn => cn.Name.Equals(request.Category.Name)).FirstOrDefaultAsync(cancellationToken);
             return result.Id;
         }
     }

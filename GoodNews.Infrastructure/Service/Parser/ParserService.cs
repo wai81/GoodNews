@@ -26,7 +26,7 @@ namespace GoodNews.Infrastructure.Service.Parser
         {
             this.mediator = mediator;
         }
-      public async Task<List<News>> GetNewsFromUrlAsync(string url)
+      public IEnumerable<News> GetNewsFromUrlAsync(string url)
         {
             List<News> news = new List<News>();
             //List<Category> category = new List<Category>();
@@ -41,12 +41,8 @@ namespace GoodNews.Infrastructure.Service.Parser
                     var description = GetDescription(postNews.Links.FirstOrDefault().Uri.ToString());
                     if (!string.IsNullOrEmpty(description))
                     {
-                        var categoryName = postNews.Categories.FirstOrDefault().Name;
-                        var categoryId = await mediator.Send(new AddCategoryByNameCommandModel(new Category()
-                            {
-                                Name = categoryName
-                            }
-                        ));
+                        
+                        var categoryId =  mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
                         
                         news.Add(new News()
                         {

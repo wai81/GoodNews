@@ -23,9 +23,8 @@ namespace GoodNews.Infrastructure.Service.Parser
 
         public async Task<bool> GetNewsUrl(string url)
         {
-            List<News> news = new List<News>();
             var newsAll = await mediator.Send(new GetNewsQueryModel());
-            news = await parser.GetNewsFromUrlAsync(url);
+            var news = parser.GetNewsFromUrlAsync(url);
             foreach (var n in news)
             {
                 if (newsAll.Count(c => c.LinkURL.Equals(n.LinkURL)) == 0)
