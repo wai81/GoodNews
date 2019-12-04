@@ -6,14 +6,14 @@ using MediatR;
 
 namespace GoodNews.Infrastructure.Commands.Models.Categories
 {
-    public class AddCategoryByNameCommandModel : IRequest<Guid>
+    public class AddCategoryByNameCommandModel : IRequest<Category>
     {
+        public string Name { get; }
         public AddCategoryByNameCommandModel(string name)
         {
             Name = name;
         }
 
-       public Guid Id { get; set; }
-       public string Name { get; }
+      
     }
 }

@@ -19,7 +19,7 @@ namespace GoodNews.Infrastructure.Queries.Handlers.News
         }
         public async Task<IEnumerable<DB.News>> Handle(GetNewsByCategoryIdQueryModel request, CancellationToken cancellationToken)
         {
-            var result = await _context.News.Where(c => c.CategoryID.Equals(request.CategoryId)).ToListAsync(cancellationToken);
+            var result = await _context.News.Where(c => c.CategoryId.Equals(request.CategoryId)).ToListAsync(cancellationToken);
             return result;
         }
     }

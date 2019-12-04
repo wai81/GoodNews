@@ -1,18 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Queries\Handlers\Comments\" />
-    <Folder Include="Queries\Models\Comments\" />
-    <Folder Include="Services\Queries\" />
+    <Compile Remove="Queries\Handlers\Comments\**" />
+    <Compile Remove="Queries\Models\Comments\**" />
+    <Compile Remove="Services\**" />
+    <EmbeddedResource Remove="Queries\Handlers\Comments\**" />
+    <EmbeddedResource Remove="Queries\Models\Comments\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Queries\Handlers\Comments\**" />
+    <None Remove="Queries\Models\Comments\**" />
+    <None Remove="Services\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.16" />
     <PackageReference Include="MediatR" Version="7.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="4.6.0" />
   </ItemGroup>
 
   <ItemGroup>

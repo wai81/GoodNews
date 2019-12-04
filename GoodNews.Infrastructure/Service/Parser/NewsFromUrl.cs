@@ -1,36 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using GoodNews.DB;
-using GoodNews.Infrastructure.Commands.Models.Post;
-using GoodNews.Infrastructure.Queries.Models.Post;
+using GoodNews.Infrastructure.Commands.Models.News;
+using GoodNews.Infrastructure.Queries.Models;
 using MediatR;
 
 namespace GoodNews.Infrastructure.Service.Parser
 {
     public class NewsFromUrl : INewsFromUrl
     {
-        private readonly IMediator mediator;
-        private readonly IParserSevice parser;
+        private readonly IMediator _mediator;
+        private readonly IParserSevice _parser;
 
         public NewsFromUrl(IMediator mediator, IParserSevice parserSevice)
         {
-            this.mediator = mediator;
-            parser = parserSevice;
+            _mediator = mediator;
+            _parser = parserSevice;
         }
 
         public async Task<bool> GetNewsUrl(string url)
         {
-            List<News> news = new List<News>();
-            var newsAll = await mediator.Send(new GetNewsQueryModel());
-            news = (List<News>) await parser.GetNewsFromUrlAsync(url);
+            IEnumerable<News> news = new List<News>();
+            news = _parser.GetNewsFromUrl(url);
+
+            var newsAll = await _mediator.Send(new GetNewsQueryModel());
+            
             foreach (var n in news)
             {
                 if (newsAll.Count(c => c.LinkURL.Equals(n.LinkURL)) == 0)
                 {
-                   await mediator.Send(new AddNewsCommandModel(n));
+                    _mediator.Send(new AddNewsCommandModel(n));
                 }
             }
             return true;

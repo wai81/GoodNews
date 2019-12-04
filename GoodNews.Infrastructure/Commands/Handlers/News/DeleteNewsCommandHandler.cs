@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using GoodNews.DB;
 using GoodNews.Infrastructure.Commands.Models;
+using GoodNews.Infrastructure.Commands.Models.Categories;
 using GoodNews.Infrastructure.Commands.Models.News;
 using MediatR;
 
@@ -19,7 +20,7 @@ namespace GoodNews.Infrastructure.Commands.Handlers.News
         public async Task<bool> Handle(DeleteCategoryCommandModel request, CancellationToken cancellationToken)
         {
 
-            var news = await _context.News.FindAsync(request.Id);
+            var news = _context.News.Find(request.Id);
             if (news == null)
             {
                 return false;

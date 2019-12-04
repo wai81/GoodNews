@@ -36,7 +36,7 @@ namespace GoodNews.DB.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("CategoryID");
+                    b.Property<Guid>("CategoryId");
 
                     b.Property<DateTime>("DateCreate");
 
@@ -52,7 +52,7 @@ namespace GoodNews.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryID");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("News");
                 });
@@ -250,7 +250,7 @@ namespace GoodNews.DB.Migrations
                 {
                     b.HasOne("GoodNews.DB.Category", "Category")
                         .WithMany("News")
-                        .HasForeignKey("CategoryID")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

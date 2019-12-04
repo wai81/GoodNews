@@ -2,17 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Syndication;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
 using System.Xml;
 using GoodNews.DB;
 using GoodNews.Infrastructure.Commands.Models.Categories;
-using GoodNews.Infrastructure.Commands.Models.Post;
-using GoodNews.Infrastructure.Queries.Models.Categories;
 using HtmlAgilityPack;
-using HtmlAgilityPack.CssSelectors.NetCore;
 using MediatR;
 
 namespace GoodNews.Infrastructure.Service.Parser
@@ -20,13 +14,13 @@ namespace GoodNews.Infrastructure.Service.Parser
     public class ParserService : IParserSevice
 
     {
-        private readonly IMediator mediator;
+        private readonly IMediator _mediator;
 
         public ParserService(IMediator mediator)
         {
-            this.mediator = mediator;
+            _mediator = mediator;
         }
-      public IEnumerable<News> GetNewsFromUrlAsync(string url)
+      public IEnumerable<News> GetNewsFromUrl(string url)
         {
             List<News> news = new List<News>();
             //List<Category> category = new List<Category>();
@@ -41,17 +35,15 @@ namespace GoodNews.Infrastructure.Service.Parser
                     var description = GetDescription(postNews.Links.FirstOrDefault().Uri.ToString());
                     if (!string.IsNullOrEmpty(description))
                     {
-                        
-                        news.Add(new News()
+                       news.Add(new News()
                         {
                             Title = postNews.Title.Text.Replace("&nbsp;", string.Empty),
                             DateCreate = postNews.PublishDate.DateTime,
                             LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
                             NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
                                 .Replace("Читать далее…", ""),
-                            CategoryID = mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault()?.Name)),
+                            Category = _mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name)).Result,
                             NewsDescription = description
-
                         });
                     }
                 }
@@ -135,7 +127,10 @@ namespace GoodNews.Infrastructure.Service.Parser
                     }
                 }
 
-                var mas = new string[] { "&ndash; ", "&ndash;", "&mdash; ", "&mdash;", "&nbsp; ", "&nbsp; ", "&nbsp;", "&laquo; ", "&laquo;", "&raquo; ", "&raquo;", "&quot;" };
+                var mas = new string[] { "&ndash; ", "&ndash;", "&mdash; ",
+                    "&mdash;", "&nbsp; ", "&nbsp; ", "&nbsp;", "&laquo; ",
+                    "&laquo;", "&raquo; ", "&raquo;", "&quot;",
+                    "\r\n" , "\r\nЧитайте также:\r\nБиблиотека Onliner: лучшие материалы и циклы статей\r\nНаш канал в Telegram. Присоединяйтесь!\r\nБыстрая связь с редакцией: читайте паблик-чат Onliner и пишите нам в Viber!\r\nПерепечатка текста и фотографий Onliner без разрешения редакции запрещена." };
 
                 foreach (var item in mas)
                 {
@@ -145,9 +140,9 @@ namespace GoodNews.Infrastructure.Service.Parser
                 Regex.Replace(text, "Читать далее…", "");
                 Regex.Replace(text, "<.*?>", "");
                 Regex.Replace(text, "  ", "");
-                Regex.Replace(text, "Библиотека Onliner: лучшие материалы и циклы статей", "");
-                Regex.Replace(text, "Наш канал в Telegram. Присоединяйтесь!", "");
-                Regex.Replace(text, "Быстрая связь с редакцией: читайте паблик-чат Onliner и пишите нам в Viber!", "");
+                Regex.Replace(text, "\r\nЧитайте также:\r\nБиблиотека Onliner: лучшие материалы и циклы статей\r\nНаш канал в Telegram. Присоединяйтесь!\r\nБыстрая связь с редакцией: читайте паблик-чат Onliner и пишите нам в Viber!\r\nПерепечатка текста и фотографий Onliner без разрешения редакции запрещена.", "");
+                //Regex.Replace(text, "Наш канал в Telegram. Присоединяйтесь!", "");
+                //Regex.Replace(text, "Быстрая связь с редакцией: читайте паблик-чат Onliner и пишите нам в Viber!", "");
                 return text;
             }
             return text;

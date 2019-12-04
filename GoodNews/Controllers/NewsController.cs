@@ -48,7 +48,7 @@ namespace GoodNews.Controllers
                                         Include("User").Include("News").ToListAsync();
             var comments = commentList.Where(n => n.News.Id.Equals(id)).
                                                     OrderByDescending(n => n.Added);
-            var category = await uow.CategoryRepository.GetByIdAsync(news.CategoryID);
+            var category = await uow.CategoryRepository.GetByIdAsync(news.CategoryId);
 
             if (news == null)
             {
@@ -83,7 +83,7 @@ namespace GoodNews.Controllers
                 await uow.SaveAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryID"] = new SelectList(uow.CategoryRepository.GetAll(), "Id", "Name", news.CategoryID);
+            ViewData["CategoryID"] = new SelectList(uow.CategoryRepository.GetAll(), "Id", "Name", news.CategoryId);
             return View(news);
         }
 
@@ -100,7 +100,7 @@ namespace GoodNews.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryID"] = new SelectList(uow.CategoryRepository.GetAll(), "Id", "Name", news.CategoryID);
+            ViewData["CategoryID"] = new SelectList(uow.CategoryRepository.GetAll(), "Id", "Name", news.CategoryId);
             return View(news);
         }
 
@@ -132,7 +132,7 @@ namespace GoodNews.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryID"] = new SelectList(uow.CategoryRepository.GetAll(), "Id", "Name", news.CategoryID);
+            ViewData["CategoryID"] = new SelectList(uow.CategoryRepository.GetAll(), "Id", "Name", news.CategoryId);
             return View(news);
         }
         

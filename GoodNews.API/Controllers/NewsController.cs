@@ -114,7 +114,7 @@ namespace GoodNews.API.Controllers
                 NewsDescription = news.NewsDescription,
                 LinkURL = news.LinkURL,
                 ImageUrl = news.ImageUrl,
-                CategoryID = news.CategoryID
+                CategoryId = news.CategoryID
                 
             };
             return Ok( await mediator.Send(new AddNewsCommandModel(context)));

@@ -177,14 +177,14 @@ namespace GoodNews.DB.Migrations
                     NewsDescription = table.Column<string>(nullable: true),
                     ImageUrl = table.Column<string>(nullable: true),
                     LinkURL = table.Column<string>(nullable: true),
-                    CategoryID = table.Column<Guid>(nullable: false)
+                    CategoryId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_News", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_News_Categories_CategoryID",
-                        column: x => x.CategoryID,
+                        name: "FK_News_Categories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -258,9 +258,9 @@ namespace GoodNews.DB.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_News_CategoryID",
+                name: "IX_News_CategoryId",
                 table: "News",
-                column: "CategoryID");
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NewsComments_NewsId",

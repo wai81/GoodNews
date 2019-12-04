@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GoodNews.DB;
+using GoodNews.Infrastructure.Service.Parser;
+using Hangfire;
+using Hangfire.SqlServer;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -82,7 +85,9 @@ namespace GoodNews.API
             services.AddMediatR(assembly);
             services.AddTransient<IMediator, Mediator>();
             //services.AddTransient<INewsGetterService, NewsGetterService>();
-
+            //add Servise Parser News from URL
+            services.AddTransient<INewsFromUrl, NewsFromUrl>();
+            services.AddTransient<IParserSevice, ParserService>();
             //add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             //add Swagger
@@ -94,7 +99,10 @@ namespace GoodNews.API
                     Version = "v1"
                 });
             });
-          
+            // Add Hangfire services.
+            services.AddHangfire(configuration =>
+                configuration.UseSqlServerStorage(connection, new SqlServerStorageOptions()));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -120,7 +128,7 @@ namespace GoodNews.API
             });
 
             //app.UseHttpsRedirection();
-<<<<<<< HEAD
+
             app.UseHangfireServer();
             app.UseHangfireDashboard("/api/admin/hangfire", new DashboardOptions
             {
@@ -129,12 +137,10 @@ namespace GoodNews.API
 
             var service = app.ApplicationServices.GetService<INewsFromUrl>();
             service.GetNewsUrl(@"https://news.tut.by/rss/all.rss");
-            //RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://news.tut.by/rss/all.rss"), Cron.MinuteInterval(10));
-            //RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"http://s13.ru/rss"), Cron.Minutely());
-            //RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://people.onliner.by/feed"), Cron.Minutely());
+            RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://news.tut.by/rss/all.rss"), Cron.MinuteInterval(10));
+            RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"http://s13.ru/rss"), Cron.MinuteInterval(15));
+            RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://people.onliner.by/feed"), Cron.MinuteInterval(20));
 
-=======
->>>>>>> parent of 307c6cc... add servis
             app.UseMvc(routes=>
             {
                 routes.MapRoute(

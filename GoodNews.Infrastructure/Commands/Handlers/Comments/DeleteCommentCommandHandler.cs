@@ -1,30 +1,28 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using GoodNews.DB;
-using GoodNews.Infrastructure.Commands.Models;
-using GoodNews.Infrastructure.Commands.Models.News;
+using GoodNews.Infrastructure.Commands.Models.Comments;
 using MediatR;
 
-namespace GoodNews.Infrastructure.Commands.Handlers.News
+namespace GoodNews.Infrastructure.Commands.Handlers.Comments
 {
-    public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommandModel, bool>
+    public class DeleteCommentCommandHandler : IRequestHandler<DeleteCommentCommandModel, bool>
     {
 
         private readonly ApplicationContext _context;
-        public DeleteCategoryCommandHandler(ApplicationContext context)
+        public DeleteCommentCommandHandler(ApplicationContext context)
         {
             _context = context;
         }
 
-        public async Task<bool> Handle(DeleteCategoryCommandModel request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteCommentCommandModel request, CancellationToken cancellationToken)
         {
-
-            var news = await _context.News.FindAsync(request.Id);
-            if (news == null)
+            var comment = _context.NewsComments.Find(request.Id);
+            if (comment == null)
             {
                 return false;
             }
-            _context.News.Remove(news);
+            _context.NewsComments.Remove(comment);
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }

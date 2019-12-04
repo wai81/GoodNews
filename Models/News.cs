@@ -15,7 +15,7 @@ namespace GoodNews.DB
         public string NewsDescription { get; set; }
         public string ImageUrl { get; set; }
         public string LinkURL { get; set; }
-        public Task<Guid> CategoryID { get; set; }
+        public Guid CategoryId { get; set; }
         public virtual Category Category { get; set; }
         ///public ICollection<Category> Category { get; set; }
         public virtual ICollection<NewsComment> NewsComments { get; set; }
