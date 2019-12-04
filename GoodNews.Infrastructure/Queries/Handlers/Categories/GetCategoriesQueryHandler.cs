@@ -1,14 +1,15 @@
-﻿using MediatR;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using GoodNews.DB;
+using GoodNews.Infrastructure.Queries.Models;
 using GoodNews.Infrastructure.Queries.Models.Categories;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace GoodNews.Infrastructure.Queries.Handlers.Categories
 {
-    class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQueryModel, IEnumerable<Category>>
+    public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQueryModel, IEnumerable<Category>>
     {
         private readonly ApplicationContext _context;
 
@@ -23,5 +24,4 @@ namespace GoodNews.Infrastructure.Queries.Handlers.Categories
             return result;
         }
     }
-
 }

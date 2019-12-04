@@ -65,7 +65,7 @@ namespace ServiceParser
                     {
                         news.Add(new News()
                         {
-                            Title = postNews.Title.Text.Replace("&nbsp;", string.Empty),
+                            Title = postNews.Title.Text,
                             DateCreate = postNews.PublishDate.DateTime,
                             LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
                             NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)

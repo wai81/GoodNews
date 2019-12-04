@@ -2,10 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using GoodNews.DB;
+using GoodNews.Infrastructure.Commands.Models.Categories;
 using GoodNews.Infrastructure.Commands.Models.Comments;
 using MediatR;
 
-namespace GoodNews.Infrastructure.Commands.Handlers.Comments
+namespace GoodNews.Infrastructure.Commands.Handlers.News
 {
     public class AddCommentCommandHandler : IRequestHandler<AddCommentCommandModel, Guid>
     {

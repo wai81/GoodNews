@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using GoodNews.API.Models;
 using GoodNews.DB;
 using GoodNews.Infrastructure.Commands.Models.Comments;
-using GoodNews.Infrastructure.Queries.Models.Comments;
-using GoodNews.Infrastructure.Queries.Models.Post;
+using GoodNews.Infrastructure.Queries.Models.News;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -48,7 +48,7 @@ namespace GoodNews.API.Controllers
            {
                var newsDetails = await mediator.Send(new GetNewsByIdQueryModel(id));
                //var newsCategory = await mediator.Send(new GetCategoryByIdQueryModel(newsDetails.CategoryID));
-               var newsComments = await mediator.Send(new GetCommentsByIdNewsQueryModel(id));
+               var newsComments = await mediator.Send(new GetNewsCommentsQueryModel(id));
                newsComments = newsComments.OrderByDescending(c => c.Added);
                var news = new NewsDetailsModel()
                {

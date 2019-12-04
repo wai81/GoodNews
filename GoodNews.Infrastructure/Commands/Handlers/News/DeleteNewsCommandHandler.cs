@@ -1,13 +1,15 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using GoodNews.DB;
-using GoodNews.Infrastructure.Commands.Models.Categories;
+using GoodNews.Infrastructure.Commands.Models;
+using GoodNews.Infrastructure.Commands.Models.News;
 using MediatR;
 
-namespace GoodNews.Infrastructure.Commands.Handlers.Post
+namespace GoodNews.Infrastructure.Commands.Handlers.News
 {
     public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommandModel, bool>
     {
+
         private readonly ApplicationContext _context;
         public DeleteCategoryCommandHandler(ApplicationContext context)
         {
@@ -16,6 +18,7 @@ namespace GoodNews.Infrastructure.Commands.Handlers.Post
 
         public async Task<bool> Handle(DeleteCategoryCommandModel request, CancellationToken cancellationToken)
         {
+
             var news = await _context.News.FindAsync(request.Id);
             if (news == null)
             {
