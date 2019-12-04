@@ -137,10 +137,20 @@ namespace GoodNews.API
 
             var service = app.ApplicationServices.GetService<INewsFromUrl>();
             service.GetNewsUrl(@"https://news.tut.by/rss/all.rss");
-            RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://news.tut.by/rss/all.rss"), Cron.MinuteInterval(10));
-            RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"http://s13.ru/rss"), Cron.MinuteInterval(15));
-            RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://people.onliner.by/feed"), Cron.MinuteInterval(20));
-
+            //RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://news.tut.by/rss/all.rss"), Cron.MinuteInterval(10));
+            //RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"http://s13.ru/rss"), Cron.MinuteInterval(15));
+            //RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://people.onliner.by/feed"), Cron.MinuteInterval(20));
+            //var client_HF = new BackgroundJobClient();
+            //client_HF.Enqueue(() => service.GetNewsUrl(@"https://people.onliner.by/feed"));
+            //client_HF.Schedule
+            
+            //    RecurringJob.AddOrUpdate(() =>
+            //{
+            //    BackgroundJob.Enqueue(() => service.GetNewsUrl(@"https://people.onliner.by/feed"));
+            //    BackgroundJob.Enqueue(() => service.GetNewsUrl(@"https://news.tut.by/rss/all.rss"));
+            //    BackgroundJob.Enqueue(() => service.GetNewsUrl(@"http://s13.ru/rss"));
+            //    }
+            //);
             app.UseMvc(routes=>
             {
                 routes.MapRoute(

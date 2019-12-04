@@ -48,11 +48,11 @@ namespace ServiceParser
 
         }
 
-        public IEnumerable<News> GetArticlesFrom_Onlainer(string url)
+        public IEnumerable<News> GetNewsFromUrl(string url)
         {
             List<News> news = new List<News>();
+            //List<Category> category = new List<Category>();
 
-            List<Category> categories = new List<Category>();
             XmlReader xmlReader = XmlReader.Create(url);
             SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
 
@@ -60,69 +60,7 @@ namespace ServiceParser
             {
                 foreach (var postNews in feed.Items)
                 {
-                    var description = GetDescription(postNews.Links.FirstOrDefault().Uri.ToString(), node_ONLAINER);
-                    if (!string.IsNullOrEmpty(description))
-                    {
-                        news.Add(new News()
-                        {
-                            Title = postNews.Title.Text,
-                            DateCreate = postNews.PublishDate.DateTime,
-                            LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
-                            NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
-                                .Replace("Читать далее…", ""),
-                            Category = _uow.GetCategorty(postNews.Categories.FirstOrDefault().Name),
-                            NewsDescription = description
-
-                        });
-                    }
-                }
-            }
-            return news;
-        }
-
-      
-
-        public IEnumerable<News> GetArticlesFrom_S13(string url)
-        {
-            List<News> news = new List<News>();
-            List<Category> categories = new List<Category>();
-            XmlReader xmlReader = XmlReader.Create(url);
-            SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
-
-            if (feed != null)
-            {
-                foreach (var postNews in feed.Items)
-                {
-                    var description = GetDescription(postNews.Links.FirstOrDefault().Uri.ToString(), node_S13);
-                    if (!string.IsNullOrEmpty(description))
-                    {
-                        news.Add(new News()
-                        {
-                            Title = postNews.Title.Text.Replace("&nbsp;", string.Empty),
-                            DateCreate = postNews.PublishDate.DateTime,
-                            LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
-                            NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty).Replace("Читать далее…", ""),
-                            Category = _uow.GetCategorty(postNews.Categories.FirstOrDefault().Name),
-                            NewsDescription = description
-                        });
-                    }
-                }
-            }
-            return news;
-        }
-
-        public IEnumerable<News> GetArticlesFrom_TUT(string url)
-        {
-            List<News> news = new List<News>();
-            List<Category> categories = new List<Category>();
-            XmlReader xmlReader = XmlReader.Create(url);
-            SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
-
-            if (feed != null)
-            {
-                foreach (var postNews in feed.Items)
-                {
-                    var description = GetDescription(postNews.Links.FirstOrDefault().Uri.ToString(), node_TUT);
+                    var description = GetDescription_(postNews.Links.FirstOrDefault().Uri.ToString());
                     if (!string.IsNullOrEmpty(description))
                     {
                         news.Add(new News()
@@ -131,16 +69,99 @@ namespace ServiceParser
                             DateCreate = postNews.PublishDate.DateTime,
                             LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
                             NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
-                                .Replace("Читать далее…", ""),
+                                 .Replace("Читать далее…", ""),
                             Category = _uow.GetCategorty(postNews.Categories.FirstOrDefault().Name),
                             NewsDescription = description
-
                         });
                     }
                 }
             }
             return news;
         }
+
+        //public IEnumerable<News> GetArticlesFrom_Onlainer(string url)
+        //{
+        //    List<News> news = new List<News>();
+        //    List<Category> categories = new List<Category>();
+        //    XmlReader xmlReader = XmlReader.Create(url);
+        //    SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
+        //    if (feed != null)
+        //    {
+        //        foreach (var postNews in feed.Items)
+        //        {
+        //            var description = GetDescription(postNews.Links.FirstOrDefault().Uri.ToString(), node_ONLAINER);
+        //            if (!string.IsNullOrEmpty(description))
+        //            {
+        //                news.Add(new News()
+        //                {
+        //                    Title = postNews.Title.Text,
+        //                    DateCreate = postNews.PublishDate.DateTime,
+        //                    LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
+        //                    NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
+        //                        .Replace("Читать далее…", ""),
+        //                    Category = _uow.GetCategorty(postNews.Categories.FirstOrDefault().Name),
+        //                    NewsDescription = description
+        //                });
+        //            }
+        //        }
+        //    }
+        //    return news;
+        //}
+        //public IEnumerable<News> GetArticlesFrom_S13(string url)
+        //{
+        //    List<News> news = new List<News>();
+        //    List<Category> categories = new List<Category>();
+        //    XmlReader xmlReader = XmlReader.Create(url);
+        //    SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
+        //    if (feed != null)
+        //    {
+        //        foreach (var postNews in feed.Items)
+        //        {
+        //            var description = GetDescription(postNews.Links.FirstOrDefault().Uri.ToString(), node_S13);
+        //            if (!string.IsNullOrEmpty(description))
+        //            {
+        //                news.Add(new News()
+        //                {
+        //                    Title = postNews.Title.Text.Replace("&nbsp;", string.Empty),
+        //                    DateCreate = postNews.PublishDate.DateTime,
+        //                    LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
+        //                    NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty).Replace("Читать далее…", ""),
+        //                    Category = _uow.GetCategorty(postNews.Categories.FirstOrDefault().Name),
+        //                    NewsDescription = description
+        //                });
+        //            }
+        //        }
+        //    }
+        //    return news;
+        //}
+        //public IEnumerable<News> GetArticlesFrom_TUT(string url)
+        //{
+        //    List<News> news = new List<News>();
+        //    List<Category> categories = new List<Category>();
+        //    XmlReader xmlReader = XmlReader.Create(url);
+        //    SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
+        //    if (feed != null)
+        //    {
+        //        foreach (var postNews in feed.Items)
+        //        {
+        //            var description = GetDescription(postNews.Links.FirstOrDefault().Uri.ToString(), node_TUT);
+        //            if (!string.IsNullOrEmpty(description))
+        //            {
+        //                news.Add(new News()
+        //                {
+        //                    Title = postNews.Title.Text.Replace("&nbsp;", string.Empty),
+        //                    DateCreate = postNews.PublishDate.DateTime,
+        //                    LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
+        //                    NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
+        //                        .Replace("Читать далее…", ""),
+        //                    Category = _uow.GetCategorty(postNews.Categories.FirstOrDefault().Name),
+        //                    NewsDescription = description
+        //                });
+        //            }
+        //        }
+        //    }
+        //    return news;
+        //}
         public bool Add(News article)
         {
             if (_uow.NewsRepository.Find(a => a.LinkURL.Equals(article.LinkURL)).Any())
@@ -164,69 +185,129 @@ namespace ServiceParser
         }
 
 
-        public string GetDescriptionFrom_Onlainer_QS(string url)
-        {
-            var web = new HtmlWeb();
-            var document = web.Load(url);
+        //public string GetDescriptionFrom_Onlainer_QS(string url)
+        //{
+        //    var web = new HtmlWeb();
+        //    var document = web.Load(url);
 
-            HtmlNode nodeContent = document.QuerySelector(".news-text");
-            string content="";
-            if (nodeContent != null)
+        //    HtmlNode nodeContent = document.QuerySelector(".news-text");
+        //    string content="";
+        //    if (nodeContent != null)
+        //    {
+        //        content = nodeContent.InnerHtml;
+        //    }
+        //    content = Regex.Replace(content, @"\s+", " ").Replace("Читать далее…", "");
+
+        //    return HttpUtility.HtmlDecode(content);
+
+        //}
+        //public string GetDescriptionFrom_S13_QS(string url)
+        //{
+        //    var web = new HtmlWeb();
+        //    var document = web.Load(url);
+
+        //    HtmlNode nodeContent = document.QuerySelector(".js-mediator-article");
+        //    string content = "";
+        //    if (nodeContent != null)
+        //    {
+        //        content = nodeContent.InnerHtml;
+        //    }
+        //    content = Regex.Replace(content, @"\s+", " ");
+
+        //    return HttpUtility.HtmlDecode(content);
+
+        //}
+        //public string GetDescriptionFrom_TUT_QS(string url)
+        //{
+        //    var web = new HtmlWeb();
+        //    var document = web.Load(url);
+
+        //    HtmlNode nodeContent = document.QuerySelector("#article_body");
+        //    string content = "";
+        //    if (nodeContent != null)
+        //    {
+        //        content = nodeContent.InnerHtml;
+        //    }
+        //    content = Regex.Replace(content, @"\s+", " ");
+
+        //    return HttpUtility.HtmlDecode(content);
+
+        //}
+
+        //private string GetDescription(string url, string node_url)
+        //{
+        //    var web = new HtmlWeb();
+        //    var doc = web.Load(url);
+
+        //    string text = "";
+
+        //    var node = doc.DocumentNode.SelectNodes(node_url);
+        //    if (node != null)
+        //    {
+                
+        //        foreach (var item in node)
+        //        {
+        //            if (text == "")
+        //            {
+        //                text = item.InnerText;
+        //            }
+        //            else
+        //            {
+        //                text += Environment.NewLine + item.InnerText;
+        //            }
+        //        }
+
+        //        var mas = new string[] { "&ndash; ", "&ndash;", "&mdash; ", "&mdash;", "&nbsp; ", "&nbsp; ", "&nbsp;", "&laquo; ", "&laquo;", "&raquo; ", "&raquo;", "&quot;" };
+
+        //        foreach (var item in mas)
+        //        {
+        //            text = text.Replace(item, " ");
+        //        }
+
+               
+
+        //        Regex.Replace(text, @"\s+", " ");
+        //            Regex.Replace(text, "Читать далее…", "");
+        //            Regex.Replace(text, "<.*?>", "");
+        //            Regex.Replace(text, "  ", "");
+                  
+        //            return text;
+
+        //    }
+            
+
+        //    return text;
+        //}
+
+
+        private string GetDescription_(string url)
+        {
+            string node_url = null;
+            string text = null;
+
+            if (url.Contains("s13.ru/"))
             {
-                content = nodeContent.InnerHtml;
+                node_url = node_S13;
             }
-            content = Regex.Replace(content, @"\s+", " ").Replace("Читать далее…", "");
-
-            return HttpUtility.HtmlDecode(content);
-
-        }
-        public string GetDescriptionFrom_S13_QS(string url)
-        {
-            var web = new HtmlWeb();
-            var document = web.Load(url);
-
-            HtmlNode nodeContent = document.QuerySelector(".js-mediator-article");
-            string content = "";
-            if (nodeContent != null)
+            if (url.Contains("tut.by/"))
             {
-                content = nodeContent.InnerHtml;
+                node_url = node_TUT;
             }
-            content = Regex.Replace(content, @"\s+", " ");
+            if (url.Contains("onliner.by/"))
+                node_url = node_ONLAINER;
 
-            return HttpUtility.HtmlDecode(content);
-
-        }
-        public string GetDescriptionFrom_TUT_QS(string url)
-        {
-            var web = new HtmlWeb();
-            var document = web.Load(url);
-
-            HtmlNode nodeContent = document.QuerySelector("#article_body");
-            string content = "";
-            if (nodeContent != null)
+            if (node_url == null)
             {
-                content = nodeContent.InnerHtml;
+                return text;
             }
-            content = Regex.Replace(content, @"\s+", " ");
-
-            return HttpUtility.HtmlDecode(content);
-
-        }
-
-        private string GetDescription(string url, string node_url)
-        {
             var web = new HtmlWeb();
             var doc = web.Load(url);
-
-            string text = "";
-
             var node = doc.DocumentNode.SelectNodes(node_url);
             if (node != null)
             {
-                
                 foreach (var item in node)
                 {
-                    if (text == "")
+                    if (text == null)
                     {
                         text = item.InnerText;
                     }
@@ -236,28 +317,28 @@ namespace ServiceParser
                     }
                 }
 
-                var mas = new string[] { "&ndash; ", "&ndash;", "&mdash; ", "&mdash;", "&nbsp; ", "&nbsp; ", "&nbsp;", "&laquo; ", "&laquo;", "&raquo; ", "&raquo;", "&quot;" };
+                var mas = new string[] { "&ndash; ", "&ndash;", "&mdash; ",
+                    "&mdash;", "&nbsp; ", "&nbsp; ", "&nbsp;", "&laquo; ",
+                    "&laquo;", "&raquo; ", "&raquo;", "&quot;",
+                    "\r\n" , "\r\nЧитайте также:\r\nБиблиотека Onliner: лучшие материалы и циклы статей\r\nНаш канал в Telegram. Присоединяйтесь!\r\nБыстрая связь с редакцией: читайте паблик-чат Onliner и пишите нам в Viber!\r\nПерепечатка текста и фотографий Onliner без разрешения редакции запрещена." };
 
                 foreach (var item in mas)
                 {
                     text = text.Replace(item, " ");
                 }
-
-               
-
                 Regex.Replace(text, @"\s+", " ");
-                    Regex.Replace(text, "Читать далее…", "");
-                    Regex.Replace(text, "<.*?>", "");
-                    Regex.Replace(text, "  ", "");
-                  
-                    return text;
-
+                Regex.Replace(text, "Читать далее…", "");
+                Regex.Replace(text, "<.*?>", "");
+                Regex.Replace(text, "  ", "");
+                Regex.Replace(text, "\r\nЧитайте также:\r\nБиблиотека Onliner: лучшие материалы и циклы статей\r\nНаш канал в Telegram. Присоединяйтесь!\r\nБыстрая связь с редакцией: читайте паблик-чат Onliner и пишите нам в Viber!\r\nПерепечатка текста и фотографий Onliner без разрешения редакции запрещена.", "");
+                //Regex.Replace(text, "Наш канал в Telegram. Присоединяйтесь!", "");
+                //Regex.Replace(text, "Быстрая связь с редакцией: читайте паблик-чат Onliner и пишите нам в Viber!", "");
+                return text;
             }
-            
-
             return text;
         }
+
     }
 
-   
+
 }

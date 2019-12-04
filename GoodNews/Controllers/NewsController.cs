@@ -175,14 +175,22 @@ namespace GoodNews.Controllers
         {
             var parserNews = Task.Factory.StartNew(() =>
                 {
-                    var pars_S13 = articleService.GetArticlesFrom_S13(@"http://s13.ru/rss");
-                    articleService.AddRangeAsync(pars_S13);
+                    //var pars_S13 = articleService.GetArticlesFrom_S13(@"http://s13.ru/rss");
+                    //articleService.AddRangeAsync(pars_S13);
 
-                    var pars_TUT = articleService.GetArticlesFrom_TUT(@"https://news.tut.by/rss/all.rss");
-                    articleService.AddRange(pars_TUT);
+                    //var pars_TUT = articleService.GetArticlesFrom_TUT(@"https://news.tut.by/rss/all.rss");
+                    //articleService.AddRange(pars_TUT);
 
-                    var pars_Onliner = articleService.GetArticlesFrom_Onlainer(@"https://people.onliner.by/feed");
-                    articleService.AddRange(pars_Onliner);
+                    //var pars_Onliner = articleService.GetArticlesFrom_Onlainer(@"https://people.onliner.by/feed");
+                    //articleService.AddRange(pars_Onliner);
+                    var S13 = articleService.GetNewsFromUrl(@"http://s13.ru/rss");
+                    articleService.AddRange(S13);
+
+                    var tut = articleService.GetNewsFromUrl(@"https://news.tut.by/rss/all.rss");
+                    articleService.AddRange(tut);
+
+                    var onliner = articleService.GetNewsFromUrl(@"https://people.onliner.by/feed");
+                    articleService.AddRange(onliner);
 
                 }
             );
@@ -194,8 +202,8 @@ namespace GoodNews.Controllers
         {
             var parserNews = Task.Factory.StartNew(() =>
                 {
-                    var pars_Onliner = articleService.GetArticlesFrom_Onlainer(@"https://people.onliner.by/feed");
-                    articleService.AddRangeAsync(pars_Onliner);
+                    var onliner = articleService.GetNewsFromUrl(@"https://people.onliner.by/feed");
+                    articleService.AddRange(onliner);
                 }
             );
             parserNews.Wait();
@@ -207,9 +215,9 @@ namespace GoodNews.Controllers
         {
             var parserNews = Task.Factory.StartNew(() =>
                 {
-                    var pars_S13 = articleService.GetArticlesFrom_S13(@"http://s13.ru/rss");
-                    articleService.AddRangeAsync(pars_S13);
-                   
+                    var S13 = articleService.GetNewsFromUrl(@"http://s13.ru/rss");
+                    articleService.AddRange(S13);
+
                 }
             );
             parserNews.Wait();
@@ -221,8 +229,8 @@ namespace GoodNews.Controllers
         {
             var parserNews = Task.Factory.StartNew(() =>
                 {
-                    var pars_TUT = articleService.GetArticlesFrom_TUT(@"https://news.tut.by/rss/all.rss");
-                    articleService.AddRangeAsync(pars_TUT);
+                    var tut = articleService.GetNewsFromUrl(@"https://news.tut.by/rss/all.rss");
+                    articleService.AddRange(tut);
                 }
             );
             parserNews.Wait();

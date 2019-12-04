@@ -9,10 +9,11 @@ namespace ServiceParser
 {
     public interface IHtmlArticleService : IArticleService
     {
-        IEnumerable<News> GetArticlesFrom_Onlainer(string url);
-        IEnumerable<News> GetArticlesFrom_TUT(string url);
-        IEnumerable<News> GetArticlesFrom_S13(string url);
-       
+        //IEnumerable<News> GetArticlesFrom_Onlainer(string url);
+        //IEnumerable<News> GetArticlesFrom_TUT(string url);
+        //IEnumerable<News> GetArticlesFrom_S13(string url);
+        IEnumerable<News> GetNewsFromUrl(string url);
+
         bool AddRange(IEnumerable<News> articles);
         Task<bool> AddRangeAsync(IEnumerable<News> objects);
 

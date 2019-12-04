@@ -14,6 +14,10 @@ namespace GoodNews.Infrastructure.Service.Parser
     public class ParserService : IParserSevice
 
     {
+        private const string node_TUT = "//html/body/div/div/div/div/div/div/div/div/p";
+        private const string node_S13 = "//html/body/div/div/div/div/ul/li/div/div";
+        private const string node_ONLAINER = "//html/body/div/div/div/div/div/div/div/div/div/div/div/div/div/div/p";
+
         private readonly IMediator _mediator;
 
         public ParserService(IMediator mediator)
@@ -100,14 +104,14 @@ namespace GoodNews.Infrastructure.Service.Parser
 
             if (url.Contains("s13.ru/"))
             {
-                node_url = "//html/body/div/div/div/div/ul/li/div/div";
+                node_url = node_S13;
             }
             if (url.Contains("tut.by/"))
             {
-                    node_url= "//html/body/div/div/div/div/div/div/div/div/p";
+                    node_url= node_TUT;
             }
             if (url.Contains("onliner.by/"))
-                node_url = "//html/body/div/div/div/div/div/div/div/div/div/div/div/div/div/div/p";
+                node_url = node_ONLAINER;
             
             
             var web = new HtmlWeb();
