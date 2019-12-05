@@ -31,7 +31,7 @@ namespace GoodNews.Infrastructure.Service.Parser
             {
                 if (newsAll.Count(c => c.LinkURL.Equals(n.LinkURL)) == 0)
                 {
-                    _mediator.Send(new AddNewsCommandModel(n));
+                    await _mediator.Send(new AddNewsCommandModel(n));
                 }
             }
             return true;
