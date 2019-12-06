@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GoodNews.Infrastructure\GoodNews.Infrastructure.csproj" />
+    <ProjectReference Include="..\GoodNews.UpdateNews\GoodNews.UpdateNews.csproj" />
+    <ProjectReference Include="..\ServiceParser\ServiceParser.csproj" />
   </ItemGroup>
 
 </Project>

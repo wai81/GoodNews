@@ -13,7 +13,7 @@ using GoodNews.DB;
 using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
 
-namespace ServiceParser
+namespace ServiceParser.ArticleServices
 {
     public class ArticleService : IHtmlArticleService
     {
@@ -244,7 +244,7 @@ namespace ServiceParser
         //    var node = doc.DocumentNode.SelectNodes(node_url);
         //    if (node != null)
         //    {
-                
+
         //        foreach (var item in node)
         //        {
         //            if (text == "")
@@ -264,17 +264,17 @@ namespace ServiceParser
         //            text = text.Replace(item, " ");
         //        }
 
-               
+
 
         //        Regex.Replace(text, @"\s+", " ");
         //            Regex.Replace(text, "Читать далее…", "");
         //            Regex.Replace(text, "<.*?>", "");
         //            Regex.Replace(text, "  ", "");
-                  
+
         //            return text;
 
         //    }
-            
+
 
         //    return text;
         //}

@@ -1,26 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Core.Interfaces;
 using GoodNews.DB;
-using GoodNews.Infrastructure.Service.Parser;
+using GoodNews.UpdateNews;
 using Hangfire;
 using Hangfire.SqlServer;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ServiceParser.Parser;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace GoodNews.API
@@ -86,8 +82,8 @@ namespace GoodNews.API
             services.AddTransient<IMediator, Mediator>();
             //services.AddTransient<INewsGetterService, NewsGetterService>();
             //add Servise Parser News from URL
-            services.AddTransient<INewsFromUrl, NewsFromUrl>();
-            services.AddTransient<IParserSevice, ParserService>();
+            services.AddTransient<IParserSevice, ArticleServiceCQS>();
+            services.AddTransient<IUpdateNewsFromUrl, UpdateNewsFromUrl>();
             //add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             //add Swagger
@@ -135,11 +131,11 @@ namespace GoodNews.API
                 Authorization = new[] { new HangfireAuthorizationFilter() }
             });
 
-            var service = app.ApplicationServices.GetService<INewsFromUrl>();
-            service.GetNewsUrl(@"https://news.tut.by/rss/all.rss");
-            //RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://news.tut.by/rss/all.rss"), Cron.MinuteInterval(10));
-            //RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"http://s13.ru/rss"), Cron.MinuteInterval(15));
-            //RecurringJob.AddOrUpdate(() => service.GetNewsUrl(@"https://people.onliner.by/feed"), Cron.MinuteInterval(20));
+            var service = app.ApplicationServices.GetService<IUpdateNewsFromUrl>();
+            //service.ParserNewsByUrl();
+            RecurringJob.AddOrUpdate(() => service.ParserNewsByUrl(), Cron.Hourly(50));
+            //RecurringJob.AddOrUpdate(() => service.ParserNewsByUrl(@"http://s13.ru/rss"), Cron.Hourly(25));
+            //RecurringJob.AddOrUpdate(() => service.ParserNewsByUrl(@"https://people.onliner.by/feed"), Cron.Hourly(25));
             //var client_HF = new BackgroundJobClient();
             //client_HF.Enqueue(() => service.GetNewsUrl(@"https://people.onliner.by/feed"));
             //client_HF.Schedule

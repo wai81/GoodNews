@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Models;
-using ServiceParser;
+using ServiceParser.ArticleServices;
 
 namespace GoodNews
 {

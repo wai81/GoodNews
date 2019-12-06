@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Core.Interfaces;
 using GoodNews.DB;
 
-namespace ServiceParser
+namespace ServiceParser.ArticleServices
 {
     public interface IHtmlArticleService : IArticleService
     {

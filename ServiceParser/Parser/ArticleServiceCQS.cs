@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml;
 using GoodNews.DB;
 using GoodNews.Infrastructure.Commands.Models.Categories;
 using HtmlAgilityPack;
 using MediatR;
 
-namespace GoodNews.Infrastructure.Service.Parser
+namespace ServiceParser.Parser
 {
-    public class ParserService : IParserSevice
+    public class ArticleServiceCQS : IParserSevice
 
     {
         private const string node_TUT = "//html/body/div/div/div/div/div/div/div/div/p";
@@ -20,15 +21,19 @@ namespace GoodNews.Infrastructure.Service.Parser
 
         private readonly IMediator _mediator;
 
-        public ParserService(IMediator mediator)
+        public ArticleServiceCQS(IMediator mediator)
         {
             _mediator = mediator;
         }
-      public IEnumerable<News> GetNewsFromUrl(string url)
+
+        //public Task<bool> AddRangeAsync(IEnumerable<News> objects)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        public async Task<IEnumerable<News>> ParserNewsFromUrl(string url)
         {
             List<News> news = new List<News>();
-            //List<Category> category = new List<Category>();
-
             XmlReader xmlReader = XmlReader.Create(url);
             SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
 
@@ -36,17 +41,19 @@ namespace GoodNews.Infrastructure.Service.Parser
             {
                 foreach (var postNews in feed.Items)
                 {
-                    var description = GetDescription(postNews.Links.FirstOrDefault().Uri.ToString());
+                    string linkNews = postNews.Links.FirstOrDefault().Uri.ToString();
+                    var description = ParserDescription(linkNews);
                     if (!string.IsNullOrEmpty(description))
                     {
-                       news.Add(new News()
+                        Category category =  await _mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
+                        news.Add(new News()
                         {
                             Title = postNews.Title.Text.Replace("&nbsp;", string.Empty),
                             DateCreate = postNews.PublishDate.DateTime,
                             LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
                             NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
-                                .Replace("Читать далее…", ""),
-                            Category = _mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name)).Result,
+                                 .Replace("Читать далее…", ""),
+                            Category = category,
                             NewsDescription = description
                         });
                     }
@@ -97,23 +104,26 @@ namespace GoodNews.Infrastructure.Service.Parser
 
         //}
 
-        private string GetDescription(string url)
+        private string ParserDescription(string url)
         {
             string node_url = null;
             string text = null;
 
-            if (url.Contains("s13.ru/"))
+            if (url.Contains("s13.ru"))
             {
                 node_url = node_S13;
-            }
-            if (url.Contains("tut.by/"))
+            };
+            if (url.Contains("tut.by"))
             {
-                    node_url= node_TUT;
-            }
-            if (url.Contains("onliner.by/"))
+                node_url = node_TUT;
+            };
+            if (url.Contains("onliner.by"))
+            {
                 node_url = node_ONLAINER;
-            
-            
+            };
+
+
+
             var web = new HtmlWeb();
             var doc = web.Load(url);
             var node = doc.DocumentNode.SelectNodes(node_url);
@@ -152,6 +162,6 @@ namespace GoodNews.Infrastructure.Service.Parser
             return text;
         }
 
-      
+
     }
 }
