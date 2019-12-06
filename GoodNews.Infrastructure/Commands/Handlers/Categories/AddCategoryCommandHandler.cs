@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using GoodNews.DB;
-using GoodNews.Infrastructure.Commands.Models;
 using GoodNews.Infrastructure.Commands.Models.Categories;
 using MediatR;
 

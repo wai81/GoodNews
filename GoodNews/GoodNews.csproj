@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AccesLayer\DataAccesLayer.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\GoodNews.Infrastructure\GoodNews.Infrastructure.csproj" />
     <ProjectReference Include="..\Models\GoodNews.DB.csproj" />
     <ProjectReference Include="..\ServiceParser\ServiceParser.csproj" />
   </ItemGroup>

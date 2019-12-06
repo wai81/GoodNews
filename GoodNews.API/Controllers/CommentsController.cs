@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using GoodNews.API.Models;
 using GoodNews.DB;
 using GoodNews.Infrastructure.Commands.Models.Comments;
-using GoodNews.Infrastructure.Queries.Models.News;
+using GoodNews.Infrastructure.Queries.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

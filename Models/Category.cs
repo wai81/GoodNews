@@ -10,6 +10,5 @@ namespace GoodNews.DB
       public string Name { get; set; }
       public ICollection<News> News { get; set; }
 
-      
     }
 }

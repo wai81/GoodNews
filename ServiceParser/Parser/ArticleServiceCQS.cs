@@ -26,12 +26,8 @@ namespace ServiceParser.Parser
             _mediator = mediator;
         }
 
-        //public Task<bool> AddRangeAsync(IEnumerable<News> objects)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        public async Task<IEnumerable<News>> ParserNewsFromUrl(string url)
+        
+        public async Task<IEnumerable<News>> ParserNewsFrom_S13(string url)
         {
             List<News> news = new List<News>();
             XmlReader xmlReader = XmlReader.Create(url);
@@ -42,9 +38,10 @@ namespace ServiceParser.Parser
                 foreach (var postNews in feed.Items)
                 {
                     string linkNews = postNews.Links.FirstOrDefault().Uri.ToString();
-                    var description = ParserDescription(linkNews);
+                    var description = ParserDescription(linkNews, node_S13);
                     if (!string.IsNullOrEmpty(description))
                     {
+
                         Category category =  await _mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
                         news.Add(new News()
                         {
@@ -61,7 +58,67 @@ namespace ServiceParser.Parser
             }
             return news;
         }
+        public async Task<IEnumerable<News>> ParserNewsFrom_Onlainer(string url)
+        {
+            List<News> news = new List<News>();
+            XmlReader xmlReader = XmlReader.Create(url);
+            SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
 
+            if (feed != null)
+            {
+                foreach (var postNews in feed.Items)
+                {
+                    string linkNews = postNews.Links.FirstOrDefault().Uri.ToString();
+                    var description = ParserDescription(linkNews, node_ONLAINER);
+                    if (!string.IsNullOrEmpty(description))
+                    {
+                        Category category = await _mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
+                        news.Add(new News()
+                        {
+                            Title = postNews.Title.Text.Replace("&nbsp;", string.Empty),
+                            DateCreate = postNews.PublishDate.DateTime,
+                            LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
+                            NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
+                                .Replace("Читать далее…", ""),
+                            Category = category,
+                            NewsDescription = description
+                        });
+                    }
+                }
+            }
+            return news;
+        }
+
+        public async Task<IEnumerable<News>> ParserNewsFrom_TUT(string url)
+        {
+            List<News> news = new List<News>();
+            XmlReader xmlReader = XmlReader.Create(url);
+            SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
+
+            if (feed != null)
+            {
+                foreach (var postNews in feed.Items)
+                {
+                    string linkNews = postNews.Links.FirstOrDefault().Uri.ToString();
+                    var description = ParserDescription(linkNews, node_TUT);
+                    if (!string.IsNullOrEmpty(description))
+                    {
+                        Category category = await _mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
+                        news.Add(new News()
+                        {
+                            Title = postNews.Title.Text.Replace("&nbsp;", string.Empty),
+                            DateCreate = postNews.PublishDate.DateTime,
+                            LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
+                            NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
+                                .Replace("Читать далее…", ""),
+                            Category = category,
+                            NewsDescription = description
+                        });
+                    }
+                }
+            }
+            return news;
+        }
         //public string GetDescriptionHTML(string url)
         //{
         //    string node_url = null;
@@ -104,23 +161,24 @@ namespace ServiceParser.Parser
 
         //}
 
-        private string ParserDescription(string url)
+        private string ParserDescription(string url, string node_url)
         {
-            string node_url = null;
+           
             string text = null;
 
-            if (url.Contains("s13.ru"))
-            {
-                node_url = node_S13;
-            };
-            if (url.Contains("tut.by"))
-            {
-                node_url = node_TUT;
-            };
-            if (url.Contains("onliner.by"))
-            {
-                node_url = node_ONLAINER;
-            };
+            //string node_url = null;
+            //if (url.Contains("s13.ru"))
+            //{
+            //    node_url = node_S13;
+            //};
+            //if (url.Contains("tut.by"))
+            //{
+            //    node_url = node_TUT;
+            //};
+            //if (url.Contains("onliner.by"))
+            //{
+            //    node_url = node_ONLAINER;
+            //};
 
 
 

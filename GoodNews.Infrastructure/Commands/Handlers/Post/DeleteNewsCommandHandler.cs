@@ -1,12 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using GoodNews.DB;
-using GoodNews.Infrastructure.Commands.Models;
 using GoodNews.Infrastructure.Commands.Models.Categories;
-using GoodNews.Infrastructure.Commands.Models.News;
 using MediatR;
 
-namespace GoodNews.Infrastructure.Commands.Handlers.News
+namespace GoodNews.Infrastructure.Commands.Handlers.Post
 {
     public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommandModel, bool>
     {

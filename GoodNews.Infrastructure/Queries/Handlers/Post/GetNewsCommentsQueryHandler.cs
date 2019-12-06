@@ -3,11 +3,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GoodNews.DB;
-using GoodNews.Infrastructure.Queries.Models.News;
+using GoodNews.Infrastructure.Queries.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace GoodNews.Infrastructure.Queries.Handlers.News
+namespace GoodNews.Infrastructure.Queries.Handlers.Post
 {
     class GetNewsCommentsQueryHandler : IRequestHandler<GetNewsCommentsQueryModel, IEnumerable<NewsComment>>
     {

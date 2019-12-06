@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GoodNews.DB;
+﻿using GoodNews.DB;
 using MediatR;
 
 namespace GoodNews.Infrastructure.Commands.Models.Categories

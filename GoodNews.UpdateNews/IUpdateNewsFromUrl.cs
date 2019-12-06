@@ -7,7 +7,9 @@ namespace GoodNews.UpdateNews
 {
     public interface IUpdateNewsFromUrl
     {
-        //Task<bool> ParserNewsByUrl(string url);
-        Task<bool> ParserNewsByUrl();
+        Task<bool> ParserNewsTUT();
+        Task<bool> ParserNewsS13();
+        Task<bool> ParserNewsOnlainer();
+        //Task<bool> ParserNewsByUrl();
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using GoodNews.DB;
 using MediatR;
 
-namespace GoodNews.Infrastructure.Queries.Models.News
+namespace GoodNews.Infrastructure.Queries.Models
 {
     public class GetNewsCommentsQueryModel : IRequest<IEnumerable<NewsComment>>
     {

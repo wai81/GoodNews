@@ -5,6 +5,7 @@ VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodNews", "GoodNews\GoodNews.csproj", "{1E5CA3C0-D29D-4E77-8C90-A5D3BBDABA53}"
 	ProjectSection(ProjectDependencies) = postProject
+		{E115A327-597C-4C81-B668-8C3C27C9A42C} = {E115A327-597C-4C81-B668-8C3C27C9A42C}
 		{E0FD565C-E1EA-450D-911B-DDA42044AC6E} = {E0FD565C-E1EA-450D-911B-DDA42044AC6E}
 		{8D2C0475-A3F1-4975-9090-42DA69A2677F} = {8D2C0475-A3F1-4975-9090-42DA69A2677F}
 		{BE26BDF8-5595-4B62-9450-44FBE13E8692} = {BE26BDF8-5595-4B62-9450-44FBE13E8692}
@@ -25,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodNews.API", "GoodNews.AP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodNews.Infrastructure", "GoodNews.Infrastructure\GoodNews.Infrastructure.csproj", "{E115A327-597C-4C81-B668-8C3C27C9A42C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodNews.UpdateNews", "GoodNews.UpdateNews\GoodNews.UpdateNews.csproj", "{69F5B227-A24F-40DA-956E-BF19001BA03F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodNews.UpdateNews", "GoodNews.UpdateNews\GoodNews.UpdateNews.csproj", "{69F5B227-A24F-40DA-956E-BF19001BA03F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

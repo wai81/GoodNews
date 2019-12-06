@@ -3,10 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using GoodNews.API.Models;
 using GoodNews.DB;
-using GoodNews.Infrastructure.Commands.Models;
-using GoodNews.Infrastructure.Commands.Models.News;
+using GoodNews.Infrastructure.Commands.Models.Post;
 using GoodNews.Infrastructure.Queries.Models;
-using GoodNews.Infrastructure.Queries.Models.News;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +17,7 @@ namespace GoodNews.API.Controllers
     /// <summary>
     /// NewsController
     /// </summary>
-   
+
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize]

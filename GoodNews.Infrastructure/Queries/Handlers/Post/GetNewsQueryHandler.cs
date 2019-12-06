@@ -6,9 +6,9 @@ using GoodNews.Infrastructure.Queries.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace GoodNews.Infrastructure.Queries.Handlers.News
+namespace GoodNews.Infrastructure.Queries.Handlers.Post
 {
-    public class GetNewsQueryHandler : IRequestHandler<GetNewsQueryModel, IEnumerable<DB.News>>
+    public class GetNewsQueryHandler : IRequestHandler<GetNewsQueryModel, IEnumerable<News>>
     {
         private readonly ApplicationContext _context;
 
@@ -17,7 +17,7 @@ namespace GoodNews.Infrastructure.Queries.Handlers.News
             _context = context;
         }
 
-        public async Task<IEnumerable<DB.News>> Handle(GetNewsQueryModel request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<News>> Handle(GetNewsQueryModel request, CancellationToken cancellationToken)
         {
             var result = await _context.News.ToListAsync(cancellationToken: cancellationToken);
             return result;
