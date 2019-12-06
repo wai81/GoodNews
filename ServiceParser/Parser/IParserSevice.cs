@@ -2,6 +2,7 @@
 using GoodNews.DB;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core;
 
 namespace ServiceParser.Parser
 {
