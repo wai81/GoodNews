@@ -53,7 +53,6 @@ namespace GoodNews.UpdateNews
         {
             IEnumerable<News> newsOnl = new List<News>();
             var newsAll = await _mediator.Send(new GetNewsQueryModel());
-
             newsOnl = await _parser.ParserNewsFrom_Onlainer(@"https://people.onliner.by/feed");
             foreach (var o in newsOnl)
             {

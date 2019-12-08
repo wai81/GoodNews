@@ -1,8 +1,11 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Core;
 using Core.Interfaces;
 using GoodNews.DB;
+using GoodNews.ServiceLemmatization;
+using GoodNews.ServiceNewsAnalysisContent;
 using GoodNews.UpdateNews;
 using Hangfire;
 using Hangfire.SqlServer;
@@ -84,6 +87,8 @@ namespace GoodNews.API
             //add Servise Parser News from URL
             services.AddTransient<IParserSevice, ArticleServiceCQS>();
             services.AddTransient<IUpdateNewsFromUrl, UpdateNewsFromUrl>();
+            services.AddTransient<ILemmaServices, LemmaServices>();
+            services.AddTransient<IGetIndexMoodNews, GetIndexMoodNews>();
             //add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             //add Swagger
@@ -132,12 +137,14 @@ namespace GoodNews.API
             });
 
             var service = app.ApplicationServices.GetService<IUpdateNewsFromUrl>();
-           
-            BackgroundJob.Schedule(() => service.ParserNewsOnlainer(),TimeSpan.FromMinutes(10));
-            BackgroundJob.Schedule(() => service.ParserNewsS13(), TimeSpan.FromMinutes(15));
-            BackgroundJob.Schedule(() => service.ParserNewsTUT(), TimeSpan.FromMinutes(20));
-            //RecurringJob.AddOrUpdate(() => service.ParserNewsByUrl(), Cron.Hourly(50));
-            
+            //service.ParserNewsS13();
+            //BackgroundJob.Schedule(() => service.ParserNewsOnlainer(), TimeSpan.FromMinutes(10));
+            //BackgroundJob.Schedule(() => service.ParserNewsS13(), TimeSpan.FromMinutes(15));
+            //BackgroundJob.Schedule(() => service.ParserNewsTUT(), TimeSpan.FromMinutes(20));
+            RecurringJob.AddOrUpdate(() => service.ParserNewsTUT(), Cron.Hourly(25));
+            RecurringJob.AddOrUpdate(() => service.ParserNewsS13(), Cron.Hourly(25));
+            RecurringJob.AddOrUpdate(() => service.ParserNewsOnlainer(), Cron.Hourly(25));
+
             app.UseMvc(routes=>
             {
                 routes.MapRoute(

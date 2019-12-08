@@ -7,6 +7,8 @@ namespace Core
 {
     public interface ILemmaServices
     {
-        Task<string> RequestForLemma(string content);
+        //Task<string> RequestToLemma(string cText);
+        Task<Dictionary<string, int>> RequestToLemma(string cText);
+
     }
 }

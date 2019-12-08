@@ -5,6 +5,7 @@ using System.ServiceModel.Syndication;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
+using Core;
 using GoodNews.DB;
 using GoodNews.Infrastructure.Commands.Models.Categories;
 using HtmlAgilityPack;
@@ -20,10 +21,11 @@ namespace ServiceParser.Parser
         private const string node_ONLAINER = "//html/body/div/div/div/div/div/div/div/div/div/div/div/div/div/div/p";
 
         private readonly IMediator _mediator;
-
-        public ArticleServiceCQS(IMediator mediator)
+        private readonly IGetIndexMoodNews _getIndexMoodNews;
+        public ArticleServiceCQS(IMediator mediator, IGetIndexMoodNews getIndexMoodNews)
         {
             _mediator = mediator;
+            _getIndexMoodNews = getIndexMoodNews;
         }
 
         
@@ -41,17 +43,24 @@ namespace ServiceParser.Parser
                     var description = ParserDescription(linkNews, node_S13);
                     if (!string.IsNullOrEmpty(description))
                     {
-
+                       
                         Category category =  await _mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
+                        string title = postNews.Title.Text.Replace("&nbsp;", string.Empty);
+                        string linkURL = postNews.Links.FirstOrDefault().Uri.ToString();
+                        string content = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
+                                 .Replace("Читать далее…", "");
+                        
+                        var moonInd = _getIndexMoodNews.GetScore(description).Result;
+                        
                         news.Add(new News()
                         {
-                            Title = postNews.Title.Text.Replace("&nbsp;", string.Empty),
+                            Title = title,
                             DateCreate = postNews.PublishDate.DateTime,
-                            LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
-                            NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
-                                 .Replace("Читать далее…", ""),
+                            LinkURL = linkURL,
+                            NewsContent = content,
                             Category = category,
-                            NewsDescription = description
+                            NewsDescription = description,
+                            MoodNews = moonInd
                         });
                     }
                 }
@@ -72,16 +81,24 @@ namespace ServiceParser.Parser
                     var description = ParserDescription(linkNews, node_ONLAINER);
                     if (!string.IsNullOrEmpty(description))
                     {
+
                         Category category = await _mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
+                        string title = postNews.Title.Text.Replace("&nbsp;", string.Empty);
+                        string linkURL = postNews.Links.FirstOrDefault().Uri.ToString();
+                        string content = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
+                                 .Replace("Читать далее…", "");
+                        
+                        var moonInd = _getIndexMoodNews.GetScore(description).Result;
+
                         news.Add(new News()
                         {
-                            Title = postNews.Title.Text.Replace("&nbsp;", string.Empty),
+                            Title = title,
                             DateCreate = postNews.PublishDate.DateTime,
-                            LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
-                            NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
-                                .Replace("Читать далее…", ""),
+                            LinkURL = linkURL,
+                            NewsContent = content,
                             Category = category,
-                            NewsDescription = description
+                            NewsDescription = description,
+                            MoodNews = moonInd
                         });
                     }
                 }
@@ -103,16 +120,24 @@ namespace ServiceParser.Parser
                     var description = ParserDescription(linkNews, node_TUT);
                     if (!string.IsNullOrEmpty(description))
                     {
+
                         Category category = await _mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
+                        string title = postNews.Title.Text.Replace("&nbsp;", string.Empty);
+                        string linkURL = postNews.Links.FirstOrDefault().Uri.ToString();
+                        string content = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
+                                 .Replace("Читать далее…", "");
+                        
+                        var moonInd = _getIndexMoodNews.GetScore(description).Result;
+
                         news.Add(new News()
                         {
-                            Title = postNews.Title.Text.Replace("&nbsp;", string.Empty),
+                            Title = title,
                             DateCreate = postNews.PublishDate.DateTime,
-                            LinkURL = postNews.Links.FirstOrDefault().Uri.ToString(),
-                            NewsContent = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
-                                .Replace("Читать далее…", ""),
+                            LinkURL = linkURL,
+                            NewsContent = content,
                             Category = category,
-                            NewsDescription = description
+                            NewsDescription = description,
+                            MoodNews = moonInd
                         });
                     }
                 }
@@ -201,8 +226,9 @@ namespace ServiceParser.Parser
 
                 var mas = new string[] { "&ndash; ", "&ndash;", "&mdash; ",
                     "&mdash;", "&nbsp; ", "&nbsp; ", "&nbsp;", "&laquo; ",
-                    "&laquo;", "&raquo; ", "&raquo;", "&quot;",
-                    "\r\n" , "\r\nЧитайте также:\r\nБиблиотека Onliner: лучшие материалы и циклы статей\r\nНаш канал в Telegram. Присоединяйтесь!\r\nБыстрая связь с редакцией: читайте паблик-чат Onliner и пишите нам в Viber!\r\nПерепечатка текста и фотографий Onliner без разрешения редакции запрещена." };
+                    "&laquo;", "&raquo; ", "&raquo;", "&quot;", "&hellip;",
+                    "\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t",
+                "\r\n" , "\r\nЧитайте также:\r\nБиблиотека Onliner: лучшие материалы и циклы статей\r\nНаш канал в Telegram. Присоединяйтесь!\r\nБыстрая связь с редакцией: читайте паблик-чат Onliner и пишите нам в Viber!\r\nПерепечатка текста и фотографий Onliner без разрешения редакции запрещена." };
 
                 foreach (var item in mas)
                 {

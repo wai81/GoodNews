@@ -30,8 +30,8 @@ namespace GoodNews.Infrastructure.Commands.Handlers.Categories
             if (result == null)
             {
                 result = new Category { Name = request.Name };
-                await _context.AddAsync(result, cancellationToken);
-                await _context.SaveChangesAsync(cancellationToken);
+                await _context.AddAsync(result);
+                await _context.SaveChangesAsync();
             }
             return result;
         }

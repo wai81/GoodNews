@@ -8,9 +8,6 @@ namespace GoodNews.DB
     {
         public int Year { get; set; }
 
-        public static implicit operator string(User v)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

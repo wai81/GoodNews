@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 namespace GoodNews.DB
 {
     public class News : Entity
-    {   public  News()
-        {
-            NewsComments = new HashSet<NewsComment>();
-        }
+    {  
+    //public  News()
+    //    {
+    //        NewsComments = new HashSet<NewsComment>();
+    //    }
         public string Title { get; set; }// заголовок новости
         public DateTime DateCreate { get; set; }//дата новости
         public string NewsContent { get; set; }
