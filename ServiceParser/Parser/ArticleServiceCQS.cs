@@ -29,13 +29,17 @@ namespace ServiceParser.Parser
             _getIndexMoodNews = getIndexMoodNews;
         }
 
-        
-        public async Task<IEnumerable<News>> ParserNewsFrom_S13(string url)
+        public IEnumerable<News> ParserNewsFromSource(string source)
         {
-            List<News> news = new List<News>();
-            XmlReader xmlReader = XmlReader.Create(url);
+            var news = new List<News>();
+            string node_url;
+            if (source.Contains("s13.ru/")) node_url = node_S13;
+            if (source.Contains("tut.by/")) node_url = node_TUT;
+            if (source.Contains("onliner.by/")) node_url = node_ONLAINER;
+
+            XmlReader xmlReader = XmlReader.Create(source);
             SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
-            var newsAll = await _mediator.Send(new GetNewsQueryModel());
+            
             if (feed != null)
             {
                 foreach (var postNews in feed.Items)
@@ -44,15 +48,50 @@ namespace ServiceParser.Parser
                     var description = ParserDescription(linkNews, node_S13);
                     if (!string.IsNullOrEmpty(description))
                     {
-                       
-                        Category category = 
-                            await _mediator.Send(
-                                new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
+                        string categoryName = postNews.Categories.FirstOrDefault().Name;
                         string title = postNews.Title.Text.Replace("&nbsp;", string.Empty);
                         string linkURL = postNews.Links.FirstOrDefault().Uri.ToString();
                         string content = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
                                  .Replace("Читать далее…", "");
+                        double moonInd = _getIndexMoodNews.GetScore(description).Result;
 
+                        news.Add(new News()
+                        {
+                            Title = title,
+                            DateCreate = postNews.PublishDate.DateTime,
+                            LinkURL = linkURL,
+                            NewsContent = content,
+                            CategoryName = categoryName,
+                            NewsDescription = description
+                        });
+                    }
+                }
+            }
+            return news;
+        }
+
+        public async Task<IEnumerable<News>> ParserNewsFrom_S13(string url)
+        {
+            List<News> news = new List<News>();
+            XmlReader xmlReader = XmlReader.Create(url);
+            SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
+            
+            if (feed != null)
+            {
+                foreach (var postNews in feed.Items)
+                {
+                    string linkNews = postNews.Links.FirstOrDefault().Uri.ToString();
+                    var description = ParserDescription(linkNews, node_S13);
+                    if (!string.IsNullOrEmpty(description))
+                    {
+                        string _category = postNews.Categories.FirstOrDefault().Name;
+                        Category category =
+                            await _mediator.Send(
+                                new AddCategoryByNameCommandModel(_category));
+                        string title = postNews.Title.Text.Replace("&nbsp;", string.Empty);
+                        string linkURL = postNews.Links.FirstOrDefault().Uri.ToString();
+                        string content = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
+                                 .Replace("Читать далее…", "");
                         double moonInd = _getIndexMoodNews.GetScore(description).Result;
 
                         news.Add(new News()
@@ -63,7 +102,7 @@ namespace ServiceParser.Parser
                             NewsContent = content,
                             Category = category,
                             NewsDescription = description,
-                            MoodNews = moonInd
+                            //MoodNews = moonInd
                         });
                     }
                 }
@@ -105,7 +144,7 @@ namespace ServiceParser.Parser
                                 NewsContent = content,
                                 Category = category,
                                 NewsDescription = description,
-                                MoodNews = moonInd
+                                //MoodNews = moonInd
                             }
                             );
                         }
@@ -146,7 +185,7 @@ namespace ServiceParser.Parser
                             NewsContent = content,
                             Category = category,
                             NewsDescription = description,
-                            MoodNews = moonInd
+                            //MoodNews = moonInd
                         });
                     }
                 }
@@ -200,19 +239,7 @@ namespace ServiceParser.Parser
            
             string text = null;
 
-            //string node_url = null;
-            //if (url.Contains("s13.ru"))
-            //{
-            //    node_url = node_S13;
-            //};
-            //if (url.Contains("tut.by"))
-            //{
-            //    node_url = node_TUT;
-            //};
-            //if (url.Contains("onliner.by"))
-            //{
-            //    node_url = node_ONLAINER;
-            //};
+           
 
 
 

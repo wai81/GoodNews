@@ -8,11 +8,11 @@ namespace ServiceParser.Parser
 {
     public interface IParserSevice : IArticleServiceCQS
     {
-        //Task<IEnumerable<News>> ParserNewsFromUrl(string url);
-
+     
+        IEnumerable<News> ParserNewsFromSource(string source);
+       
         Task<IEnumerable<News>> ParserNewsFrom_S13(string url);
         Task<IEnumerable<News>> ParserNewsFrom_Onlainer(string url);
-       //IEnumerable<News> ParserNewsFrom_Onlainer(string url);
         Task<IEnumerable<News>> ParserNewsFrom_TUT(string url);
 
     }

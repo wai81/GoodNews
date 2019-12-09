@@ -21,6 +21,13 @@ namespace GoodNews.UpdateNews
             _parser = parserSevice;
         }
 
+        public async Task<bool> RequestNewNewsFromSourse()
+        {
+            var dataSourse = _parser.ParserNewsFromSource(@"https://news.tut.by/rss/all.rss");
+
+
+            return true;
+        }
         public async Task<bool> ParserNewsTUT()
         {
             IEnumerable<News> newsTut = new List<News>();
