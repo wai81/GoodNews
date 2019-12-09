@@ -56,25 +56,24 @@ namespace GoodNews.API
            
             //add JWT
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();// => Удаляем claims по умолчанию
-            services.AddAuthentication(opt => //JwtBearerDefaults.AuthenticationScheme
-                    {
-                        opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                        opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                        opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                    }
-                    )
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+                })
                 .AddJwtBearer(options =>
                 {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["Jwt:Issuer"],
                         ValidAudience = Configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-                        //ClockSkew = TimeSpan.Zero // убраем задержку токена при истечении срока действия
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
+                        ClockSkew = TimeSpan.Zero // убираем задержку токена при истечении срока действия
                     };
                 });
 
@@ -84,13 +83,16 @@ namespace GoodNews.API
             services.AddMediatR(assembly);
             services.AddTransient<IMediator, Mediator>();
             //services.AddTransient<INewsGetterService, NewsGetterService>();
+            
             //add Servise Parser News from URL
             services.AddTransient<IParserSevice, ArticleServiceCQS>();
             services.AddTransient<IUpdateNewsFromUrl, UpdateNewsFromUrl>();
             services.AddTransient<ILemmaServices, LemmaServices>();
             services.AddTransient<IGetIndexMoodNews, GetIndexMoodNews>();
+          
             //add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+           
             //add Swagger
             services.AddSwaggerGen(c =>
             {
@@ -100,6 +102,7 @@ namespace GoodNews.API
                     Version = "v1"
                 });
             });
+            
             // Add Hangfire services.
             services.AddHangfire(configuration =>
                 configuration.UseSqlServerStorage(connection, new SqlServerStorageOptions()));
