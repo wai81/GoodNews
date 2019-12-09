@@ -8,6 +8,7 @@ using System.Xml;
 using Core;
 using GoodNews.DB;
 using GoodNews.Infrastructure.Commands.Models.Categories;
+using GoodNews.Infrastructure.Queries.Models;
 using HtmlAgilityPack;
 using MediatR;
 
@@ -34,7 +35,7 @@ namespace ServiceParser.Parser
             List<News> news = new List<News>();
             XmlReader xmlReader = XmlReader.Create(url);
             SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
-
+            var newsAll = await _mediator.Send(new GetNewsQueryModel());
             if (feed != null)
             {
                 foreach (var postNews in feed.Items)
@@ -44,14 +45,16 @@ namespace ServiceParser.Parser
                     if (!string.IsNullOrEmpty(description))
                     {
                        
-                        Category category =  await _mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
+                        Category category = 
+                            await _mediator.Send(
+                                new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
                         string title = postNews.Title.Text.Replace("&nbsp;", string.Empty);
                         string linkURL = postNews.Links.FirstOrDefault().Uri.ToString();
                         string content = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
                                  .Replace("Читать далее…", "");
-                        
-                        var moonInd = _getIndexMoodNews.GetScore(description).Result;
-                        
+
+                        double moonInd = _getIndexMoodNews.GetScore(description).Result;
+
                         news.Add(new News()
                         {
                             Title = title,
@@ -72,34 +75,40 @@ namespace ServiceParser.Parser
             List<News> news = new List<News>();
             XmlReader xmlReader = XmlReader.Create(url);
             SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
-
             if (feed != null)
             {
                 foreach (var postNews in feed.Items)
                 {
                     string linkNews = postNews.Links.FirstOrDefault().Uri.ToString();
-                    var description = ParserDescription(linkNews, node_ONLAINER);
-                    if (!string.IsNullOrEmpty(description))
+                    bool newsExist = await _mediator.Send(new GetNewsByUrlExistModel(linkNews));
+                    if (!newsExist)
                     {
-
-                        Category category = await _mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
-                        string title = postNews.Title.Text.Replace("&nbsp;", string.Empty);
-                        string linkURL = postNews.Links.FirstOrDefault().Uri.ToString();
-                        string content = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
-                                 .Replace("Читать далее…", "");
-                        
-                        var moonInd = _getIndexMoodNews.GetScore(description).Result;
-
-                        news.Add(new News()
+                        var description = ParserDescription(linkNews, node_ONLAINER);
+                        if (!string.IsNullOrEmpty(description))
                         {
-                            Title = title,
-                            DateCreate = postNews.PublishDate.DateTime,
-                            LinkURL = linkURL,
-                            NewsContent = content,
-                            Category = category,
-                            NewsDescription = description,
-                            MoodNews = moonInd
-                        });
+
+                            Category category =
+                                await _mediator.Send(
+                                    new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
+                            string title = postNews.Title.Text.Replace("&nbsp;", string.Empty);
+                            string linkURL = postNews.Links.FirstOrDefault().Uri.ToString();
+                            string content = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
+                                .Replace("Читать далее…", "");
+
+                            double moonInd = _getIndexMoodNews.GetScore(description).Result;
+
+                            news.Add(new News()
+                            {
+                                Title = title,
+                                DateCreate = postNews.PublishDate.DateTime,
+                                LinkURL = linkURL,
+                                NewsContent = content,
+                                Category = category,
+                                NewsDescription = description,
+                                MoodNews = moonInd
+                            }
+                            );
+                        }
                     }
                 }
             }
@@ -111,29 +120,29 @@ namespace ServiceParser.Parser
             List<News> news = new List<News>();
             XmlReader xmlReader = XmlReader.Create(url);
             SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
-
+            var newsAll = await _mediator.Send(new GetNewsQueryModel());
             if (feed != null)
             {
                 foreach (var postNews in feed.Items)
                 {
                     string linkNews = postNews.Links.FirstOrDefault().Uri.ToString();
+                    
                     var description = ParserDescription(linkNews, node_TUT);
                     if (!string.IsNullOrEmpty(description))
                     {
 
                         Category category = await _mediator.Send(new AddCategoryByNameCommandModel(postNews.Categories.FirstOrDefault().Name));
                         string title = postNews.Title.Text.Replace("&nbsp;", string.Empty);
-                        string linkURL = postNews.Links.FirstOrDefault().Uri.ToString();
                         string content = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
                                  .Replace("Читать далее…", "");
-                        
-                        var moonInd = _getIndexMoodNews.GetScore(description).Result;
+
+                        double moonInd = _getIndexMoodNews.GetScore(description).Result;
 
                         news.Add(new News()
                         {
                             Title = title,
                             DateCreate = postNews.PublishDate.DateTime,
-                            LinkURL = linkURL,
+                            LinkURL = linkNews,
                             NewsContent = content,
                             Category = category,
                             NewsDescription = description,

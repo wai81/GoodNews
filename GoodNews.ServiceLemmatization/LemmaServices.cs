@@ -81,43 +81,42 @@ namespace GoodNews.ServiceLemmatization
         //public async Task<String> RequestToLemma(string cText)
         public async Task<Dictionary<string, int>> RequestToLemma(string cText)
         {
-                       
+            Dictionary<string, int> response = new Dictionary<string, int>();
             try
             {
                 //string response = null;
-                Dictionary<string, int> response = new Dictionary<string, int>();
+               
                 int cTextLength = cText.Length;
-                string[] content;
+                //string[] content;
+                //content = new string[cTextLength / 1500 + 1];
+                //for (int a = 0; a < content.Length; a++)
+                //{
+                //    content[a] = cText.Substring(a * 1500, cTextLength - a * 1500 > 1500 ? 1500 : cTextLength - a * 1500);
+                //}
 
-                content = new string[cTextLength / 1500 + 1];
-                for (int a = 0; a < content.Length; a++)
-                {
-                    content[a] = cText.Substring(a * 1500, cTextLength - a * 1500 > 1500 ? 1500 : cTextLength - a * 1500);
-                }
-
-                for (int a = 0; a < content.Length; a++)
-                {
-                    var listWordsContent = await SendRequest(content[a]);
+                //for (int a = 0; a < content.Length; a++)
+                //{
+                //var listWordsContent = await SendRequest(content[a]);
+                    var listWordsContent = await SendRequest(cText);
                     var jsonList = ParsingResponseFromLemma(listWordsContent);
-                    foreach (KeyValuePair<string, int> keyValues in jsonList)
-                    {
-                        var key = keyValues.Key;
-                        var newValue = keyValues.Value;
-                        int val;
-                        if (response.TryGetValue(key, out val))
-                        {
-                            response[key] = val + newValue;
-                        }
-                        else
-                        {
-                          response.Add(key, newValue);
-                        }
-                       
-                    }
-                     //response = $"{response}{jsonList}";
-                }
-                     
-                return response;
+                //foreach (KeyValuePair<string, int> keyValues in jsonList)
+                //{
+                //    var key = keyValues.Key;
+                //    var newValue = keyValues.Value;
+                //    int val;
+                //    if (response.TryGetValue(key, out val))
+                //    {
+                //        response[key] = val + newValue;
+                //    }
+                //    else
+                //    {
+                //      response.Add(key, newValue);
+                //    }
+
+                //}
+                //}
+                //return response;
+                return jsonList;
             }
             catch (Exception ex)
             {

@@ -7,6 +7,6 @@ namespace Core
 {
     public interface IGetIndexMoodNews
     {
-        Task<float> GetScore(string cText);
+        Task<double> GetScore(string cText);
     }
 }

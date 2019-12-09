@@ -20,7 +20,7 @@ namespace GoodNews.DB
         public virtual Category Category { get; set; }
         ///public ICollection<Category> Category { get; set; }
         public virtual ICollection<NewsComment> NewsComments { get; set; }
-        public virtual float MoodNews { get; set; }
+        public virtual double MoodNews { get; set; }
 
     }
 }

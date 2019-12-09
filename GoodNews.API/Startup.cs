@@ -138,12 +138,12 @@ namespace GoodNews.API
 
             var service = app.ApplicationServices.GetService<IUpdateNewsFromUrl>();
             //service.ParserNewsS13();
-            //BackgroundJob.Schedule(() => service.ParserNewsOnlainer(), TimeSpan.FromMinutes(10));
-            //BackgroundJob.Schedule(() => service.ParserNewsS13(), TimeSpan.FromMinutes(15));
-            //BackgroundJob.Schedule(() => service.ParserNewsTUT(), TimeSpan.FromMinutes(20));
-            RecurringJob.AddOrUpdate(() => service.ParserNewsTUT(), Cron.Hourly(25));
-            RecurringJob.AddOrUpdate(() => service.ParserNewsS13(), Cron.Hourly(25));
-            RecurringJob.AddOrUpdate(() => service.ParserNewsOnlainer(), Cron.Hourly(25));
+            BackgroundJob.Schedule(() => service.ParserNewsOnlainer(), TimeSpan.FromMinutes(30));
+            BackgroundJob.Schedule(() => service.ParserNewsS13(), TimeSpan.FromMinutes(15));
+            BackgroundJob.Schedule(() => service.ParserNewsTUT(), TimeSpan.FromMinutes(20));
+            //RecurringJob.AddOrUpdate(() => service.ParserNewsTUT(), Cron.Hourly(25));
+            //RecurringJob.AddOrUpdate(() => service.ParserNewsS13(), Cron.Hourly(25));
+            //RecurringJob.AddOrUpdate(() => service.ParserNewsOnlainer(), Cron.Hourly(25));
 
             app.UseMvc(routes=>
             {

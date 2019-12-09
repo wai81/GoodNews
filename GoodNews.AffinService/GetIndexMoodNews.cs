@@ -20,39 +20,33 @@ namespace GoodNews.ServiceNewsAnalysisContent
             _lemma = lemma;
         }
 
-       
-
         public Dictionary<string, string> LoadDictionary()
         {
-            //try
-            //{
-            Dictionary<string, string> afinnDictionary = new Dictionary<string, string>();
+            try
+            {
+                Dictionary<string, string> afinnDictionary = new Dictionary<string, string>();
 
-            var afinnFile = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "\\.." + "\\.." + "\\.." + "\\.." + @"\GoodNews.AffinService"+@"\AFINN-ru.json");
-            afinnDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(afinnFile);
-            return afinnDictionary;
-
-
-             //}
-            //catch (Exception ex)
-            //{
-            //    return null;
-            //}
+                var afinnFile = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "\\.." + "\\.." + "\\.." + "\\.." + @"\GoodNews.AffinService" + @"\AFINN-ru.json");
+                afinnDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(afinnFile);
+                return afinnDictionary;
 
 
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
-        public async Task<float> GetScore(string content)
+        public async Task<double> GetScore(string content)
         {
-            float result;
-            int scorePositive = 0;
-            int scoreNegative = 0;
-            int countWords = 0;
-
+            double result;
             var afinnDictionary = LoadDictionary();
             var contentDictionary = await _lemma.RequestToLemma(content);
             //var contentDictionary = JsonConvert.DeserializeObject<Dictionary<string, int>>(textL);
-
+            int scorePositive = 0;
+            int scoreNegative = 0;
+            int countWords = 0;
             foreach (var word in contentDictionary.Keys)
             {
                 if (afinnDictionary.ContainsKey(word))
@@ -64,7 +58,7 @@ namespace GoodNews.ServiceNewsAnalysisContent
                     countWords += contentDictionary[word];
                 }
             }
-            result = scorePositive / countWords;
+            result = (double)scorePositive / countWords;
             return result;
         }
 
