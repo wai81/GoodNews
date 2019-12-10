@@ -25,13 +25,13 @@ namespace GoodNews.Infrastructure.Commands.Handlers.Categories
         public async Task<Category> Handle(AddCategoryByNameCommandModel request, CancellationToken cancellationToken)
         {
             var categories = await _context.Categories.ToListAsync(cancellationToken);
-            var result = categories.Where(c => c.Name.Equals(request.Name)).FirstOrDefault();
+            var result = categories.FirstOrDefault(c => c.Name.Equals(request.Name));
             //var result = await mediator.Send(new GetCategoryByNameQueryModel(request.Name), cancellationToken);
             if (result == null)
             {
                 result = new Category { Name = request.Name };
-                await _context.AddAsync(result);
-                await _context.SaveChangesAsync();
+                await _context.AddAsync(result, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
             }
             return result;
         }

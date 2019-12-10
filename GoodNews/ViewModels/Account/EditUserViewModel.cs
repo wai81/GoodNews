@@ -1,4 +1,4 @@
-﻿namespace Models.ViewModels.Account
+﻿namespace GoodNews.ViewModels.Account
 {
     public class EditUserViewModel
     {

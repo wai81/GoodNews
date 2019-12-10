@@ -26,11 +26,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodNews.API", "GoodNews.AP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodNews.Infrastructure", "GoodNews.Infrastructure\GoodNews.Infrastructure.csproj", "{E115A327-597C-4C81-B668-8C3C27C9A42C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodNews.UpdateNews", "GoodNews.UpdateNews\GoodNews.UpdateNews.csproj", "{69F5B227-A24F-40DA-956E-BF19001BA03F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodNews.UpdateNewsServices", "GoodNews.UpdateNews\GoodNews.UpdateNewsServices.csproj", "{69F5B227-A24F-40DA-956E-BF19001BA03F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodNews.ServiceLemmatization", "GoodNews.ServiceLemmatization\GoodNews.ServiceLemmatization.csproj", "{867A30C8-F89F-4283-B431-77F50C5A5961}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodNews.ServiceNewsAnalysisContent", "GoodNews.AffinService\GoodNews.ServiceNewsAnalysisContent.csproj", "{F9BCBB22-9063-4F2F-966D-97486358186A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodNews.ServiceNewsAnalysisContent", "GoodNews.AffinService\GoodNews.ServiceNewsAnalysisContent.csproj", "{F9BCBB22-9063-4F2F-966D-97486358186A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

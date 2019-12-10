@@ -2,11 +2,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Core;
-using Core.Interfaces;
 using GoodNews.DB;
 using GoodNews.ServiceLemmatization;
 using GoodNews.ServiceNewsAnalysisContent;
-using GoodNews.UpdateNews;
+using GoodNews.UpdateNewsServices;
 using Hangfire;
 using Hangfire.SqlServer;
 using MediatR;
@@ -85,8 +84,8 @@ namespace GoodNews.API
             //services.AddTransient<INewsGetterService, NewsGetterService>();
             
             //add Servise Parser News from URL
-            services.AddTransient<IParserSevice, ArticleServiceCQS>();
-            services.AddTransient<IUpdateNewsFromUrl, UpdateNewsFromUrl>();
+            services.AddTransient<IParserSevice, ParserSevice>();
+            services.AddTransient<INewsService, NewsService>();
             services.AddTransient<ILemmaServices, LemmaServices>();
             services.AddTransient<IGetIndexMoodNews, GetIndexMoodNews>();
           
@@ -139,11 +138,11 @@ namespace GoodNews.API
                 Authorization = new[] { new HangfireAuthorizationFilter() }
             });
 
-            var service = app.ApplicationServices.GetService<IUpdateNewsFromUrl>();
-            //service.ParserNewsS13();
-            BackgroundJob.Schedule(() => service.ParserNewsOnlainer(), TimeSpan.FromMinutes(30));
-            BackgroundJob.Schedule(() => service.ParserNewsS13(), TimeSpan.FromMinutes(15));
-            BackgroundJob.Schedule(() => service.ParserNewsTUT(), TimeSpan.FromMinutes(20));
+            var service = app.ApplicationServices.GetService<INewsService>();
+            //service.RequestUpdateNewsFromSourse(@"http://s13.ru/rss");
+            //BackgroundJob.Schedule(() => service.ParserNewsOnlainer(), TimeSpan.FromMinutes(30));
+            //BackgroundJob.Schedule(() => service.ParserNewsS13(), TimeSpan.FromMinutes(15));
+            //BackgroundJob.Schedule(() => service.ParserNewsTUT(), TimeSpan.FromMinutes(20));
             //RecurringJob.AddOrUpdate(() => service.ParserNewsTUT(), Cron.Hourly(25));
             //RecurringJob.AddOrUpdate(() => service.ParserNewsS13(), Cron.Hourly(25));
             //RecurringJob.AddOrUpdate(() => service.ParserNewsOnlainer(), Cron.Hourly(25));

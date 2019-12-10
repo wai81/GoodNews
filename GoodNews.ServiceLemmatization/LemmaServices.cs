@@ -63,13 +63,6 @@ namespace GoodNews.ServiceLemmatization
                         }
                     }
                 }
-
-                //string dictionaryString = "{";
-                //foreach (KeyValuePair<string, int> keyValues in content)
-                //{
-                //    dictionaryString += keyValues.Key + " : " + keyValues.Value + ", ";
-                //}
-                //return dictionaryString.TrimEnd(',', ' ') + "}";
                 return _content;
             }
             catch (Exception ex)

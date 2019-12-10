@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Core;
 using GoodNews.API.Models;
 using GoodNews.DB;
 using GoodNews.Infrastructure.Commands.Models.Post;
@@ -24,10 +25,12 @@ namespace GoodNews.API.Controllers
     public class NewsController : ControllerBase
     {
         private readonly IMediator mediator;
-
-        public NewsController(IMediator mediator)
+        private readonly INewsService _newsService;
+        public NewsController(IMediator mediator, INewsService newsService)
         {
+            
             this.mediator = mediator;
+            _newsService = newsService;
         }
         /// <summary>
         /// Get all news articles 
@@ -41,7 +44,8 @@ namespace GoodNews.API.Controllers
         {
             //try
             //{
-                return Ok(await mediator.Send(new GetNewsQueryModel()));
+            await _newsService.RequestUpdateNewsFromSourse(@"http://s13.ru/rss");
+            return Ok(await mediator.Send(new GetNewsQueryModel()));
             //}
             //catch (Exception e)
             //{

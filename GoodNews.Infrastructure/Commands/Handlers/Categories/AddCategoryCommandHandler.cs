@@ -15,7 +15,7 @@ namespace GoodNews.Infrastructure.Commands.Handlers.Categories
         }
         public async Task<bool> Handle(AddCategoryCommandModel request, CancellationToken cancellationToken)
         {
-            await _context.Categories.AddAsync(request.Category, cancellationToken);
+            await _context.Categories.AddRangeAsync(request.Category, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }

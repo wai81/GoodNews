@@ -14,7 +14,7 @@ using MediatR;
 
 namespace ServiceParser.Parser
 {
-    public class ArticleServiceCQS : IParserSevice
+    public class ParserSevice : IParserSevice
 
     {
         private const string node_TUT = "//html/body/div/div/div/div/div/div/div/div/p";
@@ -23,7 +23,7 @@ namespace ServiceParser.Parser
 
         private readonly IMediator _mediator;
         private readonly IGetIndexMoodNews _getIndexMoodNews;
-        public ArticleServiceCQS(IMediator mediator, IGetIndexMoodNews getIndexMoodNews)
+        public ParserSevice(IMediator mediator, IGetIndexMoodNews getIndexMoodNews)
         {
             _mediator = mediator;
             _getIndexMoodNews = getIndexMoodNews;
@@ -33,9 +33,9 @@ namespace ServiceParser.Parser
         {
             var news = new List<News>();
             string node_url;
-            if (source.Contains("s13.ru/")) node_url = node_S13;
-            if (source.Contains("tut.by/")) node_url = node_TUT;
-            if (source.Contains("onliner.by/")) node_url = node_ONLAINER;
+            if (source.Contains("s13.ru/rss")) node_url = node_S13;
+            if (source.Contains("news.tut.by/rss")) node_url = node_TUT;
+            if (source.Contains("onliner.by/feed")) node_url = node_ONLAINER;
 
             XmlReader xmlReader = XmlReader.Create(source);
             SyndicationFeed feed = SyndicationFeed.Load(xmlReader);
@@ -48,12 +48,12 @@ namespace ServiceParser.Parser
                     var description = ParserDescription(linkNews, node_S13);
                     if (!string.IsNullOrEmpty(description))
                     {
-                        string categoryName = postNews.Categories.FirstOrDefault().Name;
+                        string categoryName = postNews.Categories.FirstOrDefault()?.Name;
                         string title = postNews.Title.Text.Replace("&nbsp;", string.Empty);
-                        string linkURL = postNews.Links.FirstOrDefault().Uri.ToString();
+                        string linkURL = postNews.Links.FirstOrDefault()?.Uri.ToString();
                         string content = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
                                  .Replace("Читать далее…", "");
-                        double moonInd = _getIndexMoodNews.GetScore(description).Result;
+                        //double moonInd = _getIndexMoodNews.GetScore(description).Result;
 
                         news.Add(new News()
                         {

@@ -1,12 +1,10 @@
-﻿using Core.Interfaces;
-using GoodNews.DB;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core;
+using GoodNews.DB;
 
-namespace ServiceParser.Parser
+namespace Core
 {
-    public interface IParserSevice : IArticleServiceCQS
+    public interface IParserSevice
     {
      
         IEnumerable<News> ParserNewsFromSource(string source);
