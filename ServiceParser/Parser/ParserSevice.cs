@@ -22,11 +22,10 @@ namespace ServiceParser.Parser
         private const string node_ONLAINER = "//html/body/div/div/div/div/div/div/div/div/div/div/div/div/div/div/p";
 
         private readonly IMediator _mediator;
-        private readonly IGetIndexMoodNews _getIndexMoodNews;
-        public ParserSevice(IMediator mediator, IGetIndexMoodNews getIndexMoodNews)
+        
+        public ParserSevice(IMediator mediator)
         {
             _mediator = mediator;
-            _getIndexMoodNews = getIndexMoodNews;
         }
 
         public IEnumerable<News> ParserNewsFromSource(string source)
@@ -92,7 +91,7 @@ namespace ServiceParser.Parser
                         string linkURL = postNews.Links.FirstOrDefault().Uri.ToString();
                         string content = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
                                  .Replace("Читать далее…", "");
-                        double moonInd = _getIndexMoodNews.GetScore(description).Result;
+                       //double moonInd = _getIndexMoodNews.GetScore(description).Result;
 
                         news.Add(new News()
                         {
@@ -134,7 +133,7 @@ namespace ServiceParser.Parser
                             string content = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
                                 .Replace("Читать далее…", "");
 
-                            double moonInd = _getIndexMoodNews.GetScore(description).Result;
+                            //double moonInd = _getIndexMoodNews.GetScore(description).Result;
 
                             news.Add(new News()
                             {
@@ -175,7 +174,7 @@ namespace ServiceParser.Parser
                         string content = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
                                  .Replace("Читать далее…", "");
 
-                        double moonInd = _getIndexMoodNews.GetScore(description).Result;
+                       // double moonInd = _getIndexMoodNews.GetScore(description).Result;
 
                         news.Add(new News()
                         {

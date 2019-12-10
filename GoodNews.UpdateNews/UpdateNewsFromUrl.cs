@@ -12,21 +12,22 @@ using GoodNews.Infrastructure.Queries.Models.Categories;
 using MediatR;
 using ServiceParser.Parser;
 
-namespace GoodNews.UpdateNewsServices
+namespace GoodNews.NewsServices
 {
     public class NewsService : INewsService
     {
         private readonly IMediator _mediator;
         private readonly IParserSevice _parser;
-       
+        private readonly ILemmaDictionary _lemma;
 
-        public NewsService(IMediator mediator, IParserSevice parserSevice)
+        public NewsService(IMediator mediator,
+            IParserSevice parserSevice, ILemmaDictionary lemma)
         {
             _mediator = mediator;
             _parser = parserSevice;
+            _lemma = lemma;
+          
         }
-
-        
 
         public async Task<bool> RequestUpdateNewsFromSourse(string sorseURL)
         {
@@ -43,9 +44,9 @@ namespace GoodNews.UpdateNewsServices
             }
 
             if (await _mediator.Send(new AddCategoryCommandModel(categoryName)))
-            {}
+            { }
 
-            //var allCategory = await _mediator.Send(new GetCategoriesQueryModel());
+
             foreach (var news in dataSourse)
             {
                 if (newsAll.Count(c => c.LinkURL.Equals(news.LinkURL)) == 0)
@@ -54,125 +55,39 @@ namespace GoodNews.UpdateNewsServices
                 }
             }
 
+            foreach (var news in dataSourse)
+            {
+                var i = await _lemma.DictionaryLemmaContentn(news.NewsContent);
+             Console.WriteLine(1);
+               // news.IndexPositive = await _getIndex.GetScore(news.NewsDescription);
+            }
             //await _mediator.Send(new AddNewsCommandModel(news));
             return true;
         }
 
-
-        //public async Task<bool> ParserNewsTUT()
+        //public async Task<double> GetScore(string content)
         //{
-        //    IEnumerable<News> newsTut = new List<News>();
-        //    var newsAll = await _mediator.Send(new GetNewsQueryModel());
-        //    newsTut = await _parser.ParserNewsFrom_TUT(@"https://news.tut.by/rss/all.rss");
-        //    foreach (var item in newsTut)
+        //    double result;
+        //    var afinnDictionary = LoadDictionary();
+        //    var contentDictionary = await RequestToLemma(content);
+        //    //var contentDictionary = JsonConvert.DeserializeObject<Dictionary<string, int>>(textL);
+        //    int scorePositive = 0;
+        //    int scoreNegative = 0;
+        //    int countWords = 0;
+        //    foreach (var word in contentDictionary.Keys)
         //    {
-        //        if (newsAll.Count(c => c.LinkURL.Equals(item.LinkURL)) == 0)
+        //        if (afinnDictionary.ContainsKey(word))
         //        {
-        //            await _mediator.Send(new AddNewsCommandModel(item));
+        //            var item = Convert.ToInt32(afinnDictionary[word]);
+
+        //            if (item > 0) scorePositive += item * contentDictionary[word];
+        //            if (item < 0) scoreNegative += item * contentDictionary[word];
+        //            countWords += contentDictionary[word];
         //        }
         //    }
-        //    return true;
-        //}
-        //public async Task<bool> ParserNewsS13()
-        //{
-        //    IEnumerable<News> newsS13 = new List<News>();
-        //    var newsAll = await _mediator.Send(new GetNewsQueryModel());
-        //    newsS13 = await _parser.ParserNewsFrom_S13(@"http://s13.ru/rss");
-        //    foreach (var s in newsS13)
-        //    {
-        //        if (newsAll.Count(c => c.LinkURL.Equals(s.LinkURL)) == 0)
-        //        {
-        //            await _mediator.Send(new AddNewsCommandModel(s));
-        //        }
-        //    }
-        //    return true;
-        //}
-        //public async Task<bool> ParserNewsOnlainer()
-        //{
-        //   // IEnumerable<News> newsOnl = new List<News>();
-        //    var newsAll = await _mediator.Send(new GetNewsQueryModel());
-        //    var newsOnl = await _parser.ParserNewsFrom_Onlainer(@"https://people.onliner.by/feed");
-        //    foreach (var o in newsOnl)
-        //    {
-        //        if (newsAll.Count(c => c.LinkURL.Equals(o.LinkURL)) == 0)
-        //        {
-        //            await _mediator.Send(new AddNewsCommandModel(o));
-        //        }
-        //    }
-        //    return true;
+        //    result = (double)scorePositive / countWords;
+        //    return result;
         //}
 
-
-
-        //public async Task<bool> ParserNewsByUrl()
-        //{
-        //    IEnumerable<News> newsTut = new List<News>();
-        //    IEnumerable<News> newsS13 = new List<News>();
-        //    IEnumerable<News> newsOnl = new List<News>();
-        //    var newsAll = await _mediator.Send(new GetNewsQueryModel());
-
-        //    //newsOnl = await _parser.ParserNewsFrom_Onlainer(@"https://people.onliner.by/feed");
-        //    //foreach (var o in newsOnl)
-        //    //{
-        //    //    if (newsAll.Count(c => c.LinkURL.Equals(o.LinkURL)) == 0)
-        //    //    {
-        //    //        await _mediator.Send(new AddNewsCommandModel(o));
-        //    //    }
-        //    //}
-
-        //    //newsTut = await _parser.ParserNewsFrom_TUT(@"https://news.tut.by/rss/all.rss");
-        //    //foreach (var item in newsTut)
-        //    //{
-        //    //    if (newsAll.Count(c => c.LinkURL.Equals(item.LinkURL)) == 0)
-        //    //    {
-        //    //        await _mediator.Send(new AddNewsCommandModel(item));
-        //    //    }
-        //    //}
-
-        //    //newsS13 = await _parser.ParserNewsFrom_S13(@"http://s13.ru/rss");
-        //    //foreach (var s in newsS13)
-        //    //{
-        //    //    if (newsAll.Count(c => c.LinkURL.Equals(s.LinkURL)) == 0)
-        //    //    {
-        //    //        await _mediator.Send(new AddNewsCommandModel(s));
-        //    //    }
-        //    //}
-
-        //    Parallel.Invoke(
-        //         async () =>
-        //         {
-        //             newsTut = await _parser.ParserNewsFrom_TUT(@"https://news.tut.by/rss/all.rss");
-        //             foreach (var item in newsTut)
-        //             {
-        //                 if (newsAll.Count(c => c.LinkURL.Equals(item.LinkURL)) == 0)
-        //                 {
-        //                     await _mediator.Send(new AddNewsCommandModel(item));
-        //                 }
-        //             }
-        //         },
-        //         async () =>
-        //         {
-        //            newsS13 = await _parser.ParserNewsFrom_S13(@"http://s13.ru/rss");
-        //            foreach (var s in newsS13)
-        //            {
-        //                if (newsAll.Count(c => c.LinkURL.Equals(s.LinkURL)) == 0)
-        //                {
-        //                    await _mediator.Send(new AddNewsCommandModel(s));
-        //                }
-        //            }
-        //         }, async () =>
-        //         {
-        //             newsOnl = await _parser.ParserNewsFrom_Onlainer(@"https://people.onliner.by/feed");
-        //             foreach (var o in newsOnl)
-        //             {
-        //                 if (newsAll.Count(c => c.LinkURL.Equals(o.LinkURL)) == 0)
-        //                 {
-        //                     await _mediator.Send(new AddNewsCommandModel(o));
-        //                 }
-        //             }
-        //         }
-        //      );
-        //    return true;
-        //}
     }
 }

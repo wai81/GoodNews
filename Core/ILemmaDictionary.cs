@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Core
 {
-    public interface IGetIndexMoodNews
+    public interface ILemmaDictionary
     {
-        Task<double> GetScore(string cText);
+        Task<Dictionary<string, int>> DictionaryLemmaContentn(string cText);
     }
 }

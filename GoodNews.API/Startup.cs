@@ -3,9 +3,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Core;
 using GoodNews.DB;
-using GoodNews.ServiceLemmatization;
-using GoodNews.ServiceNewsAnalysisContent;
-using GoodNews.UpdateNewsServices;
+using GoodNews.HttpServices;
+using GoodNews.NewsServices;
+using GoodNews.NewsServices.AfinnServices;
+using GoodNews.NewsServices.LemmaService;
 using Hangfire;
 using Hangfire.SqlServer;
 using MediatR;
@@ -40,6 +41,7 @@ namespace GoodNews.API
             services.AddDbContext<ApplicationContext>(options =>
                 // options.UseSqlServer(connection));
                 options.UseSqlServer(connection, c => c.MigrationsAssembly("GoodNews.DB")));
+           
             //add Identity
             services.AddIdentity<User, IdentityRole>(opts =>
             {
@@ -81,14 +83,13 @@ namespace GoodNews.API
             var assembly = AppDomain.CurrentDomain.Load("GoodNews.Infrastructure");
             services.AddMediatR(assembly);
             services.AddTransient<IMediator, Mediator>();
-            //services.AddTransient<INewsGetterService, NewsGetterService>();
             
             //add Servise Parser News from URL
             services.AddTransient<IParserSevice, ParserSevice>();
             services.AddTransient<INewsService, NewsService>();
-            services.AddTransient<ILemmaServices, LemmaServices>();
-            services.AddTransient<IGetIndexMoodNews, GetIndexMoodNews>();
-          
+            services.AddTransient<IHttpClientServises, HttpClientServices>();
+            services.AddTransient<IAfinneService, AfinneService>();
+            services.AddTransient<ILemmaDictionary, LemmaDictionary>();
             //add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
            

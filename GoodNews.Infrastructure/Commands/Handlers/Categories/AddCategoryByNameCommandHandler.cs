@@ -26,7 +26,6 @@ namespace GoodNews.Infrastructure.Commands.Handlers.Categories
         {
             var categories = await _context.Categories.ToListAsync(cancellationToken);
             var result = categories.FirstOrDefault(c => c.Name.Equals(request.Name));
-            //var result = await mediator.Send(new GetCategoryByNameQueryModel(request.Name), cancellationToken);
             if (result == null)
             {
                 result = new Category { Name = request.Name };
