@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodNews.HttpServices
+namespace ServiceHttp
 {
     public class HttpClientServices : IHttpClientServises
     {

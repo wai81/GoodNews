@@ -6,13 +6,11 @@ using Core;
 using GoodNews.DB;
 using GoodNews.Infrastructure.Commands.Models.Categories;
 using GoodNews.Infrastructure.Commands.Models.Post;
-using GoodNews.Infrastructure.Queries.Handlers.Categories;
 using GoodNews.Infrastructure.Queries.Models;
 using GoodNews.Infrastructure.Queries.Models.Categories;
 using MediatR;
-using ServiceParser.Parser;
 
-namespace GoodNews.NewsServices
+namespace ServiceNews
 {
     public class NewsService : INewsService
     {
@@ -31,10 +29,10 @@ namespace GoodNews.NewsServices
             _afinne = afinne;
         }
 
-       public async Task<bool> RequestUpdateNewsFromSourse(string sorseURL)
-       {
-           _affinDictionary = new Dictionary<string, string>();
-           _affinDictionary = _afinne.LoadDictionary();
+        public async Task<bool> RequestUpdateNewsFromSourse(string sorseURL)
+        {
+            _affinDictionary = new Dictionary<string, string>();
+            _affinDictionary = _afinne.LoadDictionary();
 
             //var categoryNews = new Dictionary<Guid,Category>();
             var dataSourse = _parser.ParserNewsFromSource(sorseURL);
@@ -52,20 +50,20 @@ namespace GoodNews.NewsServices
                     if (newsAll.Count(c => c.LinkURL.Equals(news.LinkURL)) == 0)
                     {
                         news.Category = await _mediator.Send(new GetCategoryByNameQueryModel(news.CategoryName));
-                        
+
                     }
                 }
             }
 
             return await _mediator.Send(new AddRangeNewsCommandModel(dataSourse));
 
-            
-       }
+
+        }
 
         private async Task<bool> UpdateCategory(IEnumerable<News> dataSourse)
         {
             List<Category> categoryName = new List<Category>();
-           foreach (var cat in dataSourse)
+            foreach (var cat in dataSourse)
             {
                 if (await _mediator.Send(new GetCategoryByNameQueryModel(cat.CategoryName)) == null)
                 {
@@ -73,12 +71,12 @@ namespace GoodNews.NewsServices
                 }
             }
 
-           if (categoryName.Count == 0)
-           {
-               return true;
-           }
-           return await _mediator.Send(new AddCategoryCommandModel(categoryName));
-           
+            if (categoryName.Count == 0)
+            {
+                return true;
+            }
+            return await _mediator.Send(new AddCategoryCommandModel(categoryName));
+
         }
 
         public async Task<double> GetScore(string cText)
@@ -103,16 +101,20 @@ namespace GoodNews.NewsServices
 
                     var contentWord = await _lemma.DictionaryLemmaContentn(contentM[a]);
                     int wordCount = contentWord.Length;
+                    if(wordCount!=0)
                     for (var i = 0; i < wordCount; i++)
                     {
                         var word = contentWord[i];
-                        if (_affinDictionary.ContainsKey(word))
+                        if (word != "")
                         {
-                            var item = Convert.ToInt32(_affinDictionary[word]);
+                            if (_affinDictionary.ContainsKey(word))
+                            {
+                                var item = Convert.ToInt32(_affinDictionary[word]);
 
-                            if (item > 0) scoreP += item;
-                            if (item < 0) scoreN += item;
-                            countW += 1;
+                                if (item > 0) scoreP += item;
+                                if (item < 0) scoreN += item;
+                                countW += 1;
+                            }
                         }
                     }
 
@@ -120,8 +122,15 @@ namespace GoodNews.NewsServices
                     scoreNegative += scoreN;
                     countWords += countW;
                 }
-
-                double result = (double)scorePositive / countWords;
+                double result;
+                if (countWords != 0)
+                {
+                     result = Math.Round((double)scorePositive / countWords,2);
+                }
+                else
+                {
+                    result = 0;
+                }
                 return result;
             }
             catch (Exception ex)

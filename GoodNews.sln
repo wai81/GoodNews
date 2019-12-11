@@ -26,9 +26,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodNews.API", "GoodNews.AP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodNews.Infrastructure", "GoodNews.Infrastructure\GoodNews.Infrastructure.csproj", "{E115A327-597C-4C81-B668-8C3C27C9A42C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodNews.NewsServices", "GoodNews.UpdateNews\GoodNews.NewsServices.csproj", "{69F5B227-A24F-40DA-956E-BF19001BA03F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceLemmatization", "ServiceLemmatization\ServiceLemmatization.csproj", "{44B60E07-1612-4474-8F7D-D39EFED680A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodNews.HttpServices", "GoodNews.ServiceLemmatization\GoodNews.HttpServices.csproj", "{867A30C8-F89F-4283-B431-77F50C5A5961}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceAfinn165", "ServiceAfinn165\ServiceAfinn165.csproj", "{596FF02E-9CC3-4162-B947-1D8858A7EA73}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceHttp", "ServiceHttp\ServiceHttp.csproj", "{CBF111E2-18D8-430A-94EE-6179F6D97F20}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceNews", "ServiceNews\ServiceNews.csproj", "{968517B4-03E1-4394-8DFA-46A2EEF3FE01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,14 +68,22 @@ Global
 		{E115A327-597C-4C81-B668-8C3C27C9A42C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E115A327-597C-4C81-B668-8C3C27C9A42C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E115A327-597C-4C81-B668-8C3C27C9A42C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{69F5B227-A24F-40DA-956E-BF19001BA03F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69F5B227-A24F-40DA-956E-BF19001BA03F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{69F5B227-A24F-40DA-956E-BF19001BA03F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{69F5B227-A24F-40DA-956E-BF19001BA03F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{867A30C8-F89F-4283-B431-77F50C5A5961}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{867A30C8-F89F-4283-B431-77F50C5A5961}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{867A30C8-F89F-4283-B431-77F50C5A5961}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{867A30C8-F89F-4283-B431-77F50C5A5961}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44B60E07-1612-4474-8F7D-D39EFED680A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44B60E07-1612-4474-8F7D-D39EFED680A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44B60E07-1612-4474-8F7D-D39EFED680A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44B60E07-1612-4474-8F7D-D39EFED680A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{596FF02E-9CC3-4162-B947-1D8858A7EA73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{596FF02E-9CC3-4162-B947-1D8858A7EA73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{596FF02E-9CC3-4162-B947-1D8858A7EA73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{596FF02E-9CC3-4162-B947-1D8858A7EA73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBF111E2-18D8-430A-94EE-6179F6D97F20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBF111E2-18D8-430A-94EE-6179F6D97F20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBF111E2-18D8-430A-94EE-6179F6D97F20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBF111E2-18D8-430A-94EE-6179F6D97F20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{968517B4-03E1-4394-8DFA-46A2EEF3FE01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{968517B4-03E1-4394-8DFA-46A2EEF3FE01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{968517B4-03E1-4394-8DFA-46A2EEF3FE01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{968517B4-03E1-4394-8DFA-46A2EEF3FE01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

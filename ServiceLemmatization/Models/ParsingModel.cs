@@ -3,13 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GoodNews.ServiceNewsAnalysisContent
+namespace ServiceLemmatization.Models
 {
     public class ParsingModel
     {
         [JsonProperty("text")]
         public string Text { get; set; }
-
         [JsonProperty("annotations")]
         public Annot annotations { get; set; }
 
@@ -31,5 +30,3 @@ namespace GoodNews.ServiceNewsAnalysisContent
         public string Value { get; set; }
     }
 }
-
-

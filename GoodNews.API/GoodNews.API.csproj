@@ -22,8 +22,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GoodNews.Infrastructure\GoodNews.Infrastructure.csproj" />
-    <ProjectReference Include="..\GoodNews.ServiceLemmatization\GoodNews.HttpServices.csproj" />
-    <ProjectReference Include="..\GoodNews.UpdateNews\GoodNews.NewsServices.csproj" />
+    <ProjectReference Include="..\ServiceAfinn165\ServiceAfinn165.csproj" />
+    <ProjectReference Include="..\ServiceHttp\ServiceHttp.csproj" />
+    <ProjectReference Include="..\ServiceLemmatization\ServiceLemmatization.csproj" />
+    <ProjectReference Include="..\ServiceNews\ServiceNews.csproj" />
     <ProjectReference Include="..\ServiceParser\ServiceParser.csproj" />
   </ItemGroup>
 

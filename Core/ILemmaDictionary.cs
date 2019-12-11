@@ -7,6 +7,6 @@ namespace Core
 {
     public interface ILemmaDictionary
     {
-        Task<Dictionary<string, int>> DictionaryLemmaContentn(string cText);
+        Task<string[]> DictionaryLemmaContentn(string content);
     }
 }
