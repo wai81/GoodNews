@@ -19,23 +19,53 @@ namespace GoodNews.NewsServices
         private readonly IMediator _mediator;
         private readonly IParserSevice _parser;
         private readonly ILemmaDictionary _lemma;
+        private readonly IAfinneService _afinne;
+        private Dictionary<string, string> _affinDictionary;
 
         public NewsService(IMediator mediator,
-            IParserSevice parserSevice, ILemmaDictionary lemma)
+            IParserSevice parserSevice, ILemmaDictionary lemma, IAfinneService afinne)
         {
             _mediator = mediator;
             _parser = parserSevice;
             _lemma = lemma;
-          
+            _afinne = afinne;
         }
 
-        public async Task<bool> RequestUpdateNewsFromSourse(string sorseURL)
-        {
+       public async Task<bool> RequestUpdateNewsFromSourse(string sorseURL)
+       {
+           _affinDictionary = new Dictionary<string, string>();
+           _affinDictionary = _afinne.LoadDictionary();
+
             //var categoryNews = new Dictionary<Guid,Category>();
-            List<Category> categoryName = new List<Category>();
             var dataSourse = _parser.ParserNewsFromSource(sorseURL);
             var newsAll = await _mediator.Send(new GetNewsQueryModel());
-            foreach (var cat in dataSourse)
+
+            foreach (var news in dataSourse)
+            {
+                news.IndexPositive = await GetScore(news.NewsDescription);
+            }
+
+            if (await UpdateCategory(dataSourse))
+            {
+                foreach (var news in dataSourse)
+                {
+                    if (newsAll.Count(c => c.LinkURL.Equals(news.LinkURL)) == 0)
+                    {
+                        news.Category = await _mediator.Send(new GetCategoryByNameQueryModel(news.CategoryName));
+                        
+                    }
+                }
+            }
+
+            return await _mediator.Send(new AddRangeNewsCommandModel(dataSourse));
+
+            
+       }
+
+        private async Task<bool> UpdateCategory(IEnumerable<News> dataSourse)
+        {
+            List<Category> categoryName = new List<Category>();
+           foreach (var cat in dataSourse)
             {
                 if (await _mediator.Send(new GetCategoryByNameQueryModel(cat.CategoryName)) == null)
                 {
@@ -43,51 +73,59 @@ namespace GoodNews.NewsServices
                 }
             }
 
-            if (await _mediator.Send(new AddCategoryCommandModel(categoryName)))
-            { }
-
-
-            foreach (var news in dataSourse)
-            {
-                if (newsAll.Count(c => c.LinkURL.Equals(news.LinkURL)) == 0)
-                {
-                    news.Category = await _mediator.Send(new GetCategoryByNameQueryModel(news.CategoryName));
-                }
-            }
-
-            foreach (var news in dataSourse)
-            {
-                var i = await _lemma.DictionaryLemmaContentn(news.NewsContent);
-             Console.WriteLine(1);
-               // news.IndexPositive = await _getIndex.GetScore(news.NewsDescription);
-            }
-            //await _mediator.Send(new AddNewsCommandModel(news));
-            return true;
+           if (categoryName.Count == 0)
+           {
+               return true;
+           }
+           return await _mediator.Send(new AddCategoryCommandModel(categoryName));
+           
         }
 
-        //public async Task<double> GetScore(string content)
-        //{
-        //    double result;
-        //    var afinnDictionary = LoadDictionary();
-        //    var contentDictionary = await RequestToLemma(content);
-        //    //var contentDictionary = JsonConvert.DeserializeObject<Dictionary<string, int>>(textL);
-        //    int scorePositive = 0;
-        //    int scoreNegative = 0;
-        //    int countWords = 0;
-        //    foreach (var word in contentDictionary.Keys)
-        //    {
-        //        if (afinnDictionary.ContainsKey(word))
-        //        {
-        //            var item = Convert.ToInt32(afinnDictionary[word]);
+        public async Task<double> GetScore(string cText)
+        {
+            try
+            {
+                int scorePositive = 0;
+                int scoreNegative = 0;
+                int countWords = 0;
+                int cTextLength = cText.Length;
+                var contentM = new string[cTextLength / 1500 + 1];
+                for (int a = 0; a < contentM.Length; a++)
+                {
+                    contentM[a] = cText.Substring(a * 1500, cTextLength - a * 1500 > 1500 ? 1500 : cTextLength - a * 1500);
+                }
 
-        //            if (item > 0) scorePositive += item * contentDictionary[word];
-        //            if (item < 0) scoreNegative += item * contentDictionary[word];
-        //            countWords += contentDictionary[word];
-        //        }
-        //    }
-        //    result = (double)scorePositive / countWords;
-        //    return result;
-        //}
+                for (int a = 0; a < contentM.Length; a++)
+                {
+                    int scoreP = 0;
+                    int scoreN = 0;
+                    int countW = 0;
 
+                    var contentDictionary = await _lemma.DictionaryLemmaContentn(contentM[a]);
+                    foreach (var word in contentDictionary.Keys)
+                    {
+                        if (_affinDictionary.ContainsKey(word))
+                        {
+                            var item = Convert.ToInt32(_affinDictionary[word]);
+
+                            if (item > 0) scoreP += item * contentDictionary[word];
+                            if (item < 0) scoreN += item * contentDictionary[word];
+                            countW += contentDictionary[word];
+                        }
+                    }
+
+                    scorePositive += scoreP;
+                    scoreNegative += scoreN;
+                    countWords += countW;
+                }
+
+                double result = (double)scorePositive / countWords;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
     }
 }

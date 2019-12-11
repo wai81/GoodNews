@@ -51,42 +51,42 @@ namespace GoodNews.NewsServices.LemmaService
         {         
             try
             {
-                var response = new Dictionary<string, int>();
+                //var response = new Dictionary<string, int>();
                 var result = new Dictionary<string, int>();
-                string urlLematization = @"http://api.ispras.ru/texterra/v1/nlp?targetType=lemma&apikey=714ec07b4d7c15088d0d17381d78f4ffe4582ef7";
-                int cTextLength = cText.Length;
-                string[] content;
-                content = new string[cTextLength / 1500 + 1];
-                for (int a = 0; a < content.Length; a++)
-                {
-                    content[a] = cText.Substring(a * 1500, cTextLength - a * 1500 > 1500 ? 1500 : cTextLength - a * 1500);
-                }
+                string urlLematization = "http://api.ispras.ru/texterra/v1/nlp?targetType=lemma&apikey=714ec07b4d7c15088d0d17381d78f4ffe4582ef7";
+                //int cTextLength = cText.Length;
+                //string[] content;
+                //content = new string[cTextLength / 1500 + 1];
+                //for (int a = 0; a < content.Length; a++)
+                //{
+                //    content[a] = cText.Substring(a * 1500, cTextLength - a * 1500 > 1500 ? 1500 : cTextLength - a * 1500);
+                //}
 
-                for (int a = 0; a < content.Length; a++)
-                {
-                    var listWordsContent = await _httpClient.SendRequest(content[a], urlLematization);
-                    var jsonList = ParsingResponseFromLemma(listWordsContent);
+                //for (int a = 0; a < content.Length; a++)
+                //{
+                    var listWordsContent = await _httpClient.SendRequest(cText, urlLematization);
+                    var response = ParsingResponseFromLemma(listWordsContent);
+                    //foreach (KeyValuePair<string, int> keyValues in jsonList)
+                    //{
+                    //    string key = keyValues.Key;
+                    //    int newValue = keyValues.Value;
+                    //    int val;
+                    //    if (key != null || newValue != null)
+                    //    {
+                    //        if (result.TryGetValue(key, out val))
+                    //        {
+                    //            result[key] = val + newValue;
+                    //        }
+                    //        else
+                    //        {
+                    //            result.Add(key, newValue);
+                    //        }
+                    //    }
+                    //}
 
 
-                    foreach (KeyValuePair<string, int> dict in jsonList)
-                       {
-                            result[dict.Key] = dict.Value;
-                        }
-                    //{
-                    //var key = keyValues.Key;
-                    //var newValue = keyValues.Value;
-                    ////int val;
-                    //if (response.ContainsKey(key))
-                    //{
-                    //    response[key] = response[key] + newValue;
-                    //}
-                    //else
-                    //{
-                    //    response.Add(key, newValue);
-                    //}
-                    //}
-                }
-                response = result;
+                //}
+                //response = result;
                 return response;
             }
             catch (Exception ex)

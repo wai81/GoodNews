@@ -9,16 +9,16 @@ namespace GoodNews.HttpServices
 {
     public class HttpClientServices : IHttpClientServises
     {
-        public async Task<string> SendRequest(string requstContent, string url)
+        public async Task<string> SendRequest(string requstContent, string reqestUri)
         {
-            string response = null;
             try
             {
+                string response = null;
                 using (var client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpRequestMessage request =
-                        new HttpRequestMessage(new HttpMethod("POST"), url);
+                        new HttpRequestMessage(new HttpMethod("POST"), reqestUri);
                     request.Headers.TryAddWithoutValidation("Accept", "application/json");
                     request.Content = new StringContent("[ { \"text\" : \"" + requstContent + "\" } ]", Encoding.UTF8, "application/json");
                     var x = client.SendAsync(request).Result;
