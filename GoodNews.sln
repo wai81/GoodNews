@@ -34,6 +34,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceHttp", "ServiceHttp\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceNews", "ServiceNews\ServiceNews.csproj", "{968517B4-03E1-4394-8DFA-46A2EEF3FE01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiseRatingCalculation", "ServiseRatingCalculation\ServiseRatingCalculation.csproj", "{A04B02B5-4E6E-4239-83A7-29B930373858}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,10 @@ Global
 		{968517B4-03E1-4394-8DFA-46A2EEF3FE01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{968517B4-03E1-4394-8DFA-46A2EEF3FE01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{968517B4-03E1-4394-8DFA-46A2EEF3FE01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A04B02B5-4E6E-4239-83A7-29B930373858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A04B02B5-4E6E-4239-83A7-29B930373858}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A04B02B5-4E6E-4239-83A7-29B930373858}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A04B02B5-4E6E-4239-83A7-29B930373858}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

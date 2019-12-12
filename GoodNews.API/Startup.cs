@@ -20,6 +20,7 @@ using ServiceHttp;
 using ServiceLemmatization;
 using ServiceNews;
 using ServiceParser.Parser;
+using ServiseRatingCalculation;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace GoodNews.API
@@ -90,6 +91,7 @@ namespace GoodNews.API
             services.AddTransient<IHttpClientServises, HttpClientServices>();
             services.AddTransient<IAfinneService, AfinneService>();
             services.AddTransient<ILemmaDictionary, LemmaDictionary>();
+            services.AddTransient<IRatingCalculationSevice, RatingCalculationSevice>();
             //add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
            
@@ -140,13 +142,9 @@ namespace GoodNews.API
             });
 
             var service = app.ApplicationServices.GetService<INewsService>();
-            //service.RequestUpdateNewsFromSourse(@"http://s13.ru/rss");
-            //BackgroundJob.Schedule(() => service.ParserNewsOnlainer(), TimeSpan.FromMinutes(30));
-            //BackgroundJob.Schedule(() => service.ParserNewsS13(), TimeSpan.FromMinutes(15));
-            //BackgroundJob.Schedule(() => service.ParserNewsTUT(), TimeSpan.FromMinutes(20));
-            //RecurringJob.AddOrUpdate(() => service.ParserNewsTUT(), Cron.Hourly(25));
-            //RecurringJob.AddOrUpdate(() => service.ParserNewsS13(), Cron.Hourly(25));
-            //RecurringJob.AddOrUpdate(() => service.ParserNewsOnlainer(), Cron.Hourly(25));
+            RecurringJob.AddOrUpdate(
+                () => service.RequestUpdateNewsFromSourse(),
+                Cron.Hourly);
 
             app.UseMvc(routes=>
             {

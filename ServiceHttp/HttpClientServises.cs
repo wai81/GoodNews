@@ -1,5 +1,6 @@
 ﻿using Core;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -22,7 +23,10 @@ namespace ServiceHttp
                     request.Headers.TryAddWithoutValidation("Accept", "application/json");
                     request.Content = new StringContent("[ { \"text\" : \"" + requstContent + "\" } ]", Encoding.UTF8, "application/json");
                     var x = client.SendAsync(request).Result;
-                    response = await x.Content.ReadAsStringAsync();
+                    if (x.IsSuccessStatusCode)
+                    {
+                        response = await x.Content.ReadAsStringAsync();
+                    }
                 }
                 return response;
             }

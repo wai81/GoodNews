@@ -27,6 +27,7 @@
     <ProjectReference Include="..\ServiceLemmatization\ServiceLemmatization.csproj" />
     <ProjectReference Include="..\ServiceNews\ServiceNews.csproj" />
     <ProjectReference Include="..\ServiceParser\ServiceParser.csproj" />
+    <ProjectReference Include="..\ServiseRatingCalculation\ServiseRatingCalculation.csproj" />
   </ItemGroup>
 
 </Project>

@@ -44,7 +44,7 @@ namespace GoodNews.API.Controllers
         {
             //try
             //{
-            await _newsService.RequestUpdateNewsFromSourse(@"http://s13.ru/rss");
+            await _newsService.RequestUpdateNewsFromSourse();
             return Ok(await mediator.Send(new GetNewsQueryModel()));
             //}
             //catch (Exception e)

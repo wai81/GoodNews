@@ -16,50 +16,64 @@ namespace ServiceNews
     {
         private readonly IMediator _mediator;
         private readonly IParserSevice _parser;
-        private readonly ILemmaDictionary _lemma;
+        private readonly IRatingCalculationSevice _calculationSevice;
         private readonly IAfinneService _afinne;
         private Dictionary<string, string> _affinDictionary;
 
         public NewsService(IMediator mediator,
-            IParserSevice parserSevice, ILemmaDictionary lemma, IAfinneService afinne)
+            IParserSevice parserSevice, IRatingCalculationSevice calculationSevice, IAfinneService afinne)
         {
             _mediator = mediator;
             _parser = parserSevice;
-            _lemma = lemma;
             _afinne = afinne;
+            _calculationSevice = calculationSevice;
         }
 
-        public async Task<bool> RequestUpdateNewsFromSourse(string sorseURL)
+        public async Task<bool> RequestUpdateNewsFromSourse()
         {
             _affinDictionary = new Dictionary<string, string>();
             _affinDictionary = _afinne.LoadDictionary();
 
             //var categoryNews = new Dictionary<Guid,Category>();
-            var dataSourse = _parser.ParserNewsFromSource(sorseURL);
+            var dataSourse = GetParseNews();
             var newsAll = await _mediator.Send(new GetNewsQueryModel());
 
-            foreach (var news in dataSourse)
-            {
-                news.IndexPositive = await GetScore(news.NewsDescription);
-            }
+            //foreach (var news in dataSourse)
+            //{
+            //    news.IndexPositive = await _calculationSevice.GetContentRating(news.NewsDescription, _affinDictionary);
+            //}
 
             if (await UpdateCategory(dataSourse))
             {
                 foreach (var news in dataSourse)
                 {
-                    if (newsAll.Count(c => c.LinkURL.Equals(news.LinkURL)) == 0)
-                    {
-                        news.Category = await _mediator.Send(new GetCategoryByNameQueryModel(news.CategoryName));
-
-                    }
+                   news.Category = await _mediator.Send(new GetCategoryByNameQueryModel(news.CategoryName));
+                      if (newsAll.Count(c => c.LinkURL.Equals(news.LinkURL)) == 0)
+                      {
+                            await _mediator.Send(new AddRangeNewsCommandModel(dataSourse));
+                      }
                 }
             }
 
-            return await _mediator.Send(new AddRangeNewsCommandModel(dataSourse));
-
-
+            return true;
         }
 
+        public IEnumerable<News> GetParseNews()
+        {
+            List<News> news = new List<News>();
+            string[] sorseUri = new string[]
+            {
+                @"http://s13.ru/rss",
+                @"https://news.tut.by/rss/all.rss",
+                @"https://people.onliner.by/feed"
+            };
+            
+            for (int a = 0; a < sorseUri.Length; a++)
+            {
+                news.AddRange(_parser.ParserNewsFromSource(sorseUri[a]));
+            }
+            return news;
+        }
         private async Task<bool> UpdateCategory(IEnumerable<News> dataSourse)
         {
             List<Category> categoryName = new List<Category>();
@@ -79,64 +93,5 @@ namespace ServiceNews
 
         }
 
-        public async Task<double> GetScore(string cText)
-        {
-            try
-            {
-                int scorePositive = 0;
-                int scoreNegative = 0;
-                int countWords = 0;
-                int cTextLength = cText.Length;
-                var contentM = new string[cTextLength / 1500 + 1];
-                for (int a = 0; a < contentM.Length; a++)
-                {
-                    contentM[a] = cText.Substring(a * 1500, cTextLength - a * 1500 > 1500 ? 1500 : cTextLength - a * 1500);
-                }
-
-                for (int a = 0; a < contentM.Length; a++)
-                {
-                    int scoreP = 0;
-                    int scoreN = 0;
-                    int countW = 0;
-
-                    var contentWord = await _lemma.DictionaryLemmaContentn(contentM[a]);
-                    int wordCount = contentWord.Length;
-                    if(wordCount!=0)
-                    for (var i = 0; i < wordCount; i++)
-                    {
-                        var word = contentWord[i];
-                        if (word != "")
-                        {
-                            if (_affinDictionary.ContainsKey(word))
-                            {
-                                var item = Convert.ToInt32(_affinDictionary[word]);
-
-                                if (item > 0) scoreP += item;
-                                if (item < 0) scoreN += item;
-                                countW += 1;
-                            }
-                        }
-                    }
-
-                    scorePositive += scoreP;
-                    scoreNegative += scoreN;
-                    countWords += countW;
-                }
-                double result;
-                if (countWords != 0)
-                {
-                     result = Math.Round((double)scorePositive / countWords,2);
-                }
-                else
-                {
-                    result = 0;
-                }
-                return result;
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
-        }
     }
 }
