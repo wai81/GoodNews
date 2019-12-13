@@ -11,6 +11,7 @@ using GoodNews.Infrastructure.Queries.Models;
 using GoodNews.Infrastructure.Queries.Models.Categories;
 using GoodNews.Infrastructure.Queries.Models.RatingCalculation;
 using MediatR;
+using Serilog;
 
 namespace ServiceNews
 {
@@ -33,7 +34,7 @@ namespace ServiceNews
 
         public async Task<bool> RequestUpdateNewsFromSourse()
         {
-
+            Log.Information($"RequestUpdateNewsFromSourse -> Run");
             LoadAfinnDictionary();
             var dataSourse = GetParseNews();
             bool v = await UploadNews(dataSourse);
@@ -41,6 +42,7 @@ namespace ServiceNews
             {
                 var listNewsIndexPositive = await CalculationIndexPositive();
                 await _mediator.Send(new UpdateNewsCommandModel(listNewsIndexPositive));
+                Log.Information($"UpdateNewsCommandModel -> Ok");
             }
                         
             return true;
@@ -51,9 +53,10 @@ namespace ServiceNews
             var list_NewsIndexPositive = await _mediator.Send(new GetNewsIndexPositiveNullModel());
             foreach (var item in list_NewsIndexPositive)
             {
-                double indexPositive = await _calculationSevice.GetContentRating(item.NewsContent, _affinDictionary);
+                double? indexPositive = await _calculationSevice.GetContentRating(item.NewsContent, _affinDictionary);
                 item.IndexPositive = indexPositive;
             }
+            Log.Information($"CalculationIndexPositive -> {list_NewsIndexPositive.Count()}");
             return list_NewsIndexPositive;
         }
 
@@ -74,7 +77,7 @@ namespace ServiceNews
         {
             _affinDictionary = new Dictionary<string, string>();
             _affinDictionary = _afinne.LoadDictionary();
-        
+            Log.Information($"LoadAfinnDictionary -> Loading OK");
         }
 
         public IEnumerable<News> GetParseNews()
@@ -88,8 +91,11 @@ namespace ServiceNews
             };
             for (int a = 0; a < sorseUri.Length; a++)
             {
-                news.AddRange(_parser.ParserNewsFromSource(sorseUri[a]));
+               Log.Information($"Parse News -> {sorseUri[a]}");
+               news.AddRange(_parser.ParserNewsFromSource(sorseUri[a]));
+               
             }
+            Log.Information($"Count Parse News -> {news.Count}");
             return news;
         }
      

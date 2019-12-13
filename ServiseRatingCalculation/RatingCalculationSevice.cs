@@ -16,7 +16,7 @@ namespace ServiseRatingCalculation
            // _afinne = afinne;
         }
 
-        public async Task<double> GetContentRating(string content,  Dictionary<string, string> affinDictionary)
+        public async Task<double?> GetContentRating(string content,  Dictionary<string, string> affinDictionary)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace ServiseRatingCalculation
             }
             catch (Exception ex)
             {
-                return 0;
+                return null;
             }
         }
 

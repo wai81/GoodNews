@@ -82,7 +82,7 @@ namespace GoodNews.API.Controllers
                     await _signInManager.SignInAsync(user, false);
                     return GenerateJwtToken(model.Email, user);
                 }
-                Log.Error("SignInAsync was fail");
+                Log.Information("SignInAsync was fail");
                 return Task.FromResult(false);
             }
             catch (Exception ex)
