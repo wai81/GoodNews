@@ -6,7 +6,7 @@ using GoodNews.DB;
 
 namespace GoodNews.API.Models
 {
-    public class NewsDetailsModel
+    public class NewsDetailsViewModel
     {
         public News News { get; set; }
         //public Category Category { get; set; }

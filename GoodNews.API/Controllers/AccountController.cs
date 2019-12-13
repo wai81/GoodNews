@@ -5,24 +5,27 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using GoodNews.API.Models;
+using GoodNews.API.Models.Account;
+using GoodNews.DB;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 
 namespace GoodNews.API.Controllers
 {
     [Route("[controller]/[action]")]
+    [ApiController]
     public class AccountController : Controller
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
 
         public AccountController(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IConfiguration configuration
         )
         {
@@ -36,43 +39,60 @@ namespace GoodNews.API.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<object> Login([FromBody] LoginModel model)
+        public async Task<object> Login([FromBody] LoginViewModel model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
-
-            if (result.Succeeded)
+            try
             {
-                var appUser = _userManager.Users.SingleOrDefault(r => r.Email == model.Email);
-                return await GenerateJwtToken(model.Email, appUser);
-            }
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
 
-            throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
+                if (result.Succeeded)
+                {
+                    //Log.Information("Login operation was successfully");
+                    var appUser = _userManager.Users.SingleOrDefault(r => r.Email == model.Email);
+                    return GenerateJwtToken(model.Email, appUser);
+                }
+                Log.Information("Login operation was fail");
+                return Task.FromResult(false);
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Login operation was fail with exception: {ex.Message}");
+                return Task.FromResult(false);
+            }
         }
         /// <summary>
         /// Register User
         /// </summary>
         /// <param name="model"></param>
-        /// <returns></returns>
+        /// <returns>GenerateJwtToken(model.Email, user)</returns>
         [HttpPost]
-        public async Task<object> Register([FromBody] RegisterModel model)
+        public async Task<object> Register([FromBody] RegisterViewModel model)
         {
-            var user = new IdentityUser
+            try
             {
-                UserName = model.Email,//UserName,
-                Email = model.Email,
-            };
-            var result = await _userManager.CreateAsync(user, model.Password);
+                var user = new User
+                {
+                    UserName = model.Email,//UserName,
+                    Email = model.Email,
+                };
+                var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(user, false);
-                return await GenerateJwtToken(model.Email, user);
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, false);
+                    return GenerateJwtToken(model.Email, user);
+                }
+                Log.Error("SignInAsync was fail");
+                return Task.FromResult(false);
             }
-
-            throw new ApplicationException("UNKNOWN_ERROR");
+            catch (Exception ex)
+            {
+                Log.Error($"SignInAsync was fail with exception: {ex.Message}");
+                return Task.FromResult(false);
+            }
         }
 
-        private async Task<object> GenerateJwtToken(string email, IdentityUser user)
+        private object GenerateJwtToken(string email, User user)
         {
             var claims = new List<Claim>
             {
@@ -85,12 +105,13 @@ namespace GoodNews.API.Controllers
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
 
-            var token = new JwtSecurityToken(_configuration["JwtIssuer"],
+            var token = new JwtSecurityToken(
+                _configuration["JwtIssuer"],
                 _configuration["JwtIssuer"],
                 claims,
                 expires: expires,
-                signingCredentials: creds);
-
+                signingCredentials: creds
+            );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }

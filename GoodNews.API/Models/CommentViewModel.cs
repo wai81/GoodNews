@@ -2,7 +2,7 @@
 
 namespace GoodNews.API.Models
 {
-    public class CommentModel
+    public class CommentViewModel
     {
         public string commentText { get; set; }
         public Guid commentId { get; set; }

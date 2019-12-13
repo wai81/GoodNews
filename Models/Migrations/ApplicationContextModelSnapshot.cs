@@ -36,15 +36,13 @@ namespace GoodNews.DB.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("CategoryId");
-
-                    b.Property<string>("CategoryName");
+                    b.Property<Guid?>("CategoryId");
 
                     b.Property<DateTime>("DateCreate");
 
                     b.Property<string>("ImageUrl");
 
-                    b.Property<double>("IndexPositive");
+                    b.Property<double?>("IndexPositive");
 
                     b.Property<string>("LinkURL");
 
@@ -254,8 +252,7 @@ namespace GoodNews.DB.Migrations
                 {
                     b.HasOne("GoodNews.DB.Category", "Category")
                         .WithMany("News")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CategoryId");
                 });
 
             modelBuilder.Entity("GoodNews.DB.NewsComment", b =>

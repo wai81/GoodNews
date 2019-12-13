@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GoodNews.API.Models
 {
-    public class NewsModel
+    public class NewsViewModel
     {
         public string Title { get; set; }// заголовок новости
         public DateTime DateCreate { get; set; }//дата новости

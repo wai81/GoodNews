@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GoodNews.API.Models
+namespace GoodNews.API.Models.Account
 {
-    public class RegisterModel
+    public class RegisterViewModel
     {
         //[Required]
         //public string UserName { get; set; }

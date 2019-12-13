@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using GoodNews.DB;
-using Models;
 
 namespace GoodNews.ViewModels
 {

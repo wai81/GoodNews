@@ -2,9 +2,9 @@
 using GoodNews.DB;
 using Microsoft.AspNetCore.Identity;
 
-namespace GoodNews.Models
+namespace GoodNews.API.Models
 {
-    public class AddRolesDefault
+    public class AddRolesApiDefault
     {
         public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {

@@ -2,6 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Core;
+using GoodNews.API.Filters;
 using GoodNews.DB;
 using Hangfire;
 using Hangfire.SqlServer;
@@ -15,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using ServiceAfinn165;
 using ServiceHttp;
 using ServiceLemmatization;
@@ -30,6 +32,12 @@ namespace GoodNews.API
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("logs\\log_app.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
         }
 
         public IConfiguration Configuration { get; }
@@ -92,6 +100,8 @@ namespace GoodNews.API
             services.AddTransient<IAfinneService, AfinneService>();
             services.AddTransient<ILemmaDictionary, LemmaDictionary>();
             services.AddTransient<IRatingCalculationSevice, RatingCalculationSevice>();
+            
+            services.AddCors();
             //add MVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
            
@@ -125,7 +135,10 @@ namespace GoodNews.API
             //}
 
             //Add Sequring JWT
+            app.UseCors(builder =>
+               builder.AllowAnyOrigin());
             app.UseAuthentication();
+            app.UseStatusCodePages();
             //Add Swagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -142,9 +155,9 @@ namespace GoodNews.API
             });
 
             var service = app.ApplicationServices.GetService<INewsService>();
-            RecurringJob.AddOrUpdate(
-                () => service.RequestUpdateNewsFromSourse(),
-                Cron.Hourly);
+            //RecurringJob.AddOrUpdate(
+            //    () => service.RequestUpdateNewsFromSourse(),
+            //    Cron.Hourly);
 
             app.UseMvc(routes=>
             {

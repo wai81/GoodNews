@@ -6,8 +6,10 @@ using Core;
 using GoodNews.DB;
 using GoodNews.Infrastructure.Commands.Models.Categories;
 using GoodNews.Infrastructure.Commands.Models.Post;
+using GoodNews.Infrastructure.Commands.Models.Upload;
 using GoodNews.Infrastructure.Queries.Models;
 using GoodNews.Infrastructure.Queries.Models.Categories;
+using GoodNews.Infrastructure.Queries.Models.RatingCalculation;
 using MediatR;
 
 namespace ServiceNews
@@ -31,31 +33,48 @@ namespace ServiceNews
 
         public async Task<bool> RequestUpdateNewsFromSourse()
         {
+
+            LoadAfinnDictionary();
+            var dataSourse = GetParseNews();
+            bool v = await UploadNews(dataSourse);
+            if (v)
+            {
+                var listNewsIndexPositive = await CalculationIndexPositive();
+                await _mediator.Send(new UpdateNewsCommandModel(listNewsIndexPositive));
+            }
+                        
+            return true;
+        }
+
+        public async Task<IEnumerable<News>> CalculationIndexPositive()
+        {
+            var list_NewsIndexPositive = await _mediator.Send(new GetNewsIndexPositiveNullModel());
+            foreach (var item in list_NewsIndexPositive)
+            {
+                double indexPositive = await _calculationSevice.GetContentRating(item.NewsContent, _affinDictionary);
+                item.IndexPositive = indexPositive;
+            }
+            return list_NewsIndexPositive;
+        }
+
+        private async Task<bool> UploadNews(IEnumerable<News> dataSourse)
+        {
+            try
+            {
+                await _mediator.Send(new UploadNewsCommandModel(dataSourse));
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public void LoadAfinnDictionary()
+        {
             _affinDictionary = new Dictionary<string, string>();
             _affinDictionary = _afinne.LoadDictionary();
-
-            //var categoryNews = new Dictionary<Guid,Category>();
-            var dataSourse = GetParseNews();
-            var newsAll = await _mediator.Send(new GetNewsQueryModel());
-
-            //foreach (var news in dataSourse)
-            //{
-            //    news.IndexPositive = await _calculationSevice.GetContentRating(news.NewsDescription, _affinDictionary);
-            //}
-
-            if (await UpdateCategory(dataSourse))
-            {
-                foreach (var news in dataSourse)
-                {
-                   news.Category = await _mediator.Send(new GetCategoryByNameQueryModel(news.CategoryName));
-                      if (newsAll.Count(c => c.LinkURL.Equals(news.LinkURL)) == 0)
-                      {
-                            await _mediator.Send(new AddRangeNewsCommandModel(dataSourse));
-                      }
-                }
-            }
-
-            return true;
+        
         }
 
         public IEnumerable<News> GetParseNews()
@@ -67,31 +86,12 @@ namespace ServiceNews
                 @"https://news.tut.by/rss/all.rss",
                 @"https://people.onliner.by/feed"
             };
-            
             for (int a = 0; a < sorseUri.Length; a++)
             {
                 news.AddRange(_parser.ParserNewsFromSource(sorseUri[a]));
             }
             return news;
         }
-        private async Task<bool> UpdateCategory(IEnumerable<News> dataSourse)
-        {
-            List<Category> categoryName = new List<Category>();
-            foreach (var cat in dataSourse)
-            {
-                if (await _mediator.Send(new GetCategoryByNameQueryModel(cat.CategoryName)) == null)
-                {
-                    categoryName.Add(new Category() { Name = cat.CategoryName });
-                }
-            }
-
-            if (categoryName.Count == 0)
-            {
-                return true;
-            }
-            return await _mediator.Send(new AddCategoryCommandModel(categoryName));
-
-        }
-
+     
     }
 }

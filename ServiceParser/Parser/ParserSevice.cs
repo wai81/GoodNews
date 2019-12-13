@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.ServiceModel.Syndication;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 using Core;
 using GoodNews.DB;
 using HtmlAgilityPack;
+using HtmlAgilityPack.CssSelectors.NetCore;
 using MediatR;
 
 namespace ServiceParser.Parser
@@ -28,7 +31,7 @@ namespace ServiceParser.Parser
         public IEnumerable<News> ParserNewsFromSource(string source)
         {
             var news = new List<News>();
-            string node_url;
+            string node_url="";
             if (source.Contains("s13.ru/rss")) node_url = node_S13;
             if (source.Contains("news.tut.by/rss")) node_url = node_TUT;
             if (source.Contains("onliner.by/feed")) node_url = node_ONLAINER;
@@ -41,21 +44,25 @@ namespace ServiceParser.Parser
                 foreach (var postNews in feed.Items)
                 {
                     string linkNews = postNews.Links.FirstOrDefault().Uri.ToString();
-                    var description = ParserDescription(linkNews, node_S13);
+                    var description = ParserDescription(linkNews, node_url);
                     if (!string.IsNullOrEmpty(description))
                     {
-                        string categoryName = postNews.Categories.FirstOrDefault()?.Name;
+                        Category category = new Category() { Name = postNews.Categories.FirstOrDefault().Name };
+                       // string categoryName = postNews.Categories.FirstOrDefault()?.Name;
                         string title = postNews.Title.Text.Replace("&nbsp;", string.Empty);
                         string linkURL = postNews.Links.FirstOrDefault()?.Uri.ToString();
                         string content = Regex.Replace(postNews.Summary.Text, @"<[^>]+>|&nbsp;", string.Empty)
                                  .Replace("Читать далее…", "");
+                        //string imageURL = GetImagePost(postNews, source);
                         news.Add(new News()
                         {
                             Title = title,
                             DateCreate = postNews.PublishDate.DateTime,
                             LinkURL = linkURL,
                             NewsContent = content,
-                            CategoryName = categoryName,
+                            //CategoryName = categoryName,
+                            //ImageUrl = imageURL,
+                            Category =category,
                             NewsDescription = description
                         });
                     }
@@ -64,17 +71,10 @@ namespace ServiceParser.Parser
             return news;
         }
 
-       
 
         private string ParserDescription(string url, string node_url)
         {
-           
             string text = null;
-
-           
-
-
-
             var web = new HtmlWeb();
             var doc = web.Load(url);
             var node = doc.DocumentNode.SelectNodes(node_url);

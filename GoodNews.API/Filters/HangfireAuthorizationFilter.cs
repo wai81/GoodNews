@@ -1,7 +1,7 @@
 ﻿using Hangfire.Annotations;
 using Hangfire.Dashboard;
 
-namespace GoodNews.API
+namespace GoodNews.API.Filters
 {
     public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
     {

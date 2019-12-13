@@ -71,7 +71,7 @@ namespace GoodNews.API.Controllers
                 //var newsCategory = await mediator.Send(new GetCategoryByIdQueryModel(newsDetails.CategoryID));
                 var newsComments = await mediator.Send(new GetNewsCommentsQueryModel(id));
                 newsComments = newsComments.OrderByDescending(c => c.Added);
-                var news = new NewsDetailsModel()
+                var news = new NewsDetailsViewModel()
                 {
                     News = newsDetails,
                     //Category = newsCategory,
@@ -106,7 +106,7 @@ namespace GoodNews.API.Controllers
         /// <returns></returns>
         // POST api/<controller>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] NewsModel news)
+        public async Task<IActionResult> Post([FromBody] NewsViewModel news)
         {
             var context = new News()
             { 

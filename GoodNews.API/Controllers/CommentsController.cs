@@ -8,10 +8,12 @@ using GoodNews.DB;
 using GoodNews.Infrastructure.Commands.Models.Comments;
 using GoodNews.Infrastructure.Queries.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,6 +24,7 @@ namespace GoodNews.API.Controllers
     /// </summary>
 
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class CommentsController : Controller
     {
@@ -50,19 +53,21 @@ namespace GoodNews.API.Controllers
                //var newsCategory = await mediator.Send(new GetCategoryByIdQueryModel(newsDetails.CategoryID));
                var newsComments = await mediator.Send(new GetNewsCommentsQueryModel(id));
                newsComments = newsComments.OrderByDescending(c => c.Added);
-               var news = new NewsDetailsModel()
+               var news = new NewsDetailsViewModel()
                {
                    News = newsDetails,
                    //Category = newsCategory,
                    NewsComments = newsComments
                };
+               Log.Information("Get news model by newsId was successfully");
                return Ok(news);
            }
-           catch (Exception e)
+           catch (Exception ex)
            {
-               Console.WriteLine(e);
-               throw;
-           }
+                Log.Error($"Get news model by newsId was fail with exception:{Environment.NewLine}{ex.Message}");
+
+                return StatusCode(500, "Internal server error");
+            }
        }
 
        /// <summary>
@@ -74,35 +79,45 @@ namespace GoodNews.API.Controllers
        [HttpPost]
        public async Task<IActionResult> Post([FromBody] string commentText, Guid id)
        {
-           var commentUser = userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
-           var news = await mediator.Send(new GetNewsByIdQueryModel(id));
-           var comment = new NewsComment()
-           {
-               Id = new Guid(),
-               User = commentUser,
-               Text = commentText,
-               Email = commentUser.Email,
-               News = news
-           };
+            try
+            {
+                var commentUser = userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value).Result;
+                var news = await mediator.Send(new GetNewsByIdQueryModel(id));
+                var comment = new NewsComment()
+                {
+                    Id = new Guid(),
+                    User = commentUser,
+                    Text = commentText,
+                    Email = commentUser.Email,
+                    News = news
+                };
 
-           await mediator.Send(new AddCommentCommandModel(comment));
-          
-           var commentModel = new CommentModel()
-           {
-               commentId = comment.Id,
-               commentText = comment.Text,
-               newsId = comment.NewsId,
-               usersName = comment.User.UserName,
-               added = comment.Added
-           };
-            return Ok(commentModel);
-       }
+                await mediator.Send(new AddCommentCommandModel(comment));
 
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
+                var commentModel = new CommentViewModel()
+                {
+                    commentId = comment.Id,
+                    commentText = comment.Text,
+                    newsId = comment.NewsId,
+                    usersName = comment.User.UserName,
+                    added = comment.Added
+                };
+                Log.Information("Post new comment  was successfully");
+                return StatusCode(201, comment);
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Post new comment was fail with exception:{Environment.NewLine}{ex.Message}");
+                return BadRequest();
+            }
         }
+
+        //// PUT api/<controller>/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody]string value)
+        //{
+        //}
         
         /// <summary>
         /// DELETE comment
@@ -113,7 +128,17 @@ namespace GoodNews.API.Controllers
         [HttpDelete("{id}")]
         public async Task<bool> Delete(Guid id)
         {
-            return (await mediator.Send(new DeleteCommentCommandModel(id)));
+            try
+            {
+               await mediator.Send(new DeleteCommentCommandModel(id));
+               Log.Information("Delete comment  was successfully");
+               return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Delete comment  was fail with exception: {ex.Message}");
+                return true;
+            }
         }
     }
 }

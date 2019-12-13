@@ -16,11 +16,10 @@ namespace GoodNews.DB
         public string NewsDescription { get; set; }
         public string ImageUrl { get; set; }
         public string LinkURL { get; set; }
-        public Guid CategoryId { get; set; }
-        public virtual Category Category { get; set; }
-        public string CategoryName { get; set; }
+        public Guid? CategoryId { get; set; }
+        public Category Category { get; set; }
         public virtual ICollection<NewsComment> NewsComments { get; set; }
-        public virtual double IndexPositive { get; set; }
+        public double? IndexPositive { get; set; }
 
     }
 }

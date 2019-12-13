@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GoodNews.DB.Migrations
 {
-    public partial class index_news : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -177,9 +177,8 @@ namespace GoodNews.DB.Migrations
                     NewsDescription = table.Column<string>(nullable: true),
                     ImageUrl = table.Column<string>(nullable: true),
                     LinkURL = table.Column<string>(nullable: true),
-                    CategoryId = table.Column<Guid>(nullable: false),
-                    CategoryName = table.Column<string>(nullable: true),
-                    IndexPositive = table.Column<double>(nullable: false)
+                    CategoryId = table.Column<Guid>(nullable: true),
+                    IndexPositive = table.Column<double>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -189,7 +188,7 @@ namespace GoodNews.DB.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
