@@ -39,6 +39,7 @@ namespace ServiceLemmatization
             }
             catch (Exception ex)
             {
+               
                 return null;
             }
         }

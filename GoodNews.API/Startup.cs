@@ -80,9 +80,9 @@ namespace GoodNews.API
                     options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
+                        ValidIssuer = Configuration["Jwt:JwtIssuer"],
+                        ValidAudience = Configuration["Jwt:JwtIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:JwtKey"])),
                         ClockSkew = TimeSpan.Zero // убираем задержку токена при истечении срока действия
                     };
                 });

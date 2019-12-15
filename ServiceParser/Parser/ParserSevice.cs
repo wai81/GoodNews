@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.ServiceModel.Syndication;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
@@ -47,7 +48,7 @@ namespace ServiceParser.Parser
                     var description = ParserDescription(linkNews, node_url);
                     if (!string.IsNullOrEmpty(description))
                     {
-                        Category category = new Category() { Name = postNews.Categories.FirstOrDefault().Name };
+                        Category category = new Category() { Name = NormolazeText(postNews.Categories.FirstOrDefault().Name) };
                        // string categoryName = postNews.Categories.FirstOrDefault()?.Name;
                         string title = postNews.Title.Text.Replace("&nbsp;", string.Empty);
                         string linkURL = postNews.Links.FirstOrDefault()?.Uri.ToString();
@@ -117,7 +118,14 @@ namespace ServiceParser.Parser
             }
             return text;
         }
-
+         private string NormolazeText (string text)
+        {
+            text.ToLower();
+            var sb = new StringBuilder(text);
+            sb[0] = char.ToUpper(sb[0]);
+            text = sb.ToString();
+            return text;
+        }
 
     }
 }

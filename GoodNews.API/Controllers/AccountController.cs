@@ -39,7 +39,8 @@ namespace GoodNews.API.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<object> Login([FromBody] LoginViewModel model)
+        //public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
             try
             {
@@ -47,17 +48,19 @@ namespace GoodNews.API.Controllers
 
                 if (result.Succeeded)
                 {
-                    //Log.Information("Login operation was successfully");
+                    Log.Information($"Login operation was successfully: {model.Email}");
                     var appUser = _userManager.Users.SingleOrDefault(r => r.Email == model.Email);
-                    return GenerateJwtToken(model.Email, appUser);
+                    //return GenerateJwtToken(model.Email, appUser);
+                    var token = GenerateJwtToken(model.Email, appUser);
+                    return Ok(token);
                 }
-                Log.Information("Login operation was fail");
-                return Task.FromResult(false);
+                Log.Information($"Login operation was fail: {model.Email}");
+                return StatusCode(401, $"Login operation was fail: {Task.FromResult(false)}");
             }
             catch (Exception ex)
             {
                 Log.Error($"Login operation was fail with exception: {ex.Message}");
-                return Task.FromResult(false);
+                return StatusCode(500, $"Login operation was fail: {ex.Message}");
             }
         }
         /// <summary>
@@ -66,10 +69,12 @@ namespace GoodNews.API.Controllers
         /// <param name="model"></param>
         /// <returns>GenerateJwtToken(model.Email, user)</returns>
         [HttpPost]
-        public async Task<object> Register([FromBody] RegisterViewModel model)
+        //public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             try
             {
+                
                 var user = new User
                 {
                     UserName = model.Email,//UserName,
@@ -79,20 +84,23 @@ namespace GoodNews.API.Controllers
 
                 if (result.Succeeded)
                 {
+                    Log.Information($"Register operation was successfully: {model.Email}");
                     await _signInManager.SignInAsync(user, false);
-                    return GenerateJwtToken(model.Email, user);
+                    //return GenerateJwtToken(model.Email, user);
+                    var token = GenerateJwtToken(model.Email, user);
+                    return Ok(token);
                 }
-                Log.Information("SignInAsync was fail");
-                return Task.FromResult(false);
+                Log.Information($"Register was fail: {model.Email}");
+                return StatusCode(401, $"Register was fail: {Task.FromResult(false)}");
             }
             catch (Exception ex)
             {
-                Log.Error($"SignInAsync was fail with exception: {ex.Message}");
-                return Task.FromResult(false);
+                Log.Error($"Register was fail with exception: {ex.Message}");
+               return StatusCode(500, $"Register operation was fail: {ex.Message}");
             }
         }
 
-        private object GenerateJwtToken(string email, User user)
+        private string GenerateJwtToken(string email, User user)
         {
             var claims = new List<Claim>
             {
@@ -101,13 +109,13 @@ namespace GoodNews.API.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
+            var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["Jwt:JwtExpireDays"]));
 
             var token = new JwtSecurityToken(
-                _configuration["JwtIssuer"],
-                _configuration["JwtIssuer"],
+                _configuration["Jwt:JwtIssuer"],
+                _configuration["Jwt:JwtIssuer"],
                 claims,
                 expires: expires,
                 signingCredentials: creds
