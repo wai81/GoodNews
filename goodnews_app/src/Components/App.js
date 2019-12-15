@@ -59,9 +59,9 @@ const featuredPosts = [
 ];
 const posts = [post1, post2, post3];
 const sidebar = {
-    title: 'About',
+    title: 'Кратко о проекте',
     description:
-        'Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.',
+        'Данное решение проекта позволяет загружать новости в базу, проводить лематизацию, проводить анализ содержания текста и устанавливать индекс положительности новости.',
     archives: [
         { title: 'March 2020', url: '#' },
         { title: 'February 2020', url: '#' },
@@ -103,8 +103,8 @@ export default class extends Component {
                             <Sidebar
                                 title={sidebar.title}
                                 description={sidebar.description}
-                                archives={sidebar.archives}
-                                social={sidebar.social}
+                                //archives={sidebar.archives}
+                                //social={sidebar.social}
                             />
                         </Grid>
                     </main>
