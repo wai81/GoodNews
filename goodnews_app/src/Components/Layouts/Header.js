@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from 'prop-types';
 import {Toolbar, Typography, Button, IconButton,Link} from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
@@ -20,9 +20,26 @@ const useStyles = makeStyles(theme => ({
         flexShrink: 0,
     },
 }));
+
 export default function Header(props) {
     const classes = useStyles();
     const { sections, title } = props;
+
+    const [hasError, setErrors] = useState(false);
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const res = await fetch("https://localhost:44300/api/Categories");
+            res
+                .json()
+                .then(res => setCategories(res))
+                .catch(err => setErrors(err));
+        }
+
+        fetchData();
+    }, []);
+
     return (
         <React.Fragment>
         <Toolbar>
@@ -45,16 +62,16 @@ export default function Header(props) {
             </Button>
         </Toolbar>
         <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
-            {sections.map(section => (
+            {categories.map(category => (
                 <Link
                     color="inherit"
                     noWrap
-                    key={section.title}
+                    key={category.id}
                     variant="body2"
-                    href={section.url}
+                    href={category.id}
                     className={classes.toolbarLink}
                 >
-                    {section.title}
+                    {category.name}
                 </Link>
             ))}
         </Toolbar>

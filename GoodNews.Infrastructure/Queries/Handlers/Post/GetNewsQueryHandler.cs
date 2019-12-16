@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GoodNews.DB;
@@ -19,7 +20,7 @@ namespace GoodNews.Infrastructure.Queries.Handlers.Post
 
         public async Task<IEnumerable<News>> Handle(GetNewsQueryModel request, CancellationToken cancellationToken)
         {
-            var result = await _context.News.ToListAsync(cancellationToken: cancellationToken);
+            var result = await _context.News.OrderBy(n=>n.DateCreate).ToListAsync(cancellationToken: cancellationToken);
             return result;
         }
     }

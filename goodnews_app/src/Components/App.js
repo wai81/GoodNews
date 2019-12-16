@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React, { Component, Fragment, useEffect, useState } from "react"
 import { makeStyles } from '@material-ui/core/styles';
 import {Grid, Typography,Container,CssBaseline } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
@@ -17,17 +17,18 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+
 const sections = [
-    { title: 'Technology', url: '#' },
-    { title: 'Design', url: '#' },
-    { title: 'Culture', url: '#' },
-    { title: 'Business', url: '#' },
-    { title: 'Politics', url: '#' },
-    { title: 'Opinion', url: '#' },
-    { title: 'Science', url: '#' },
-    { title: 'Health', url: '#' },
-    { title: 'Style', url: '#' },
-    { title: 'Travel', url: '#' },
+    //{ title: 'Technology', url: '#' },
+    //{ title: 'Design', url: '#' },
+    //{ title: 'Culture', url: '#' },
+    //{ title: 'Business', url: '#' },
+    //{ title: 'Politics', url: '#' },
+    //{ title: 'Opinion', url: '#' },
+    //{ title: 'Science', url: '#' },
+    //{ title: 'Health', url: '#' },
+    //{ title: 'Style', url: '#' },
+    //{ title: 'Travel', url: '#' },
 ];
 
 const mainFeaturedPost = {

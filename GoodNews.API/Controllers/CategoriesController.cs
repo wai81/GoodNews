@@ -40,25 +40,31 @@ namespace GoodNews.API.Controllers
         {
             return Ok(await mediator.Send(new GetCategoriesQueryModel()));
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        [ProducesResponseType(200, Type = typeof(SpecialType))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Get(Guid id)
         {
-            return "value";
+            return Ok(await mediator.Send(new GetNewsByCategoryIdQueryModel(id)));
         }
 
-        // POST api/<controller>
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
+        //// POST api/<controller>
+        //[HttpPost]
+        //public void Post([FromBody]string value)
+        //{
+        //}
 
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+        //// PUT api/<controller>/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody]string value)
+        //{
+        //}
 
         /// <summary>
         /// Delete Category by Id

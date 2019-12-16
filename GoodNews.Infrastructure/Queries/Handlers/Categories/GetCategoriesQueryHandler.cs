@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GoodNews.DB;
@@ -20,7 +21,7 @@ namespace GoodNews.Infrastructure.Queries.Handlers.Categories
 
         public async Task<IEnumerable<Category>> Handle(GetCategoriesQueryModel request, CancellationToken cancellationToken)
         {
-            var result = await _context.Categories.ToListAsync(cancellationToken: cancellationToken);
+            var result = await _context.Categories.OrderBy(c=>c.Name).ToListAsync(cancellationToken: cancellationToken);
             return result;
         }
     }
