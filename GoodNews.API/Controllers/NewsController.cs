@@ -6,6 +6,7 @@ using GoodNews.API.Models;
 using GoodNews.DB;
 using GoodNews.Infrastructure.Commands.Models.Post;
 using GoodNews.Infrastructure.Queries.Models;
+using GoodNews.Infrastructure.Queries.Models.Post;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -41,14 +42,23 @@ namespace GoodNews.API.Controllers
         [HttpGet]
         [ProducesResponseType (200,  Type=typeof(SpecialType))]
         [ProducesResponseType (StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(int id = 1)
         {
+            int countNewsOnPage = 6;
             try
             {
-                var news = await mediator.Send(new GetNewsQueryModel());
+                var countNews = await mediator.Send(new GetNewsCountQueryModel());
+                var countPages = (countNews % countNewsOnPage) != 0 ? countNews / countNewsOnPage + 1 : countNews / countNewsOnPage;
+                var news = await mediator.Send(new GetNewsPageQueryModel(id, countNewsOnPage));
                 news = news.OrderByDescending(s => s.DateCreate);
+                NewsModel newsPage = new NewsModel()
+                {
+                    CountPages = countPages,
+                    News = news
+                };
+
                 Log.Information("Get all news page was successfully");
-                return Ok(news);
+                return Ok(newsPage);
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
 import React, { Component, Fragment, useEffect, useState } from "react"
+import { BrowserRouter} from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {Grid, Typography,Container,CssBaseline } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
@@ -7,9 +8,7 @@ import TwitterIcon from '@material-ui/icons/Twitter';
 import { Header, Footer, MainFeaturedPost, FeaturedPost, Sidebar } from './Layouts';
 import Exercises from './Exercises'
 import Main from "./Layouts/Main";
-import post1 from './Post/blog-post.1.md';
-import post2 from './Post/blog-post.2.md';
-import post3 from './Post/blog-post.3.md';
+
 
 const useStyles = makeStyles(theme => ({
     mainGrid: {
@@ -43,22 +42,22 @@ const mainFeaturedPost = {
 const featuredPosts = [
     {
         title: 'Featured post',
-        date: 'Nov 12',
-        description:
+        dateCreate: 'Nov 12',
+        newsDescription:
             'This is a wider card with supporting text below as a natural lead-in to additional content.',
         image: 'https://source.unsplash.com/random',
         imageText: 'Image Text',
     },
     {
         title: 'Post title',
-        date: 'Nov 11',
-        description:
+        dateCreate: 'Nov 11',
+        newsDescription:
             'This is a wider card with supporting text below as a natural lead-in to additional content.',
         image: 'https://source.unsplash.com/random',
         imageText: 'Image Text',
     },
 ];
-const posts = [post1, post2, post3];
+//const posts = [post1, post2, post3];
 const sidebar = {
     title: 'Кратко о проекте',
     description:
@@ -87,9 +86,10 @@ export default class extends Component {
     render() {
         //const classes = useStyles();
         return(
+         <BrowserRouter>
             <Fragment>
-            <CssBaseline/>
-            <Container maxWidth="lg">
+             <CssBaseline/>
+             <Container maxWidth="lg">
                 <Header title="Good News" sections={sections}/>
                     <main>
                         <MainFeaturedPost post={mainFeaturedPost} />
@@ -104,14 +104,13 @@ export default class extends Component {
                             <Sidebar
                                 title={sidebar.title}
                                 description={sidebar.description}
-                                //archives={sidebar.archives}
-                                //social={sidebar.social}
-                            />
+                               />
                         </Grid>
                     </main>
-            </Container>
-            <Footer title="Good News" description="Мое первое решение"/>
-        </Fragment>
+              </Container>
+             <Footer title="Good News" description="Мое первое решение"/>
+            </Fragment>
+        </BrowserRouter>
         );
     }
 }

@@ -96,6 +96,8 @@ namespace ServiceParser.Parser
                 var mas = new string[] { "&ndash; ", "&ndash;", "&mdash; ",
                     "&mdash;", "&nbsp; ", "&nbsp; ", "&nbsp;", "&laquo; ",
                     "&laquo;", "&raquo; ", "&raquo;", "&quot;", "&hellip;",
+                     "\t\n\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\n\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\n",
+                    "\t\t\n","    \t    ","// TUT.BY ",
                     "\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t",
                     "\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t",
                     "\r\nЧитайте также:","\r\nБиблиотека Onliner: лучшие материалы и циклы статей",

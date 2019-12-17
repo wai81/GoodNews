@@ -53,6 +53,9 @@ export default function MainFeaturedPost(props) {
                         <Link variant="subtitle1" href="#">
                             {post.linkText}
                         </Link>
+                        <Typography variant="h5" color="inherit" paragraph>
+                           {post.idexPositiviti}
+                        </Typography>
                     </div>
                 </Grid>
             </Grid>

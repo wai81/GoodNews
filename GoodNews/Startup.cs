@@ -28,7 +28,7 @@ namespace GoodNews
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationContext>(options =>
-                options.UseSqlServer(connection, c=>c.MigrationsAssembly("GoodNews")));
+                options.UseSqlServer(connection, c=>c.MigrationsAssembly("GoodNews.DB")));
             services.AddIdentity<User, IdentityRole>(opts =>
                 {
                     //настройка вилидности пароля
@@ -50,6 +50,7 @@ namespace GoodNews
             services.AddTransient<IRepository<NewsComment>, NewsCommentRepository>();
             services.AddTransient<IHtmlArticleService, ArticleService>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -71,6 +72,8 @@ namespace GoodNews
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseCookiePolicy();
+
+            
 
             app.UseMvc(routes =>
             {
