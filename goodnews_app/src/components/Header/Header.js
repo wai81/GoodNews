@@ -1,4 +1,6 @@
 import React, {useEffect, useState} from "react";
+import {NavLink} from "react-router-dom";
+
 import PropTypes from 'prop-types';
 import {Toolbar, Typography, Button, IconButton,Link} from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
@@ -52,7 +54,7 @@ export default function Header(props) {
                 noWrap
                 className={classes.toolbarTitle}
             >
-                {title}
+                Good News
             </Typography>
             <IconButton>
                 <SearchIcon />
@@ -63,7 +65,7 @@ export default function Header(props) {
         </Toolbar>
         <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
             {categories.map(category => (
-                <Link
+                <NavLink
                     color="inherit"
                     noWrap
                     key={category.id}
@@ -72,7 +74,7 @@ export default function Header(props) {
                     className={classes.toolbarLink}
                 >
                     {category.name}
-                </Link>
+                </NavLink>
             ))}
         </Toolbar>
         </React.Fragment>

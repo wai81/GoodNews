@@ -5,9 +5,9 @@ import {Grid, Typography,Container,CssBaseline } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
-import { Header, Footer, MainFeaturedPost, FeaturedPost, Sidebar } from './Layouts';
-import Exercises from './Exercises'
-import Main from "./Layouts/Main";
+import { Header, Footer, MainFeaturedPost, FeaturedPost, Sidebar } from './components/layouts';
+import Exercises from './components/Exercises'
+import Main from "./components/layouts/Main";
 
 
 const useStyles = makeStyles(theme => ({
@@ -57,7 +57,7 @@ const featuredPosts = [
         imageText: 'Image Text',
     },
 ];
-//const posts = [post1, post2, post3];
+const posts = [];
 const sidebar = {
     title: 'Кратко о проекте',
     description:
@@ -86,31 +86,31 @@ export default class extends Component {
     render() {
         //const classes = useStyles();
         return(
-         <BrowserRouter>
-            <Fragment>
-             <CssBaseline/>
-             <Container maxWidth="lg">
-                <Header title="Good News" sections={sections}/>
-                    <main>
-                        <MainFeaturedPost post={mainFeaturedPost} />
-                        <Grid container spacing={4}>
-                            {featuredPosts.map(post => (
-                                <FeaturedPost key={post.title} post={post} />
-                            ))}
-                        </Grid>
+            <BrowserRouter>
+                <Fragment>
+                    <CssBaseline/>
+                    <Container maxWidth="lg">
+                        <Header title="Good News" sections={sections}/>
+                        <main>
+                            <MainFeaturedPost post={mainFeaturedPost} />
+                            <Grid container spacing={4}>
+                                {featuredPosts.map(post => (
+                                    <FeaturedPost key={post.title} post={post} />
+                                ))}
+                            </Grid>
 
-                        <Grid container spacing={5} >
-                            <Main  title="From the firehose" posts={posts}/>
-                            <Sidebar
-                                title={sidebar.title}
-                                description={sidebar.description}
-                               />
-                        </Grid>
-                    </main>
-              </Container>
-             <Footer title="Good News" description="Мое первое решение"/>
-            </Fragment>
-        </BrowserRouter>
+                            <Grid container spacing={5} >
+                                <Main  title="From the firehose" posts={posts}/>
+                                <Sidebar
+                                    title={sidebar.title}
+                                    description={sidebar.description}
+                                />
+                            </Grid>
+                        </main>
+                    </Container>
+                    <Footer title="Good News" description="Мое первое решение"/>
+                </Fragment>
+            </BrowserRouter>
         );
     }
 }

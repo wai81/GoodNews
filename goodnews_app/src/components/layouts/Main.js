@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import {Grid, Typography} from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
-import FeaturedPost from './FeaturedPost';
+import FeaturedPost from '../Post/FeaturedPost';
 
 const useStyles = makeStyles(theme => ({
     markdown: {
