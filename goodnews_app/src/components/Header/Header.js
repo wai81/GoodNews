@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {NavLink} from "react-router-dom";
-
 import PropTypes from 'prop-types';
 import {Toolbar, Typography, Button, IconButton,Link} from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles } from '@material-ui/core/styles';
+
 
 const useStyles = makeStyles(theme => ({
     toolbar: {
@@ -59,9 +59,11 @@ export default function Header(props) {
             <IconButton>
                 <SearchIcon />
             </IconButton>
+            <NavLink to = '/login'>
             <Button variant="outlined" size="small">
                 Sign up
             </Button>
+            </NavLink>
         </Toolbar>
         <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
             {categories.map(category => (
@@ -81,7 +83,3 @@ export default function Header(props) {
     );
 }
 
-Header.propTypes = {
-    sections: PropTypes.array,
-    title: PropTypes.string,
-};

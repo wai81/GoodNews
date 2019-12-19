@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import {Grid, Typography} from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
-import FeaturedPost from '../Post/FeaturedPost';
+import NewsPost from '../Post/NewsPost';
 
 const useStyles = makeStyles(theme => ({
     markdown: {
@@ -13,28 +13,28 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Main(props) {
-    const classes = useStyles();
-    const { posts, title } = props;
-
-    const [hasError, setErrors] = useState(false);
-    const [news, setNews] = useState([]);
-
-    useEffect(() => {
-        async function fetchData() {
-            const res = await fetch("https://localhost:44300/api/News");
-            res
-                .json()
-                .then(res => setNews(res))
-                .catch(err => setErrors(err));
-        }
-
-        fetchData();
-    }, []);
+    // const classes = useStyles();
+    // const { posts, title } = props;
+    //
+    // // const [hasError, setErrors] = useState(false);
+    // const [news, setNews] = useState([]);
+    //
+    // useEffect(() => {
+    //     async function fetchData() {
+    //         const res = await fetch("https://localhost:44300/api/News");
+    //         res
+    //             .json()
+    //             .then(res => setNews(res))
+    //             .catch(err => setErrors(err));
+    //     }
+    //
+    //     fetchData();
+    // }, []);
    return (
         <Grid container spacing={4}>
-            {news.map(newsitem => (
-                <FeaturedPost key={newsitem.id} post={newsitem} />
-            ))}
+            {/*{news.map(newsitem => (*/}
+            {/*    <NewsPost key={newsitem.id} post={newsitem} />*/}
+            {/*))}*/}
 
         </Grid>
     );
