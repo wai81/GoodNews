@@ -1,11 +1,13 @@
 import React,{useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
+import { Rating } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import {Grid, Typography } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
-import NewsPost from "../../components/Post/NewsPost";
-import Pagination from "../../components/Pagination";
+import NewsPost from "../Post/NewsPost";
+import Pagination from "../Pagination";
 import axios from 'axios';
+import MainFeaturedPost from "../Post/MainFeaturedPost";
 
 const useStyles = makeStyles(theme => ({
     markdown: {
@@ -41,7 +43,7 @@ const NewsPage = (props) =>{
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage] = useState(10);
+    const [postsPerPage] = useState(4);
     const [hasError, setErrors] = useState(false);
 
     useEffect(() => {
@@ -77,6 +79,8 @@ const NewsPage = (props) =>{
     const paginate = pageNumber => setCurrentPage(pageNumber);
 
     return (
+        <Grid container spacing={6}>
+        <MainFeaturedPost />
         <Grid item xs={12} md={10}>
             <Divider />
             {/*   {post.map(newsItem => (*/}
@@ -88,7 +92,7 @@ const NewsPage = (props) =>{
                 totalPosts={posts.length}
                 paginate={paginate}
             />
-
+        </Grid>
         </Grid>
 
 

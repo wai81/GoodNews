@@ -51,7 +51,7 @@ const MainFeaturedPost = (props) =>{
         image: 'https://source.unsplash.com/random',
         imgText: 'main image description',
         linkText: 'Continue reading…',
-        idexPositiviti: 5,
+        indexPositive: 5,
     };
     return (
         <Paper className={classes.mainFeaturedPost} style={{ backgroundImage: `url(${post.image})` }}>
@@ -77,8 +77,8 @@ const MainFeaturedPost = (props) =>{
                 </Grid>
                 <Grid item md={5}>
                 <Typography className={classes.mainIdexPositivitit} variant="h6" color="inherit" gutterBottom align={"right"}>
-                    <Rating name="read-only" value={post.idexPositiviti} readOnly />
-                    <p>Индек позитивности: {post.idexPositiviti} </p>
+                    <Rating name="read-only" value={post.indexPositive} readOnly />
+                    {post.indexPositive}
                 </Typography>
                 </Grid>
             </Grid>

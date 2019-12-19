@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {NavLink} from "react-router-dom";
+import {NavLink, Link} from "react-router-dom";
 import PropTypes from 'prop-types';
-import {Toolbar, Typography, Button, IconButton,Link} from "@material-ui/core";
+import {Toolbar, Typography, Button, IconButton} from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -32,7 +32,7 @@ export default function Header(props) {
 
     useEffect(() => {
         async function fetchData() {
-            const res = await fetch("https://localhost:44300/api/Categories");
+            const res = await fetch("https://localhost:44300/api/categories");
             res
                 .json()
                 .then(res => setCategories(res))
@@ -45,7 +45,7 @@ export default function Header(props) {
     return (
         <React.Fragment>
         <Toolbar>
-            <Button size="small">Good News</Button>
+            <Button size="small"><NavLink to="/">Good News</NavLink></Button>
             <Typography
                 component="h2"
                 variant="h5"
@@ -67,16 +67,15 @@ export default function Header(props) {
         </Toolbar>
         <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
             {categories.map(category => (
-                <NavLink
+                <Link
+                    to = {`/news/category/${category.id}`}
                     color="inherit"
                     noWrap
-                    key={category.id}
                     variant="body2"
-                    href={category.id}
                     className={classes.toolbarLink}
                 >
                     {category.name}
-                </NavLink>
+                </Link>
             ))}
         </Toolbar>
         </React.Fragment>

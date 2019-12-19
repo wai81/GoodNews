@@ -64,6 +64,7 @@ namespace ServiceNews
         {
             try
             {
+
                 await _mediator.Send(new UploadNewsCommandModel(dataSourse));
                 return true;
             }

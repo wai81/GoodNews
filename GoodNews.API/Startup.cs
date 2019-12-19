@@ -155,9 +155,9 @@ namespace GoodNews.API
             });
 
             var service = app.ApplicationServices.GetService<INewsService>();
-            //RecurringJob.AddOrUpdate(
-            //    () => service.RequestUpdateNewsFromSourse(),
-            //    Cron.Hourly);
+            RecurringJob.AddOrUpdate(
+                () => service.RequestUpdateNewsFromSourse(),
+                Cron.Hourly);
 
             app.UseMvc(routes=>
             {
