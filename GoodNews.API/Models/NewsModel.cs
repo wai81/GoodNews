@@ -9,6 +9,8 @@ namespace GoodNews.API.Models
     public class NewsModel
     {
         public long CountPages { get; set; }
+        public int CurentNumPage { get; set; }
         public IEnumerable<News> News { get; set; }
+      
     }
 }

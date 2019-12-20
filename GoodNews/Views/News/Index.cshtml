@@ -5,20 +5,24 @@
     }
     <div class="row mb-2">
         @foreach (var item in Model)
-        {   
+        {
             <div class="col-md-10">
                 <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                    <div class="col p-4 d-flex flex-column position-static">
-                        <strong class="d-inline-block mb-2 text-primary">@item.Category</strong>
+                    <div class="col p-2 d-flex flex-column position-static">
+                        <h5>
+                            <span class="badge badge-primary">
+                                Рейтинг позитивности <span class="badge badge-light">@item.IndexPositive</span>
+                                <span class="sr-only">unread messages</span>
+                            </span>
+                        </h5>
                         <h4 class="mb-0">@item.Title</h4>
                         <div class="mb-1 text-muted">@item.DateCreate</div>
-
-                        <h8 class="card-text mb-auto">
+                        <h8 class="card-text mb-5">
                             @{
                                 string str;
-                                if (item.NewsContent.Length > 200)
+                                if (item.NewsContent.Length > 150)
                                 {
-                                   str = item.NewsContent.Substring(0, 200) + "...";
+                                    str = item.NewsContent.Substring(0, 150) + "...";
                                 }
                                 else
                                 {
@@ -27,14 +31,14 @@
                             }
                             @str
                         </h8>
-
                         <a class="stretched-link float-right" asp-action="Details" asp-route-id="@item.Id">Читать далее...</a>
                     </div>
                     <div class="col-auto d-none d-lg-block">
-                     <div  class="img"><img width="200" height="250" src="https://source.unsplash.com/random" class="img-thumbnail" alt="thumb"></div>
-                       
+                        <div class="img"><img width="200" height="250" src="https://source.unsplash.com/random" class="img-thumbnail" alt="thumb"></div>
+
                     </div>
                 </div>
             </div>
         }
+     
     </div>
