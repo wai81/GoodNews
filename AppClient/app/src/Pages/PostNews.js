@@ -1,56 +1,72 @@
 import React from 'react';
-import {NavLink,Link} from "react-router-dom";
+import {Link} from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
-import {Typography, Grid, Card,CardActionArea,CardContent,CardMedia,Hidden} from '@material-ui/core';
+import {
+    Typography,
+    Grid,
+    Card,
+    CardActionArea,
+    CardContent,
+    CardMedia,
+    Hidden,
+    Button,
+    Fade,
+    Grow, Zoom
+} from '@material-ui/core';
 import {Rating} from "@material-ui/lab";
 import Moment from 'react-moment';
-
 
 
 const useStyles = makeStyles({
     card: {
         display: 'flex',
         marginBottom: 4,
-        },
+    },
     cardDetails: {
         flex: 1,
+        margin: 4,
     },
     cardMedia: {
         width: 160,
     },
 });
-const fadPosts = {
+const post = {
     image: 'https://source.unsplash.com/random',
     imageText: 'Image Text',
 };
 
-const PostNews = (post, loading) => {
+const PostNews = (props, loading) => {
     const classes = useStyles();
     // if (loading) {
     //      return <h2>Loading...</h2>;
     // }
+
     return (
-        <div classes={classes.card}>
-        <Card classes={classes.card}>
-                <CardActionArea>
+        <Grid item xs={12} md={6}>
+            <Zoom
+                in={'true'}
+                style={{ transitionDelay: 'true'  ? '500ms' : '0ms' }}
+                >
+                <CardActionArea  component={Link} to={`/news/${props.post.id}`} key = {props.post.id}>
+                    <Card className={classes.card}>
                     <div className={classes.cardDetails}>
                         <CardContent>
                             <Typography variant="subtitle1" color="textSecondary">
-                                <Rating name="read-only" value={post.indexPositive} readOnly />
-                                {post.indexPositive}
+                                <Rating name="read-only" value={props.post.indexPositive} readOnly />
+                                {props.post.indexPositive}
                             </Typography>
-                            <Typography component="h6" variant="h5">
-                                {post.title}
+                            <Typography component="h6" variant="h6">
+                                {props.post.title}
                             </Typography>
                             <Typography variant="subtitle1" color="textSecondary">
-                                <Moment format="YYYY/MM/DD">{post.dateCreate}</Moment>
+                                <Moment format="YYYY/MM/DD">{props.post.dateCreate}</Moment>
                             </Typography>
                             <Typography variant="subtitle1" paragraph>
-                                {/*{post.newsContent.length > 250 ? post.newsContent.substr(0,250)+'...':post.newsContent }*/}
+                                {props.post.newsContent.length > 250 ? props.post.newsContent.substr(0,250)+'...':props.post.newsContent }
                             </Typography>
-                            <Link to={`/news/${post.id}`}>
+                            <Link component={Link} to={`/news/${props.post.id}`} key = {props.post.id}>
                                 <Typography variant="subtitle1" color="primary">
-                                    Continue reading...
+                                    Читать подробнее...
                                 </Typography>
                             </Link>
                         </CardContent>
@@ -58,9 +74,10 @@ const PostNews = (post, loading) => {
                     <Hidden xsDown>
                         <CardMedia className={classes.cardMedia} image={post.image} title={post.imageTitle} />
                     </Hidden>
+                    </Card>
                 </CardActionArea>
-            </Card>
-        </div>
+            </Zoom>
+        </Grid>
 
 
     );

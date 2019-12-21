@@ -1,0 +1,12 @@
+.newsContainer {
+    margin-top: 20px;
+}
+.my-flex-container{
+    display: flex;
+}
+.my-flex-block{
+    display: inline-flex;
+    flex-direction:row;
+    justify-content: space-around;
+    align-items:baseline
+}

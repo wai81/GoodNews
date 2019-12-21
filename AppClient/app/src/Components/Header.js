@@ -1,6 +1,8 @@
-import React, {useEffect, useState} from "react";
-import {NavLink, Link} from "react-router-dom";
-import {Toolbar, Typography, Button, IconButton} from "@material-ui/core";
+import React, {Fragment,useEffect, useState} from "react";
+import {Link, Router} from "react-router-dom";
+import createBrowserHistory from "history/createBrowserHistory";
+
+import {Toolbar, Typography, Button, IconButton, Grow, Slide} from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles } from '@material-ui/core/styles';
 import {API_BASE_URL} from "../config";
@@ -31,7 +33,7 @@ export default function Header(props) {
 
     useEffect(() => {
         async function fetchData() {
-            const res = await fetch(`${API_BASE_URL}/categories`);
+            const res = await fetch(`${API_BASE_URL}/api/categories`);
             res
                 .json()
                 .then(res => setCategories(res))
@@ -40,11 +42,13 @@ export default function Header(props) {
 
         fetchData();
     }, []);
+    const history = createBrowserHistory();
 
     return (
-        <React.Fragment>
+        <Fragment>
+            {/*<Router history={history}>*/}
             <Toolbar>
-                <Button size="small"><NavLink to="/">Good News</NavLink></Button>
+                <Button size="small" component={Link} to="/">Good News</Button>
                 <Typography
                     component="h2"
                     variant="h5"
@@ -58,25 +62,36 @@ export default function Header(props) {
                 <IconButton>
                     <SearchIcon />
                 </IconButton>
-                <NavLink to = '/login'>
-                    <Button  variant="outlined" size="small">
+                <Button component={Link} to="/login"
+                        variant="outlined"
+                        size="small" >
                         Sign up
-                    </Button>
-                </NavLink>
+                </Button>
             </Toolbar>
+
             <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
                 {categories.map(category => (
-                    <Link
-                        to = {`/news/category/${category.id}`}
+                    <Slide
+                        direction="up"
+                        in={'true'}
+                        style={{ transformOrigin: '0 0 0' }}
+                        {...('true' ? { timeout: 1000 } : {})}
+                    >
+                    <Button
+                        component={Link} to={`/newsCategory/${category.id}`}
                         color="inherit"
                         noWrap
+                        key={category.id}
                         variant="body2"
                         className={classes.toolbarLink}
                     >
                         {category.name}
-                    </Link>
+                    </Button>
+                    </Slide>
                 ))}
             </Toolbar>
-        </React.Fragment>
+
+            {/*</Router>*/}
+        </Fragment>
     );
 }

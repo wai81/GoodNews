@@ -42,21 +42,23 @@ namespace GoodNews.API.Controllers
         [HttpGet]
         [ProducesResponseType (200,  Type=typeof(SpecialType))]
         [ProducesResponseType (StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Get(int curentNumPage = 1)
+        //public async Task<IActionResult> Get(int curentNumPage = 1)
+        public async Task<IActionResult> Get()
         {
-            int countNewsOnPage = 6;
+            int countNewsOnPage = 10;
             try
             {
                 var countNews = await mediator.Send(new GetNewsCountQueryModel());
                 var countPages = (countNews % countNewsOnPage) != 0 ? countNews / countNewsOnPage + 1 : countNews / countNewsOnPage;
-                var news = await mediator.Send(new GetNewsPageQueryModel(curentNumPage, countNewsOnPage));
-                news = news.OrderByDescending(s => s.DateCreate);
-                NewsModel newsPage = new NewsModel()
-                {
-                    CountPages = countPages,
-                    CurentNumPage = curentNumPage,
-                    News = news
-                };
+                var news = await mediator.Send(new GetNewsPageQueryModel(1, countNewsOnPage));
+                var newsPage = news.OrderByDescending(s => s.DateCreate);
+                //NewsModel newsPage = new NewsModel()
+                //{
+                //    CountPages = countPages,
+                //    CurrentNumPage = curentNumPage,
+                //    CountNewsOnPage = countNewsOnPage,
+                //    News = news
+                //};
                 //var newsPage = await mediator.Send(new GetNewsQueryModel());
                 Log.Information("Get all news page was successfully");
                 return Ok(newsPage);

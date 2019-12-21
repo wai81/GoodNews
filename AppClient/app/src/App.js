@@ -1,36 +1,54 @@
-import React from 'react';
-import {BrowserRouter, Route} from "react-router-dom";
-import {Container, CssBaseline, Grid} from "@material-ui/core";
-
+import React,{Fragment} from 'react';
+import {Router,
+    BrowserRouter,
+    Route,
+    Switch,
+    Redirect
+} from 'react-router-dom';
+import {Container, CssBaseline} from "@material-ui/core";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
-import Login from "./Components/Pages/Login";
-import News from "./Components/Pages/News";
-import Register from "./Components/Pages/Register";
-import NewsDetails from "./Components/Pages/NewsDetails";
-import NewsCategory from "./Components/Pages/NewsCategory";
-import mainFeaturedPost from "./Components/Pages/mainFeaturedPost";
+import News from "./Pages/News";
+import NewsDetails from "./Pages/NewsDetails";
+import NewsCategory from "./Pages/NewsCategory";
+import Login from "./Pages/Login";
+import Register from "./Pages/Register";
+import NotFound from "./Pages/NotFound";
+import MainFeaturedPost from "./Pages/MainFeaturedPost"
+import createBrowserHistory from "history/createBrowserHistory";
 
+
+
+const history = createBrowserHistory();
 const App = () => {
-  return (
-    <BrowserRouter>
-        {/*<div className="App">*/}
-        <CssBaseline/>
-        <Container maxWidth="lg">
-            <Header/>
+        return (
 
-          <div className='app-content-wrapper'>
-            <Route exact path='/' component={News}/>
-            <Route exact path='/news' component={News}/>
-            <Route path='/news/:id' component={NewsDetails}/>
-            <Route path='/news/category/:id' component={NewsCategory}/>
-            <Route path='/login' component={Login}/>
-            <Route path='/register' component={Register}/>
-          </div>
-        {/*</div>*/}
-        </Container>
-      <Footer/>
-     </BrowserRouter>
-  );
-}
+            <Fragment>
+            <CssBaseline/>
+                <Container maxWidth="lg">
+                    <BrowserRouter>
+                        <Header />
+                        <main>
+
+
+                        <Switch>
+
+                            <Route exact path='/' component={News}/>
+                            <Route exact path='/news' component={News}/>
+                            <Route path='/news/:id' component={NewsDetails}/>
+                            <Route path='/newsCategory/:id' component={NewsCategory}/>
+                            <Route path='/login' component={Login}/>
+                            <Route path='/register' component={Register}/>
+                            <Route path='/register' component={Register}/>
+
+                        </Switch>
+                        </main>
+                    </BrowserRouter>
+                </Container>
+                <Footer/>
+            </Fragment>
+
+        );
+    }
+
 export default App;
