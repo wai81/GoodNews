@@ -75,7 +75,7 @@ namespace GoodNews.API.Controllers
         // <returns>GenerateJwtToken(email, user)</returns>
         [HttpPost]
         //public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
-        public async Task<IActionResult> Register(string email, [FromBody] string password)
+        public async Task<IActionResult> Register(string email, string password)
         {
             try
             {

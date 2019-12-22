@@ -61,18 +61,24 @@ const Register = () => {
         };
 
         const getToken = async (emailInput, passwordInput) => {
-                const requestOptions = {
+             const requestOptions = {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(passwordInput)
-                    };
-                    fetch(`${API_BASE_URL}/Account//Register?&email=${emailInput}`, requestOptions)
-                        .then(response => response.text())
-                        .then(text =>{
-                            const email= JSON.parse(text).email;
-                            setAccessToken(email);
-                        })
-                };
+                        };
+             const url = `${API_BASE_URL}/Account/Register?email=${emailInput}&password=${passwordInput}`
+            fetch(url,requestOptions)
+                .then((response) => {if (!response.ok) throw new Error(response.status);
+                else return response.text();})
+                //.then(response => response.text())
+                .then((text) => {
+                    const email = JSON.parse(text).email;
+                    setAccessToken(email);
+                    const token = JSON.parse(text).token;
+                    const role = JSON.parse(text).role
+                })
+                .catch( err =>
+                {alert(err)});
+        };
 
 
 

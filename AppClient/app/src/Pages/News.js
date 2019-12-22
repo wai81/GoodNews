@@ -5,6 +5,7 @@ import {Grid,Fade} from "@material-ui/core";
 import {API_BASE_URL} from "../config";
 import NotFound from "./NotFound";
 import MainFeaturedPost from "./MainFeaturedPost";
+import {UserProvider} from "../services/UseUser";
 
 
 const useStyles = makeStyles(theme => ({

@@ -59,14 +59,22 @@ const styles = theme => ({
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            }
+                }
         };
-        fetch(`${API_BASE_URL}/Account/Login?email=${email}&password=${password}`, requestOptions)
-            .then(response => response.text())
-            .then(text => {
+        const url = `${API_BASE_URL}/Account/Login?email=${email}&password=${password}`;
+
+        fetch(url,requestOptions)
+            .then((response) => {if (!response.ok) throw new Error(response.status);
+            else return response.text();})
+            //.then(response => response.text())
+            .then((text) => {
                 const email = JSON.parse(text).email;
                 setAccessToken(email);
-            })
+                const token = JSON.parse(text).token;
+                const role = JSON.parse(text).role
+             })
+            .catch( err =>
+            {alert(err)});
     };
 
     return (
