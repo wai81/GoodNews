@@ -37,7 +37,7 @@ export default function Header(props) {
     const classes = useStyles();
     const [hasError, setErrors] = useState(false);
     const [categories, setCategories] = useState([]);
-    const {user, setAccessToken} = useUser();
+    const { user, setAccessToken } = useUser();
 
     function logout() {
         setAccessToken(null);
@@ -72,16 +72,19 @@ export default function Header(props) {
                 {/*<IconButton>*/}
                 {/*    <SearchIcon />*/}
                 {/*</IconButton>*/}
-                <Typography variant="h7" color="inherit">
-                    {user.email ? user.email : ''}
-                </Typography>
-                {user.email && <Button color="inherit" onClick={logout}><AccountBoxIcon/>Выход</Button>}
-                <Button component={Link} to="/login"
-                        variant="outlined"
-                        size="small" >
-                    <AccountBoxIcon/>
-                    Авторизация
-                </Button >
+
+                {user.email ? user.email &&
+                <Button color="inherit" onClick={logout}>
+                    <AccountBoxIcon/> {user.email} Выход</Button>:
+                    <Button component={Link} to="/login" color="inherit" >
+                    <AccountBoxIcon/>Авторизация</Button>
+                }
+                {/*<Button component={Link} to="/login"*/}
+                {/*        variant="outlined"*/}
+                {/*        size="small" >*/}
+                {/*    <AccountBoxIcon/>*/}
+                {/*    Авторизация*/}
+                {/*</Button >*/}
             </Toolbar>
             <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
                 {categories.map(category => (

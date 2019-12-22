@@ -45,13 +45,17 @@ const News = (props) => {
                 <main>
 
                     <MainFeaturedPost firstPos={news['0']}/>
-                         <Grid container spacing={4}>
+
+                    <Grid container spacing={4}>
 
                            {news.map(post => (
-                                <PostNews post={post} />
+                               <UserProvider>
+                                    <PostNews post={post} />
+                               </UserProvider>
                             ))}
 
-                        </Grid>
+                    </Grid>
+
                 </main>
 
 

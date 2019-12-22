@@ -62,7 +62,6 @@ const styles = theme => ({
                 }
         };
         const url = `${API_BASE_URL}/Account/Login?email=${email}&password=${password}`;
-
         fetch(url,requestOptions)
             .then((response) => {if (!response.ok) throw new Error(response.status);
             else return response.text();})
@@ -72,7 +71,7 @@ const styles = theme => ({
                 setAccessToken(email);
                 const token = JSON.parse(text).token;
                 const role = JSON.parse(text).role
-             })
+            })
             .catch( err =>
             {alert(err)});
     };
