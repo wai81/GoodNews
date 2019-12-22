@@ -1,11 +1,22 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {NavLink} from "react-router-dom";
-import {Typography, Avatar, Button, CssBaseline, Grid,Checkbox,FormControlLabel,TextField,Container} from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { makeStyles } from '@material-ui/core/styles';
+import {
+    Typography,
+    Avatar,
+    Button,
+    CssBaseline,
+    Grid,
+    Checkbox,
+    FormControlLabel,
+    TextField,
+    Container, Fab
+} from '@material-ui/core';
+import { withStyles  } from '@material-ui/core/styles';
+import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import {useUser} from "../services/UseUser";
+import {API_BASE_URL} from "../config";
 
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
     paper: {
         marginTop: theme.spacing(8),
         display: 'flex',
@@ -23,20 +34,50 @@ const useStyles = makeStyles(theme => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
-}));
+});
+ function Login  (props) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const {setAccessToken} = useUser();
+    const { classes } = props;
 
-export default function LoginPage() {
-    const classes = useStyles();
+    function handleEmailChange(event) {
+        setEmail(event.target.value);
+    };
+
+    function handlePasswordChange(event) {
+        setPassword(event.target.value);
+    };
+
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        getToken(email, password);
+    };
+
+    const getToken = async (email, password) => {
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        fetch(`${API_BASE_URL}/Account/Login?email=${email}&password=${password}`, requestOptions)
+            .then(response => response.text())
+            .then(text => {
+                const email = JSON.parse(text).email;
+                setAccessToken(email);
+            })
+    };
 
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
+                    <AccountBoxIcon/>
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Вход в систему
+                   Авторизация
                 </Typography>
                 <form className={classes.form} noValidate>
                     <TextField
@@ -45,10 +86,12 @@ export default function LoginPage() {
                         required
                         fullWidth
                         id="email"
-                        label="Email Address"
+                        label="Email адрес"
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        onChange={handleEmailChange}
+                        value={email}
                     />
                     <TextField
                         variant="outlined"
@@ -56,30 +99,24 @@ export default function LoginPage() {
                         required
                         fullWidth
                         name="password"
-                        label="Password"
+                        label="Пароль"
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                    />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
+                        onChange={handlePasswordChange}
+                        value={password}
                     />
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
+                        onClick={handleFormSubmit}
                         className={classes.submit}
                     >
                         Авторизоваться
                     </Button>
                     <Grid container>
-                        {/*<Grid item xs>*/}
-                        {/*    <Link href="#" variant="body2">*/}
-                        {/*        Forgot password?*/}
-                        {/*    </Link>*/}
-                        {/*</Grid>*/}
                         <Grid item>
                             <NavLink to='/register' variant="body2">
                                 {"Нет аккаунта? Зарегистрироваться"}
@@ -92,3 +129,4 @@ export default function LoginPage() {
         </Container>
     );
 }
+export default withStyles(styles)(Login);

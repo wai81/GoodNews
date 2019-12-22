@@ -80,6 +80,10 @@ namespace GoodNews.API
                     options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["Jwt:JwtIssuer"],
                         ValidAudience = Configuration["Jwt:JwtIssuer"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:JwtKey"])),
@@ -128,16 +132,21 @@ namespace GoodNews.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            //else
-            //{
-            //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            //    app.UseHsts();
-            //}
+            else
+            {
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
 
             //Add Sequring JWT
-            app.UseCors(builder =>
-               builder.AllowAnyOrigin());
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+            );
             app.UseAuthentication();
+
             app.UseStatusCodePages();
             //Add Swagger
             app.UseSwagger();
@@ -146,7 +155,7 @@ namespace GoodNews.API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "");
             });
 
-            //app.UseHttpsRedirection();
+            
 
             app.UseHangfireServer();
             app.UseHangfireDashboard("/api/admin/hangfire", new DashboardOptions

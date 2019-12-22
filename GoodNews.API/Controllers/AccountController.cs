@@ -39,22 +39,26 @@ namespace GoodNews.API.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        //public async Task<IActionResult> Login([FromBody] LoginViewModel model)
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(string email, string password)
         {
             try
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+                var result = await _signInManager.PasswordSignInAsync(email, password, false, false);
 
                 if (result.Succeeded)
                 {
-                    Log.Information($"Login operation was successfully: {model.Email}");
-                    var appUser = _userManager.Users.SingleOrDefault(r => r.Email == model.Email);
-                    //return GenerateJwtToken(model.Email, appUser);
-                    var token = GenerateJwtToken(model.Email, appUser);
-                    return Ok(token);
+                    var user = _userManager.Users.SingleOrDefault(r => r.Email == email);
+                    Log.Information($"Login operation was successfully: {email}");
+                    return Ok( new
+                        {
+                            id = user.Id,
+                            userName = user.UserName,
+                            email = user.Email,
+                            roles = await _userManager.GetRolesAsync(user),
+                            token = GenerateJwtToken(email, user),
+                    });
                 }
-                Log.Information($"Login operation was fail: {model.Email}");
+                Log.Information($"Login operation was fail: {email}");
                 return StatusCode(401, $"Login operation was fail: {Task.FromResult(false)}");
             }
             catch (Exception ex)
@@ -64,33 +68,44 @@ namespace GoodNews.API.Controllers
             }
         }
         /// <summary>
-        /// Register User
+        /// 
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns>GenerateJwtToken(model.Email, user)</returns>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        // <returns>GenerateJwtToken(email, user)</returns>
         [HttpPost]
         //public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Register(string email, [FromBody] string password)
         {
             try
             {
                 
                 var user = new User
                 {
-                    UserName = model.Email,//UserName,
-                    Email = model.Email,
+                    UserName = email,
+                    Email = email,
                 };
-                var result = await _userManager.CreateAsync(user, model.Password);
+                var result = await _userManager.CreateAsync(user, password);
 
                 if (result.Succeeded)
                 {
-                    Log.Information($"Register operation was successfully: {model.Email}");
-                    await _signInManager.SignInAsync(user, false);
-                    //return GenerateJwtToken(model.Email, user);
-                    var token = GenerateJwtToken(model.Email, user);
-                    return Ok(token);
+
+                    //await _signInManager.SignInAsync(user, false);
+                    await _userManager.AddToRoleAsync(user, "user");
+
+                    Log.Information($"Register operation was successfully: {email}");
+
+                    //var token = GenerateJwtToken(email, user);
+                    return Ok(new
+                    {
+                        id = user.Id,
+                        userName = user.UserName,
+                        email = user.Email,
+                        roles = await _userManager.GetRolesAsync(user),
+                        token = GenerateJwtToken(email, user)
+                    });
                 }
-                Log.Information($"Register was fail: {model.Email}");
+                Log.Information($"Register was fail: {email}");
                 return StatusCode(401, $"Register was fail: {Task.FromResult(false)}");
             }
             catch (Exception ex)

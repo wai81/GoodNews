@@ -35,20 +35,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const post = {
-    title: 'Title of a longer featured blog post',
-    description:
-        "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
     image: 'https://source.unsplash.com/random',
     imgText: 'main image description',
-    linkText: 'Continue reading…',
-    indexPositive: 5,
 };
-
 export default function  MainFeaturedPost(props) {
-//const bestPost = (props) =>{
     const classes = useStyles();
-    // alert( props.firstPos.title);
-
     return (
         <Zoom
             in={'true'}
@@ -60,7 +51,6 @@ export default function  MainFeaturedPost(props) {
             <div className={classes.overlay} />
             <Grid container>
                 <Grid item md={10}>
-
                     <div className={classes.mainFeaturedPostContent}>
                         <Typography variant="h6" color="inherit" gutterBottom align={"left"}>
                             <Rating name="read-only" value={props.firstPos?.indexPositive} readOnly />
@@ -79,11 +69,9 @@ export default function  MainFeaturedPost(props) {
                         </Button>
                     </div>
                 </Grid>
-
             </Grid>
         </Paper>
         </Zoom>
     );
-
 }
 

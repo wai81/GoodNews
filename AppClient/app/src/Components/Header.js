@@ -1,11 +1,20 @@
-import React, {Fragment,useEffect, useState} from "react";
-import {Link, Router} from "react-router-dom";
-import createBrowserHistory from "history/createBrowserHistory";
+import React, {
+    Fragment,
+    useEffect,
+    useState} from "react";
+import {Link} from "react-router-dom";
 
-import {Toolbar, Typography, Button, IconButton, Grow, Slide} from "@material-ui/core";
-import SearchIcon from '@material-ui/icons/Search';
+import {
+    Toolbar,
+    Typography,
+    Button,
+    IconButton,
+    Slide,
+    Fab} from "@material-ui/core";
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import { makeStyles } from '@material-ui/core/styles';
 import {API_BASE_URL} from "../config";
+import {UserProvider, useUser} from "../services/UseUser";
 
 const useStyles = makeStyles(theme => ({
     toolbar: {
@@ -26,10 +35,13 @@ const useStyles = makeStyles(theme => ({
 
 export default function Header(props) {
     const classes = useStyles();
-    const { sections, title } = props;
-
     const [hasError, setErrors] = useState(false);
     const [categories, setCategories] = useState([]);
+    const {user, setAccessToken} = useUser();
+
+    function logout() {
+        setAccessToken(null);
+    }
 
     useEffect(() => {
         async function fetchData() {
@@ -42,11 +54,9 @@ export default function Header(props) {
 
         fetchData();
     }, []);
-    const history = createBrowserHistory();
 
     return (
         <Fragment>
-            {/*<Router history={history}>*/}
             <Toolbar>
                 <Button size="small" component={Link} to="/">Good News</Button>
                 <Typography
@@ -59,16 +69,20 @@ export default function Header(props) {
                 >
                     Good News
                 </Typography>
-                <IconButton>
-                    <SearchIcon />
-                </IconButton>
+                {/*<IconButton>*/}
+                {/*    <SearchIcon />*/}
+                {/*</IconButton>*/}
+                <Typography variant="h7" color="inherit">
+                    {user.email ? user.email : ''}
+                </Typography>
+                {user.email && <Button color="inherit" onClick={logout}><AccountBoxIcon/>Выход</Button>}
                 <Button component={Link} to="/login"
                         variant="outlined"
                         size="small" >
-                        Sign up
-                </Button>
+                    <AccountBoxIcon/>
+                    Авторизация
+                </Button >
             </Toolbar>
-
             <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
                 {categories.map(category => (
                     <Slide
@@ -90,8 +104,6 @@ export default function Header(props) {
                     </Slide>
                 ))}
             </Toolbar>
-
-            {/*</Router>*/}
         </Fragment>
     );
 }

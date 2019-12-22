@@ -1,8 +1,17 @@
-import React from 'react';
+import React,{useState} from 'react';
 import {NavLink} from "react-router-dom";
-import {Typography, Avatar, Button, CssBaseline, Grid,Checkbox,FormControlLabel,TextField,Container} from '@material-ui/core';
+import {
+    Typography,
+    Avatar,
+    Button,
+    CssBaseline,
+    Grid,
+    TextField,
+    Container} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
+import {API_BASE_URL} from "../config";
+import {useUser} from "../services/UseUser";
 
 
 
@@ -26,8 +35,46 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function RegisterPage() {
+const Register = () => {
     const classes = useStyles();
+    const {setAccessToken} = useUser();
+    const [emailInput, setEmailInput] = useState('');
+    const [passwordInput, setPasswordInput] = useState('');
+    const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
+
+       function handleEmailChange(event) {
+           setEmailInput(event.target.value);
+        };
+
+        function handlePasswordChange(event) {
+            setPasswordInput(event.target.value);
+        };
+
+        function handleConfirmPasswordChange(event) {
+            setConfirmPasswordInput(event.target.value);
+        };
+        function submitHandler(event) {
+            event.preventDefault();
+            if(passwordInput === confirmPasswordInput) {
+                getToken(emailInput, passwordInput, confirmPasswordInput);
+            }
+        };
+
+        const getToken = async (emailInput, passwordInput) => {
+                const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(passwordInput)
+                    };
+                    fetch(`${API_BASE_URL}/Account//Register?&email=${emailInput}`, requestOptions)
+                        .then(response => response.text())
+                        .then(text =>{
+                            const email= JSON.parse(text).email;
+                            setAccessToken(email);
+                        })
+                };
+
+
 
     return (
         <Container component="main" maxWidth="xs">
@@ -41,29 +88,7 @@ export default function RegisterPage() {
                 </Typography>
                 <form className={classes.form} noValidate>
                     <Grid container spacing={2}>
-                        {/*<Grid item xs={12} sm={6}>*/}
-                        {/*    <TextField*/}
-                        {/*        autoComplete="fname"*/}
-                        {/*        name="firstName"*/}
-                        {/*        variant="outlined"*/}
-                        {/*        required*/}
-                        {/*        fullWidth*/}
-                        {/*        id="firstName"*/}
-                        {/*        label="First Name"*/}
-                        {/*        autoFocus*/}
-                        {/*    />*/}
-                        {/*</Grid>*/}
-                        {/*<Grid item xs={12} sm={6}>*/}
-                        {/*    <TextField*/}
-                        {/*        variant="outlined"*/}
-                        {/*        required*/}
-                        {/*        fullWidth*/}
-                        {/*        id="lastName"*/}
-                        {/*        label="Last Name"*/}
-                        {/*        name="lastName"*/}
-                        {/*        autoComplete="lname"*/}
-                        {/*    />*/}
-                        {/*</Grid>*/}
+
                         <Grid item xs={12}>
                             <TextField
                                 variant="outlined"
@@ -73,6 +98,8 @@ export default function RegisterPage() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                onChange={handleEmailChange}
+                                value={emailInput}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -85,6 +112,8 @@ export default function RegisterPage() {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
+                                onChange={handlePasswordChange}
+                                value={passwordInput}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -97,23 +126,21 @@ export default function RegisterPage() {
                             type="password"
                             id="confirmPassword"
                             autoComplete="current-password"
+                            onChange={handleConfirmPasswordChange}
+                            value={confirmPasswordInput}
                         />
                         </Grid>
-                        {/*<Grid item xs={12}>*/}
-                        {/*    <FormControlLabel*/}
-                        {/*        control={<Checkbox value="allowExtraEmails" color="primary" />}*/}
-                        {/*        label="I want to receive inspiration, marketing promotions and updates via email."*/}
-                        {/*    />*/}
-                        {/*</Grid>*/}
+
                     </Grid>
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
+                        onClick={submitHandler}
                         className={classes.submit}
                     >
-                        Войти в систему
+                        Регистрация
                     </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
@@ -127,3 +154,4 @@ export default function RegisterPage() {
         </Container>
     );
 }
+export default Register;
