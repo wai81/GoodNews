@@ -70,7 +70,8 @@ const styles = theme => ({
                 const email = JSON.parse(text).email;
                 setAccessToken(email);
                 const token = JSON.parse(text).token;
-                const role = JSON.parse(text).role
+                const role = JSON.parse(text).role;
+                props.history.push("/");
             })
             .catch( err =>
             {alert(err)});

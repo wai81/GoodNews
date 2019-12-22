@@ -26,9 +26,10 @@ namespace GoodNews
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = Configuration.GetConnectionString("DefaultConnection");
+            //string connection = Configuration.GetConnectionString("DefaultConnection");
+            string connection = Configuration.GetConnectionString("AzureConnection");
             services.AddDbContext<ApplicationContext>(options =>
-                options.UseSqlServer(connection, c=>c.MigrationsAssembly("GoodNews.DB")));
+                options.UseSqlServer(connection, c => c.MigrationsAssembly("GoodNews.DB")));
             services.AddIdentity<User, IdentityRole>(opts =>
                 {
                     //настройка вилидности пароля

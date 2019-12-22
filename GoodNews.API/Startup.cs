@@ -46,7 +46,8 @@ namespace GoodNews.API
         public void ConfigureServices(IServiceCollection services)
         {
             //add config contex
-            string connection = Configuration.GetConnectionString("DefaultConnection");
+            //string connection = Configuration.GetConnectionString("DefaultConnection");
+            string connection = Configuration.GetConnectionString("AzureConnection");
             services.AddDbContext<ApplicationContext>(options =>
                 // options.UseSqlServer(connection));
                 options.UseSqlServer(connection, c => c.MigrationsAssembly("GoodNews.DB")));

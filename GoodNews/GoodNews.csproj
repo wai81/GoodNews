@@ -22,4 +22,9 @@
     <ProjectReference Include="..\ServiceParser\ServiceParser.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
 </Project>
