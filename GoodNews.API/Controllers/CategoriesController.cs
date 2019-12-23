@@ -54,28 +54,28 @@ namespace GoodNews.API.Controllers
             return Ok(await mediator.Send(new GetNewsByCategoryIdQueryModel(id)));
         }
 
-        //// POST api/<controller>
+        // POST api/<controller>
         //[HttpPost]
         //public void Post([FromBody]string value)
         //{
         //}
 
-        //// PUT api/<controller>/5
+        // PUT api/<controller>/5
         //[HttpPut("{id}")]
         //public void Put(int id, [FromBody]string value)
         //{
         //}
 
-        /// <summary>
-        /// Delete Category by Id
-        /// </summary>
-        /// <param name="id">id of Category</param>
-        /// <returns></returns>
+        // <summary>
+        // Delete Category by Id
+        // </summary>
+        // <param name="id">id of Category</param>
+        // <returns></returns>
         // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            return Ok(await mediator.Send(new DeleteCategoryCommandModel(id)));
-        }
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> Delete(Guid id)
+        //{
+        //    return Ok(await mediator.Send(new DeleteCategoryCommandModel(id)));
+        //}
     }
 }

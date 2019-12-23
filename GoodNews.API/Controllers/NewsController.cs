@@ -105,40 +105,48 @@ namespace GoodNews.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(Guid categoryId)
         {
-            return Ok(await mediator.Send(new GetNewsByCategoryIdQueryModel(categoryId)));
-        }
-       
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="news"></param>
-        /// <returns></returns>
-        // POST api/<controller>
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] NewsViewModel news)
-        {
             try
             {
-                var context = new News()
-                {
-                    Title = news.Title,
-                    DateCreate = news.DateCreate,
-                    NewsContent = news.NewsContent,
-                    NewsDescription = news.NewsDescription,
-                    LinkURL = news.LinkURL,
-                    ImageUrl = news.ImageUrl,
-                    CategoryId = news.CategoryID
-
-                };
-                Log.Information($"Post news {news} news page was successfully");
-                return Ok(await mediator.Send(new AddNewsCommandModel(context)));
+                return Ok(await mediator.Send(new GetNewsByCategoryIdQueryModel(categoryId)));
             }
             catch (Exception ex)
             {
-                Log.Error($"Post news was fail with exception:{Environment.NewLine}{ex.Message}");
+                Log.Error($"Get category by id -> {categoryId} page was fail with exception:{Environment.NewLine}{ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
+       
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="news"></param>
+        ///// <returns></returns>
+        //// POST api/<controller>
+        //[HttpPost]
+        //public async Task<IActionResult> Post([FromBody] NewsViewModel news)
+        //{
+        //    try
+        //    {
+        //        var context = new News()
+        //        {
+        //            Title = news.Title,
+        //            DateCreate = news.DateCreate,
+        //            NewsContent = news.NewsContent,
+        //            NewsDescription = news.NewsDescription,
+        //            LinkURL = news.LinkURL,
+        //            ImageUrl = news.ImageUrl,
+        //            CategoryId = news.CategoryID
+
+        //        };
+        //        Log.Information($"Post news {news} news page was successfully");
+        //        return Ok(await mediator.Send(new AddNewsCommandModel(context)));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log.Error($"Post news was fail with exception:{Environment.NewLine}{ex.Message}");
+        //        return StatusCode(500, "Internal server error");
+        //    }
+        //}
 
         //// PUT api/<controller>/5
         //[HttpPut("{id}")]
@@ -146,26 +154,26 @@ namespace GoodNews.API.Controllers
         //{
             
 
+        ////}
+        ///// <summary>
+        ///// Delete Articel News by Id
+        ///// </summary>
+        ///// <param name="id">id of news articles</param>
+        ///// <returns></returns>
+        //// DELETE api/<controller>/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> Delete(Guid id)
+        //{
+        //    try
+        //    {
+        //        Log.Information($"Delete news by id -> {id} was successfully");
+        //        return Ok(await mediator.Send(new DeleteNewsCommandModel(id)));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log.Error($"Post news was fail with exception:{Environment.NewLine}{ex.Message}");
+        //        return StatusCode(500, "Internal server error");
+        //    }
         //}
-        /// <summary>
-        /// Delete Articel News by Id
-        /// </summary>
-        /// <param name="id">id of news articles</param>
-        /// <returns></returns>
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            try
-            {
-                Log.Information($"Delete news by id -> {id} was successfully");
-                return Ok(await mediator.Send(new DeleteNewsCommandModel(id)));
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Post news was fail with exception:{Environment.NewLine}{ex.Message}");
-                return StatusCode(500, "Internal server error");
-            }
-        }
     }
 }
