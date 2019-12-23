@@ -4,6 +4,7 @@ import { Rating } from '@material-ui/lab';
 import {Paper, Typography, Grid, Button,Zoom} from '@material-ui/core';
 import {makeStyles} from "@material-ui/core";
 import { RichText } from 'prismic-reactjs';
+import Moment from "react-moment";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 
 const useStyles = makeStyles(theme => ({
@@ -59,6 +60,9 @@ export default function  MainFeaturedPost(props) {
                         </Typography>
                         <Typography component="h2" variant="h4" color="inherit" gutterBottom>
                             {props.firstPos?.title}
+                        </Typography>
+                        <Typography variant="subtitle1" color="initial">
+                                <Moment format="YYYY/MM/DD">{props.firstPos?.dateCreate}</Moment>
                         </Typography>
                         <Typography variant="h6" color="inherit" paragraph>
                             {props.firstPos?.newsContent}

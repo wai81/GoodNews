@@ -48,8 +48,8 @@ namespace GoodNews.API.Controllers
            
             try
             {
-                var news = await mediator.Send(new GetNewsPageQueryModel(curentNumPage));
-                var newsPage = news.OrderByDescending(s => s.DateCreate);
+                var newsPage = await mediator.Send(new GetNewsPageQueryModel(curentNumPage));
+                //var newsPage = news.OrderByDescending(n => n.DateCreate).OrderByDescending(p => p.IndexPositive);//news.OrderByDescending(s => s.DateCreate);
                 Log.Information("Get all news page was successfully");
                 return Ok(newsPage);
                 

@@ -5,7 +5,7 @@ import {Grid,Fade} from "@material-ui/core";
 import {API_BASE_URL} from "../config";
 import NotFound from "./NotFound";
 import MainFeaturedPost from "./MainFeaturedPost";
-import {UserProvider} from "../services/UseUser";
+
 import InfiniteScroll from "react-infinite-scroll-component";
 import axios from "axios";
 
@@ -17,16 +17,16 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const News = (props) => {
-    const classes = useStyles();
-    const [hasError, setErrors] = useState(false);
-    const [news, setNews] = useState([]);
-    const [loading, setLoading] =useState(false)
+   const classes = useStyles();
+   const [hasError, setErrors] = useState(false);
+   const [news, setNews] = useState([]);
+   const [loading, setLoading] =useState(false)
    const [page, setPage] = useState(1);
+  
 
 
     useEffect(() => {
         axios.get(`${API_BASE_URL}/api/News/?curentNumPage=${page}`)
-
         .then(res => {setNews(res.data)});
         }, []);
     const fetchData = async () => {
@@ -58,13 +58,9 @@ const News = (props) => {
                     <MainFeaturedPost firstPos={news['0']}/>
 
                     <Grid container spacing={4}>
-
                            {news.map(post => (
-                               <UserProvider>
-                                    <PostNews post={post} />
-                               </UserProvider>
+                                <PostNews post={post} />
                             ))}
-
                     </Grid>
                     </InfiniteScroll>
                 </main>

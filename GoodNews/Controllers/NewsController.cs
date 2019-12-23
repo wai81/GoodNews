@@ -33,7 +33,9 @@ namespace GoodNews.Controllers
         public async Task<IActionResult> Index()
 
         {
-            return View(await uow.NewsRepository.GetAllAsync());
+            var news = await uow.NewsRepository.GetAllAsync();
+            var sortedNews = news.OrderByDescending(n => n.DateCreate).OrderByDescending(p => p.IndexPositive);
+            return View(sortedNews);
         }
         
         [HttpGet]

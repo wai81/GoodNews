@@ -7,12 +7,14 @@ import Moment from "react-moment";
 import NotFound from "./NotFound";
 import {API_BASE_URL} from "../config";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
+import {UserProvider,useUser} from "../services/UseUser";
+
 
 
 const NewsDetailPage = (props)=> {
     const [hasError, setErrors] = useState(false);
     const [post, setPost] = useState([]);
-
+    const { user } = useUser();
 
     const match = matchPath(props.history.location.pathname, {
         path: '/newsPost/:id',
@@ -38,10 +40,12 @@ const NewsDetailPage = (props)=> {
     if (hasError!=true) {
 
             return (
+                <UserProvider>
+                {user.email ? user.email &&
                 <Container align="justify">
                     <Typography variant="subtitle1" color="textSecondary">
-                        <Rating name="read-only" value={props.indexPositive} precision={0.5}  emptyIcon={<StarBorderIcon fontSize="inherit" />} readOnly />
-                        {post.indexPositive}
+                        <Rating name="read-only" value={post.indexPositive} precision={0.5}  emptyIcon={<StarBorderIcon fontSize="inherit" />} readOnly />
+                            {post.indexPositive}
                     </Typography>
                     <Typography component="h6" variant="h5">
                         {post.title}
@@ -54,6 +58,9 @@ const NewsDetailPage = (props)=> {
                         {post.newsDescription}
                     </Typography>
                 </Container>
+                 :props.history.push("/login")}
+                                    
+                 </UserProvider>
             );
     } else {
         return <NotFound />;
