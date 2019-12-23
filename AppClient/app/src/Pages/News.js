@@ -6,7 +6,8 @@ import {API_BASE_URL} from "../config";
 import NotFound from "./NotFound";
 import MainFeaturedPost from "./MainFeaturedPost";
 import {UserProvider} from "../services/UseUser";
-
+import InfiniteScroll from "react-infinite-scroll-component";
+import axios from "axios";
 
 const useStyles = makeStyles(theme => ({
     markdown: {
@@ -19,31 +20,41 @@ const News = (props) => {
     const classes = useStyles();
     const [hasError, setErrors] = useState(false);
     const [news, setNews] = useState([]);
-   const [loading, setLoading] =useState(false)
-    const [checked, setChecked] = useState(false);
+    const [loading, setLoading] =useState(false)
+   const [page, setPage] = useState(1);
 
 
     useEffect(() => {
+        axios.get(`${API_BASE_URL}/api/News/?curentNumPage=${page}`)
 
-        const fetchPosts = async () => {
-            setLoading(true);
-            const res = await fetch(`${API_BASE_URL}/api/News`);
-            res
-                .json()
-                .then(res => setNews(res))
-                .catch(err => setErrors(true));
+        .then(res => {setNews(res.data)});
+        }, []);
+    const fetchData = async () => {
+        setPage(page + 1);
+        await axios
+            .get(`${API_BASE_URL}/api/News/?curentNumPage=${page + 1}`)
+            .then(res => setNews(news.concat(res.data)));
+    };
 
-            setLoading(false);
+        // const fetchPosts = async () => {
+        //     setLoading(true);
+        //     const res = await fetch(`${API_BASE_URL}/api/News`);
+        //     res
+        //         .json()
+        //         .then(res => setNews(res))
+        //         .catch(err => setErrors(true));
+        //
+        //     setLoading(false);
+        //
+        // }
+        //     fetchPosts();
+        // }, []);
 
-        }
-
-        fetchPosts();
-    }, []);
     if (news.length!==null) {
 
             return (
                 <main>
-
+                    <InfiniteScroll dataLength={news.length} next={fetchData} hasMore={true}>
                     <MainFeaturedPost firstPos={news['0']}/>
 
                     <Grid container spacing={4}>
@@ -55,7 +66,7 @@ const News = (props) => {
                             ))}
 
                     </Grid>
-
+                    </InfiniteScroll>
                 </main>
 
 

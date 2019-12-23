@@ -42,24 +42,14 @@ namespace GoodNews.API.Controllers
         [HttpGet]
         [ProducesResponseType (200,  Type=typeof(SpecialType))]
         [ProducesResponseType (StatusCodes.Status400BadRequest)]
-        //public async Task<IActionResult> Get(int curentNumPage = 1)
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(int curentNumPage = 1)
+        //public async Task<IActionResult> GetNews()
         {
-            int countNewsOnPage = 10;
+           
             try
             {
-                var countNews = await mediator.Send(new GetNewsCountQueryModel());
-                var countPages = (countNews % countNewsOnPage) != 0 ? countNews / countNewsOnPage + 1 : countNews / countNewsOnPage;
-                var news = await mediator.Send(new GetNewsPageQueryModel(1, countNewsOnPage));
+                var news = await mediator.Send(new GetNewsPageQueryModel(curentNumPage));
                 var newsPage = news.OrderByDescending(s => s.DateCreate);
-                //NewsModel newsPage = new NewsModel()
-                //{
-                //    CountPages = countPages,
-                //    CurrentNumPage = curentNumPage,
-                //    CountNewsOnPage = countNewsOnPage,
-                //    News = news
-                //};
-                //var newsPage = await mediator.Send(new GetNewsQueryModel());
                 Log.Information("Get all news page was successfully");
                 return Ok(newsPage);
                 
@@ -78,16 +68,16 @@ namespace GoodNews.API.Controllers
         /// <param name="id">id of news articles </param>
         /// <returns></returns>
         // GET api/<controller>/5
-        [HttpGet("{id}")]
+        [HttpGet("newsPost/{postId}")]
         [ProducesResponseType(200, Type = typeof(SpecialType))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid postId)
         {
             try
             {
-                var newsDetails = await mediator.Send(new GetNewsByIdQueryModel(id));
+                var newsDetails = await mediator.Send(new GetNewsByIdQueryModel(postId));
                 //var newsCategory = await mediator.Send(new GetCategoryByIdQueryModel(newsDetails.CategoryID));
-                var newsComments = await mediator.Send(new GetNewsCommentsQueryModel(id));
+                var newsComments = await mediator.Send(new GetNewsCommentsQueryModel(postId));
                 newsComments = newsComments.OrderByDescending(c => c.Added);
                 var news = new NewsDetailsViewModel()
                 {
@@ -95,12 +85,12 @@ namespace GoodNews.API.Controllers
                     //Category = newsCategory,
                     NewsComments = newsComments
                 };
-                Log.Information($"Get news by id -> {id} news page was successfully");
+                Log.Information($"Get news by id -> {postId} news page was successfully");
                 return Ok(news);
             }
             catch (Exception ex)
             {
-                Log.Error($"Get news by id -> {id} page was fail with exception:{Environment.NewLine}{ex.Message}");
+                Log.Error($"Get news by id -> {postId} page was fail with exception:{Environment.NewLine}{ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }

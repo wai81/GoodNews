@@ -8,13 +8,11 @@ import {
     Toolbar,
     Typography,
     Button,
-    IconButton,
-    Slide,
-    Fab} from "@material-ui/core";
+    Slide} from "@material-ui/core";
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import { makeStyles } from '@material-ui/core/styles';
 import {API_BASE_URL} from "../config";
-import {UserProvider, useUser} from "../services/UseUser";
+import {useUser} from "../services/UseUser";
 
 const useStyles = makeStyles(theme => ({
     toolbar: {
@@ -69,22 +67,13 @@ export default function Header(props) {
                 >
                     Good News
                 </Typography>
-                {/*<IconButton>*/}
-                {/*    <SearchIcon />*/}
-                {/*</IconButton>*/}
-
                 {user.email ? user.email &&
                 <Button color="inherit" onClick={logout}>
                     <AccountBoxIcon/> {user.email} Выход</Button>:
                     <Button component={Link} to="/login" color="inherit" >
                     <AccountBoxIcon/>Авторизация</Button>
                 }
-                {/*<Button component={Link} to="/login"*/}
-                {/*        variant="outlined"*/}
-                {/*        size="small" >*/}
-                {/*    <AccountBoxIcon/>*/}
-                {/*    Авторизация*/}
-                {/*</Button >*/}
+
             </Toolbar>
             <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
                 {categories.map(category => (

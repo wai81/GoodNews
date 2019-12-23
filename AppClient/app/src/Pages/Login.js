@@ -6,11 +6,8 @@ import {
     Button,
     CssBaseline,
     Grid,
-    Checkbox,
-    FormControlLabel,
     TextField,
-    Container, Fab
-} from '@material-ui/core';
+    Container} from '@material-ui/core';
 import { withStyles  } from '@material-ui/core/styles';
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import {useUser} from "../services/UseUser";

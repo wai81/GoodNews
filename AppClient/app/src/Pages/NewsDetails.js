@@ -6,6 +6,7 @@ import {Rating} from "@material-ui/lab";
 import Moment from "react-moment";
 import NotFound from "./NotFound";
 import {API_BASE_URL} from "../config";
+import StarBorderIcon from "@material-ui/icons/StarBorder";
 
 
 const NewsDetailPage = (props)=> {
@@ -14,7 +15,7 @@ const NewsDetailPage = (props)=> {
 
 
     const match = matchPath(props.history.location.pathname, {
-        path: '/news/:id',
+        path: '/newsPost/:id',
         exact: true,
         strict: false
     });
@@ -23,7 +24,7 @@ const NewsDetailPage = (props)=> {
 
     useEffect(() => {
         async function fetchData() {
-            const res = await fetch(`${API_BASE_URL}/api/News/${postId}`);
+            const res = await fetch(`${API_BASE_URL}/api/News/newsPost/${postId}`);
             res
                 .json()
                 .then(res => setPost(res.news))
@@ -32,12 +33,14 @@ const NewsDetailPage = (props)=> {
         fetchData();
     }, []);
 
+    
+
     if (hasError!=true) {
 
             return (
                 <Container align="justify">
                     <Typography variant="subtitle1" color="textSecondary">
-                        <Rating name="read-only" value={post.indexPositive} readOnly />
+                        <Rating name="read-only" value={props.indexPositive} precision={0.5}  emptyIcon={<StarBorderIcon fontSize="inherit" />} readOnly />
                         {post.indexPositive}
                     </Typography>
                     <Typography component="h6" variant="h5">

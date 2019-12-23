@@ -9,11 +9,10 @@ namespace GoodNews.Infrastructure.Queries.Models.Post
     public class GetNewsPageQueryModel : IRequest<IEnumerable<News>>
     {
         public int NumberP { get; }
-        public int CountNewsOnPage { get; }
-    public GetNewsPageQueryModel(int numberP = 1, int countNewsOnPage = 6)
+        
+    public GetNewsPageQueryModel(int numberP)
         {
             NumberP = numberP;
-            CountNewsOnPage = countNewsOnPage;
         }
         
     }

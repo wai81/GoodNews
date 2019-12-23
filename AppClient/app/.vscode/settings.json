@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.deploySubpath": "build",
+    "appService.defaultWebAppToDeploy": "/subscriptions/f8943968-b33b-430d-b30c-78e697efbcc1/resourceGroups/react/providers/Microsoft.Web/sites/gn-r"
+}

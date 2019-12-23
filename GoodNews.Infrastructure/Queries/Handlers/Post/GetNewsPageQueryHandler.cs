@@ -22,8 +22,9 @@ namespace GoodNews.Infrastructure.Queries.Handlers.Post
 
         public async Task<IEnumerable<News>> Handle(GetNewsPageQueryModel request, CancellationToken cancellationToken)
         {
-            var result = await _context.News.OrderByDescending(n=>n.IndexPositive).Skip((request.NumberP - 1) * request.CountNewsOnPage)
-                 .Take(request.CountNewsOnPage)
+            int countNewsOnPage = 10;
+            var result = await _context.News.OrderByDescending(n=>n.IndexPositive).Skip((request.NumberP - 1) * countNewsOnPage)
+                 .Take(countNewsOnPage)
                  .ToListAsync(cancellationToken);
 
             return result;

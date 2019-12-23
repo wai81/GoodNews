@@ -4,6 +4,7 @@ import { Rating } from '@material-ui/lab';
 import {Paper, Typography, Grid, Button,Zoom} from '@material-ui/core';
 import {makeStyles} from "@material-ui/core";
 import { RichText } from 'prismic-reactjs';
+import StarBorderIcon from "@material-ui/icons/StarBorder";
 
 const useStyles = makeStyles(theme => ({
     mainFeaturedPost: {
@@ -53,7 +54,7 @@ export default function  MainFeaturedPost(props) {
                 <Grid item md={10}>
                     <div className={classes.mainFeaturedPostContent}>
                         <Typography variant="h6" color="inherit" gutterBottom align={"left"}>
-                            <Rating name="read-only" value={props.firstPos?.indexPositive} readOnly />
+                            <Rating name="read-only" value={props.firstPos?.indexPositive} precision={0.5}  emptyIcon={<StarBorderIcon fontSize="inherit" />} readOnly />
                             {props.firstPos?.indexPositive}
                         </Typography>
                         <Typography component="h2" variant="h4" color="inherit" gutterBottom>
@@ -62,7 +63,7 @@ export default function  MainFeaturedPost(props) {
                         <Typography variant="h6" color="inherit" paragraph>
                             {props.firstPos?.newsContent}
                         </Typography>
-                        <Button component={Link} to={`/news/${props.firstPos?.id}`} key = {props.firstPos?.id} variant="contained">
+                        <Button component={Link} to={`/newsPost/${props.firstPos?.id}`} key = {props.firstPos?.id} variant="contained">
                             <Typography variant="subtitle1" color="inherit">
                                 Читать подробнее...
                             </Typography>
